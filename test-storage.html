@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Browser Storage Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #ffd700;
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+        .warning { color: #f39c12; }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+        .product-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .product-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2ecc71;
+        }
+        .product-name {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .product-category {
+            color: #bdc3c7;
+            font-size: 0.9em;
+        }
+        .storage-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .storage-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .storage-status {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .online { color: #2ecc71; }
+        .offline { color: #e74c3c; }
+        .loading { color: #f39c12; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Cross-Browser Storage Test</h1>
+        
+        <div class="test-section">
+            <h3>🔧 Storage Status</h3>
+            <div class="storage-info">
+                <div class="storage-card">
+                    <div>🌐 Server Storage</div>
+                    <div class="storage-status" id="serverStatus">Loading...</div>
+                </div>
+                <div class="storage-card">
+                    <div>💾 IndexedDB</div>
+                    <div class="storage-status" id="indexedDBStatus">Loading...</div>
+                </div>
+                <div class="storage-card">
+                    <div>🍪 Cookies</div>
+                    <div class="storage-status" id="cookieStatus">Loading...</div>
+                </div>
+                <div class="storage-card">
+                    <div>📱 Session Storage</div>
+                    <div class="storage-status" id="sessionStatus">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test Operations</h3>
+            <button onclick="testCreateProduct()">Create Test Product</button>
+            <button onclick="testGetProducts()">Get All Products</button>
+            <button onclick="testServerConnection()">Test Server Connection</button>
+            <button onclick="testCrossBrowserSync()">Test Cross-Browser Sync</button>
+            <button onclick="clearAllData()">Clear All Data</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Current Products</h3>
+            <div id="productList" class="product-list">
+                <div class="info">No products yet. Create one to test!</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 Test Results</h3>
+            <div id="testResults" class="status">
+                <div class="info">Ready to test cross-browser storage!</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>💡 How to Test Cross-Browser</h3>
+            <ol>
+                <li><strong>Create a product</strong> in this browser (Zen)</li>
+                <li><strong>Open Chrome</strong> and navigate to the same URL</li>
+                <li><strong>Check if the product appears</strong> automatically</li>
+                <li><strong>Edit the product</strong> in Chrome</li>
+                <li><strong>Return to Zen</strong> - changes should be visible!</li>
+            </ol>
+            <p class="success"><strong>✅ Expected Result:</strong> Products created in any browser appear everywhere!</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3002/api';
+        let testProducts = [];
+
+        // Initialize storage status
+        async function initializeStorage() {
+            updateStatus('indexedDBStatus', 'Checking...', 'loading');
+            updateStatus('serverStatus', 'Checking...', 'loading');
+            updateStatus('cookieStatus', 'Checking...', 'loading');
+            updateStatus('sessionStatus', 'Checking...', 'loading');
+
+            // Check IndexedDB
+            try {
+                if ('indexedDB' in window) {
+                    updateStatus('indexedDBStatus', 'Available', 'online');
+                } else {
+                    updateStatus('indexedDBStatus', 'Not Supported', 'offline');
+                }
+            } catch (error) {
+                updateStatus('indexedDBStatus', 'Error', 'offline');
+            }
+
+            // Check Server
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    updateStatus('serverStatus', 'Online', 'online');
+                } else {
+                    updateStatus('serverStatus', 'Error', 'offline');
+                }
+            } catch (error) {
+                updateStatus('serverStatus', 'Offline', 'offline');
+            }
+
+            // Check Cookies
+            try {
+                if (navigator.cookieEnabled) {
+                    updateStatus('cookieStatus', 'Enabled', 'online');
+                } else {
+                    updateStatus('cookieStatus', 'Disabled', 'offline');
+                }
+            } catch (error) {
+                updateStatus('cookieStatus', 'Error', 'offline');
+            }
+
+            // Check Session Storage
+            try {
+                if ('sessionStorage' in window) {
+                    updateStatus('sessionStatus', 'Available', 'online');
+                } else {
+                    updateStatus('sessionStatus', 'Not Supported', 'offline');
+                }
+            } catch (error) {
+                updateStatus('sessionStatus', 'Error', 'offline');
+            }
+        }
+
+        function updateStatus(elementId, text, status) {
+            const element = document.getElementById(elementId);
+            element.textContent = text;
+            element.className = `storage-status ${status}`;
+        }
+
+        // Test creating a product
+        async function testCreateProduct() {
+            const testProduct = {
+                id: `test_${Date.now()}`,
+                name: `Test Product ${new Date().toLocaleTimeString()}`,
+                description: 'This is a test product for cross-browser storage testing',
+                category: 'Test Category',
+                price: '9.99',
+                originalPrice: '19.99',
+                features: ['Test Feature 1', 'Test Feature 2'],
+                images: [],
+                amazonChoice: false,
+                prime: true,
+                rating: 4.5,
+                reviews: [],
+                reviewCount: 0,
+                variants: [],
+                specifications: {},
+                stock: 100,
+                store: 'Test Store',
+                aboutThisItem: ['Test item description'],
+                productDetails: {},
+                technicalDetails: {},
+                countryRedirects: [],
+                createdBy: 'test',
+                createdAt: Date.now(),
+                pageViews: 0
+            };
+
+            try {
+                // Save to server
+                const serverResponse = await fetch(`${API_BASE_URL}/products`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testProduct)
+                });
+
+                if (serverResponse.ok) {
+                    const result = await serverResponse.json();
+                    testProducts.push(result.product);
+                    
+                    // Save to localStorage
+                    const existing = JSON.parse(localStorage.getItem('createdProducts') || '[]');
+                    existing.push(result.product);
+                    localStorage.setItem('createdProducts', JSON.stringify(existing));
+
+                    // Save to sessionStorage
+                    const sessionExisting = JSON.parse(sessionStorage.getItem('sessionProducts') || '[]');
+                    sessionExisting.push(result.product);
+                    sessionStorage.setItem('sessionProducts', JSON.stringify(sessionExisting));
+
+                    // Save to cookies (limited data)
+                    const cookieData = {
+                        id: result.product.id,
+                        name: result.product.name,
+                        category: result.product.category,
+                        lastUpdated: Date.now()
+                    };
+                    const cookieExisting = getCookie('cookieProducts');
+                    let cookieProducts = [];
+                    if (cookieExisting) {
+                        try {
+                            cookieProducts = JSON.parse(decodeURIComponent(cookieExisting));
+                        } catch {
+                            cookieProducts = [];
+                        }
+                    }
+                    cookieProducts.push(cookieData);
+                    setCookie('cookieProducts', JSON.stringify(cookieProducts));
+
+                    showResult('✅ Test product created and saved to all storage layers!', 'success');
+                    displayProducts();
+                } else {
+                    showResult('❌ Failed to save to server', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error creating product: ${error.message}`, 'error');
+            }
+        }
+
+        // Test getting products
+        async function testGetProducts() {
+            try {
+                // Get from server
+                const serverResponse = await fetch(`${API_BASE_URL}/products`);
+                if (serverResponse.ok) {
+                    const serverProducts = await serverResponse.json();
+                    
+                    // Get from localStorage
+                    const localProducts = JSON.parse(localStorage.getItem('createdProducts') || '[]');
+                    
+                    // Get from sessionStorage
+                    const sessionProducts = JSON.parse(sessionStorage.getItem('sessionProducts') || '[]');
+                    
+                    // Get from cookies
+                    const cookieProducts = getCookie('cookieProducts');
+                    let cookieData = [];
+                    if (cookieProducts) {
+                        try {
+                            cookieData = JSON.parse(decodeURIComponent(cookieProducts));
+                        } catch {
+                            cookieData = [];
+                        }
+                    }
+
+                    showResult(`📊 Products found: Server: ${serverProducts.length}, Local: ${localProducts.length}, Session: ${sessionProducts.length}, Cookies: ${cookieData.length}`, 'info');
+                    
+                    // Merge all products
+                    const allProducts = [...serverProducts, ...localProducts, ...sessionProducts];
+                    const uniqueProducts = allProducts.filter((product, index, self) => 
+                        index === self.findIndex(p => p.id === product.id)
+                    );
+                    
+                    testProducts = uniqueProducts;
+                    displayProducts();
+                } else {
+                    showResult('❌ Failed to get products from server', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error getting products: ${error.message}`, 'error');
+            }
+        }
+
+        // Test server connection
+        async function testServerConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    const health = await response.json();
+                    showResult(`✅ Server is healthy! Uptime: ${Math.round(health.uptime)}s`, 'success');
+                } else {
+                    showResult('❌ Server health check failed', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Server connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Test cross-browser sync
+        function testCrossBrowserSync() {
+            const localStorageProducts = JSON.parse(localStorage.getItem('createdProducts') || '[]');
+            const sessionStorageProducts = JSON.parse(sessionStorage.getItem('sessionProducts') || '[]');
+            const cookieProducts = getCookie('cookieProducts');
+            
+            let cookieData = [];
+            if (cookieProducts) {
+                try {
+                    cookieData = JSON.parse(decodeURIComponent(cookieProducts));
+                } catch {
+                    cookieData = [];
+                }
+            }
+
+            const syncStatus = {
+                localStorage: localStorageProducts.length,
+                sessionStorage: sessionStorageProducts.length,
+                cookies: cookieData.length,
+                totalUnique: new Set([...localStorageProducts, ...sessionStorageProducts].map(p => p.id)).size
+            };
+
+            showResult(`🔄 Sync Status: Local: ${syncStatus.localStorage}, Session: ${syncStatus.sessionStorage}, Cookies: ${syncStatus.cookies}, Unique: ${syncStatus.totalUnique}`, 'info');
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all test data?')) {
+                localStorage.removeItem('createdProducts');
+                sessionStorage.removeItem('sessionProducts');
+                setCookie('cookieProducts', '');
+                testProducts = [];
+                displayProducts();
+                showResult('🧹 All test data cleared!', 'warning');
+            }
+        }
+
+        // Display products
+        function displayProducts() {
+            const productList = document.getElementById('productList');
+            
+            if (testProducts.length === 0) {
+                productList.innerHTML = '<div class="info">No products yet. Create one to test!</div>';
+                return;
+            }
+
+            productList.innerHTML = testProducts.map(product => `
+                <div class="product-item">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-category">${product.category}</div>
+                    <div>ID: ${product.id}</div>
+                    <div>Created: ${new Date(product.createdAt).toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        // Show test results
+        function showResult(message, type) {
+            const results = document.getElementById('testResults');
+            results.innerHTML = `<div class="${type}">${message}</div>`;
+            
+            // Auto-clear after 5 seconds
+            setTimeout(() => {
+                results.innerHTML = '<div class="info">Ready for next test!</div>';
+            }, 5000);
+        }
+
+        // Cookie utilities
+        function setCookie(name, value, days = 30) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            initializeStorage();
+            testGetProducts();
+        });
+    </script>
+</body>
+</html>
