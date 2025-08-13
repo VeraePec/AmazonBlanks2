@@ -1,11 +1,10 @@
+// IMPORTANT: Use Netlify serverless proxy when OPENAI key is not exposed to client
+// We keep the local browser usage for dev only when VITE_OPENAI_API_KEY is provided
 import OpenAI from 'openai';
 
-// Initialize OpenAI with API key from environment (never hard-code secrets)
-const OPENAI_KEY = (import.meta as any).env?.VITE_OPENAI_API_KEY || process.env.VITE_OPENAI_API_KEY || '';
-const openai = new OpenAI({
-  apiKey: OPENAI_KEY,
-  dangerouslyAllowBrowser: true
-});
+const BROWSER_OPENAI_KEY = (import.meta as any).env?.VITE_OPENAI_API_KEY || '';
+const useBrowserKey = !!BROWSER_OPENAI_KEY;
+const openai = useBrowserKey ? new OpenAI({ apiKey: BROWSER_OPENAI_KEY, dangerouslyAllowBrowser: true }) : null as any;
 
 export interface ProductData {
   id?: string;
@@ -272,26 +271,30 @@ Return a JSON object exactly matching this schema shape (example values shown):
 Strictly follow valid JSON syntax.
 `;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a precise data extraction assistant that returns only valid JSON."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.2,
-      max_tokens: 4000,
-      // Enforce valid JSON response from the model
-      response_format: { type: "json_object" as const }
-    });
+    let jsonResponse: string | undefined;
+    if (useBrowserKey) {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are a precise data extraction assistant that returns only valid JSON." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.2,
+        max_tokens: 4000,
+        response_format: { type: "json_object" as const }
+      });
+      jsonResponse = response.choices[0]?.message?.content?.trim();
+    } else {
+      const proxyResp = await fetch('/.netlify/functions/openai-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, model: 'gpt-4o-mini', temperature: 0.2, max_tokens: 4000 })
+      });
+      const data = await proxyResp.json();
+      if (!data?.success) throw new Error(data?.error || 'OpenAI proxy failed');
+      jsonResponse = String(data.content || '').trim();
+    }
 
-    const jsonResponse = response.choices[0]?.message?.content?.trim();
-    
     if (!jsonResponse) {
       throw new Error('No response from OpenAI');
     }
