@@ -327,8 +327,36 @@ const DynamicProductPageV2 = () => {
           }
         }
 
-        // Resolve any persisted image references to usable URLs
+        // Resolve any persisted image references to usable URLs; if regular URLs, also persist for durability
+        // Resolve any references, then ensure every image is persisted to IndexedDB so refresh works across browsers
         const resolvedImages = await imageStorage.resolveImageUrlsAsync(product.images || []);
+        const ensuredPersistedImages = await imageStorage.processImagesForPersistence(resolvedImages);
+
+        // If images are not already under /images/products, upload them once to server and rewrite
+        const makePersistent = async (imgs: string[]): Promise<string[]> => {
+          const out: string[] = [];
+          for (const img of imgs || []) {
+            if (typeof img === 'string' && (img.startsWith('/images/products/') || (img.startsWith('http') && img.includes('/images/products/')))) {
+              out.push(img);
+              continue;
+            }
+            try {
+              const payload = img.startsWith('http') || img.startsWith('/') ? { url: img } : { dataUrl: img };
+              const resp = await fetch('/api/upload-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+              });
+              const json = await resp.json();
+              out.push(json?.url || img);
+            } catch {
+              out.push(img);
+            }
+          }
+          return out;
+        };
+
+        const persistentImages = await makePersistent(ensuredPersistedImages);
         const resolvedVariants = Array.isArray(product.variants)
           ? await Promise.all(
               product.variants.map(async (v: any) => ({
@@ -338,7 +366,7 @@ const DynamicProductPageV2 = () => {
                       v.options.map(async (o: any) => ({
                         ...o,
                         images: Array.isArray(o?.images)
-                          ? await imageStorage.resolveImageUrlsAsync(o.images)
+                          ? await makePersistent(await imageStorage.processImagesForPersistence(await imageStorage.resolveImageUrlsAsync(o.images)))
                           : [],
                       }))
                     )
@@ -353,7 +381,7 @@ const DynamicProductPageV2 = () => {
               product.reviews.map(async (review: any) => ({
                 ...review,
                 images: Array.isArray(review?.images)
-                  ? await imageStorage.resolveImageUrlsAsync(review.images)
+                  ? await makePersistent(await imageStorage.processImagesForPersistence(await imageStorage.resolveImageUrlsAsync(review.images)))
                   : []
               }))
             )
@@ -368,7 +396,7 @@ const DynamicProductPageV2 = () => {
 
         let transformed = createTemplateData({
           ...(product as any),
-          images: resolvedImages,
+          images: persistentImages,
           variants: resolvedVariants,
           reviews: resolvedReviews // Pass resolved reviews with working image URLs
         });

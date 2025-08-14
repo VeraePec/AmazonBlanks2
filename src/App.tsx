@@ -30,7 +30,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import LinkRotator from './pages/LinkRotator';
 import FacebookAdAssets from './pages/FacebookAdAssets';
 import FacebookAdsPage from './pages/FacebookAdsPage';
-import AiProductCreator from './pages/AiProductCreator';
+// Removed AiProductCreator page per request
 import DynamicProductPageV2 from './components/DynamicProductPageV2';
 import NotFound from './pages/NotFound';
 import CountryDetectionNotification from './components/CountryDetectionNotification';
@@ -285,7 +285,6 @@ function App() {
                   <Route path="/link-rotator" element={<LinkRotator />} />
                   <Route path="/facebook-ad-assets" element={<FacebookAdAssets />} />
                   <Route path="/facebook-ads" element={<FacebookAdsPage />} />
-                  <Route path="/ai-product-creator" element={<AiProductCreator />} />
                   
                   {/* Catch-all route for dynamic products - should be last */}
                   <Route path="*" element={<DynamicProductPageV2 />} />

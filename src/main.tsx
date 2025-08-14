@@ -18,23 +18,22 @@ try {
 // Cross-browser fix: pull any server products into local dynamic registry on startup
 (async () => {
   try {
-    // One-time migration of any legacy local products to the server
-    try {
-      await unifiedStorage.migrateFromLocalStorage();
-    } catch {}
+    const MIGRATION_FLAG = 'migration_done_supabase_v1';
+    const shouldMigrate = !localStorage.getItem(MIGRATION_FLAG);
 
-    // Additionally migrate AI dynamic products (dynamicProducts + product_*) from this browser to server
-    try {
+    if (shouldMigrate) {
+      try { await unifiedStorage.migrateFromLocalStorage(); } catch (err) {}
+
       const lightweightStr = localStorage.getItem('dynamicProducts');
       if (lightweightStr) {
-        const lightweight = JSON.parse(lightweightStr) as Array<{ id: string }>; 
+        const lightweight = JSON.parse(lightweightStr) as Array<{ id: string }>
         for (const lp of lightweight) {
           try {
             const fullStr = localStorage.getItem('product_' + lp.id);
             if (!fullStr) continue;
             const p = JSON.parse(fullStr);
             const route = p.route || `/${p.id}`;
-            // Normalize any non-portable image references into portable data URLs for server
+
             const toDataUrl = async (url: string): Promise<string> => {
               try {
                 const res = await fetch(url);
@@ -106,14 +105,18 @@ try {
               lastUpdated: Date.now(),
               globalId: `global_${p.id}`,
             };
-            await unifiedStorage.saveProduct(centralized);
+
+            const exists = await unifiedStorage.getProductById(centralized.id);
+            if (!exists) {
+              await unifiedStorage.saveProduct(centralized);
+            }
           } catch (e) {
             console.warn('Skipping dynamic product migration due to parse/save error', e);
           }
         }
+
+        try { localStorage.setItem(MIGRATION_FLAG, 'true'); } catch (err) {}
       }
-    } catch (e) {
-      console.warn('Dynamic products migration skipped:', e);
     }
 
     const products = await unifiedStorage.getAllProducts();
@@ -122,6 +125,15 @@ try {
       for (const p of products) {
         try {
           const route = p.route || `/${p.id}`;
+          const persistedImages = await imageStorage.processImagesForPersistence(Array.isArray(p.images) ? p.images : []);
+          const persistedReviews = Array.isArray(p.reviews)
+            ? await Promise.all(
+                p.reviews.map(async (r: any) => ({
+                  ...r,
+                  images: await imageStorage.processImagesForPersistence(Array.isArray(r?.images) ? r.images : [])
+                }))
+              )
+            : [];
           registerDynamicProduct({
             id: p.id,
             name: p.name,
@@ -129,17 +141,17 @@ try {
             route,
             price: p.price,
             originalPrice: p.originalPrice,
-            images: p.images || ['/placeholder.svg'],
+            images: persistedImages.length > 0 ? persistedImages : (p.images || ['/placeholder.svg']),
             store: p.store || 'Amazon Basics',
             category: p.category || 'General',
             rating: p.rating || 4.5,
-            reviewCount: p.reviewCount || p.reviews?.length || 100,
+            reviewCount: p.reviewCount || persistedReviews?.length || p.reviews?.length || 100,
             aboutThisItem: p.aboutThisItem || [],
             features: p.features || [],
             productDetails: p.productDetails || {},
             technicalDetails: p.technicalDetails || {},
             productInfo: p.specifications || {},
-            reviews: p.reviews || [],
+            reviews: persistedReviews,
             variants: p.variants || [],
             amazonChoice: p.amazonChoice || false,
             prime: p.prime !== false,
@@ -152,7 +164,7 @@ try {
         }
       }
       console.log(`✅ Hydrated ${products.length} products from unified storage`);
-      try { window.dispatchEvent(new Event('unified-storage-hydrated')); } catch {}
+      try { window.dispatchEvent(new Event('unified-storage-hydrated')); } catch (err) {}
     }
   } catch (e) {
     console.warn('Unified storage hydration skipped:', e);

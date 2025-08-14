@@ -539,24 +539,57 @@ export const getAllProductsWithCreated = (): Product[] => {
     });
 
     // Fallback: Also check localStorage directly for any products that might have been saved
+    // Enhancement: if dynamic products exist, read their full records (product_<id>) to get image arrays
     let fallbackProducts: Product[] = [];
     try {
       const dynamicProducts = JSON.parse(localStorage.getItem('dynamicProducts') || '[]');
       const createdProductsStorage = JSON.parse(localStorage.getItem('createdProducts') || '[]');
-      
-      // Convert any found products to the right format
-      fallbackProducts = [...dynamicProducts, ...createdProductsStorage].map((p: any) => {
-        // Ensure proper route generation
+
+      const mappedDynamics: Product[] = (dynamicProducts || []).map((dp: any) => {
+        // Try to load the full product record to get actual images array
+        let full: any = null;
+        try {
+          const fullStr = localStorage.getItem('product_' + dp.id);
+          if (fullStr) full = JSON.parse(fullStr);
+        } catch {}
+
+        const imagesArray: string[] = Array.isArray(full?.images) ? full.images : Array.isArray(dp?.images) ? dp.images : [];
+
+        let route = dp?.route;
+        if (!route && dp?.slug) route = dp.slug.startsWith('/') ? dp.slug : `/${dp.slug}`;
+        if (!route && dp?.id) route = `/${dp.id}`;
+        if (!route) route = `/fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+        const product: Product = {
+          id: dp.id || `fallback-${Date.now()}-${Math.random()}`,
+          name: dp.name || 'Unknown Product',
+          price: dp.price || '£9.99',
+          originalPrice: dp.originalPrice,
+          rating: dp.rating || 4.0,
+          reviews: dp.reviews || dp.reviewCount || 100,
+          image: imagesArray?.[0] || dp.image || '/placeholder.svg',
+          // include images array so Thumbnail can prefer it
+          // @ts-ignore allow extra field on Product for rendering path
+          images: imagesArray,
+          prime: dp.prime ?? true,
+          amazonChoice: dp.amazonChoice ?? false,
+          category: dp.category || 'Home & Kitchen',
+          route,
+          description: dp.description || dp.aboutThisItem?.[0] || '',
+          features: dp.features || [],
+          collection: ''
+        } as any;
+        product.collection = autoAssignCollection(product);
+        return product;
+      });
+
+      const mappedCreated: Product[] = (createdProductsStorage || []).map((p: any) => {
         let fallbackRoute = p.route;
-        if (!fallbackRoute && p.slug) {
-          fallbackRoute = p.slug.startsWith('/') ? p.slug : `/${p.slug}`;
-        } else if (!fallbackRoute && p.id) {
-          fallbackRoute = `/${p.id}`;
-        } else if (!fallbackRoute) {
-          fallbackRoute = `/fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        }
-        
-        const mapped = {
+        if (!fallbackRoute && p.slug) fallbackRoute = p.slug.startsWith('/') ? p.slug : `/${p.slug}`;
+        else if (!fallbackRoute && p.id) fallbackRoute = `/${p.id}`;
+        else if (!fallbackRoute) fallbackRoute = `/fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+        const product: Product = {
           id: p.id || `fallback-${Date.now()}-${Math.random()}`,
           name: p.name || 'Unknown Product',
           price: p.price || '£9.99',
@@ -564,6 +597,9 @@ export const getAllProductsWithCreated = (): Product[] => {
           rating: p.rating || 4.0,
           reviews: p.reviews || p.reviewCount || 100,
           image: p.image || p.images?.[0] || '/placeholder.svg',
+          // pass through any images list present
+          // @ts-ignore allow extra field for rendering
+          images: Array.isArray(p.images) ? p.images : [],
           prime: p.prime ?? true,
           amazonChoice: p.amazonChoice ?? false,
           category: p.category || 'Home & Kitchen',
@@ -571,10 +607,13 @@ export const getAllProductsWithCreated = (): Product[] => {
           description: p.description || p.aboutThisItem?.[0] || '',
           features: p.features || [],
           collection: ''
-        };
-        mapped.collection = autoAssignCollection(mapped);
-        return mapped;
+        } as any;
+        product.collection = autoAssignCollection(product);
+        return product;
       });
+
+      // Combine
+      fallbackProducts = [...mappedDynamics, ...mappedCreated];
     } catch (fallbackError) {
       console.warn('Fallback product loading failed:', fallbackError);
     }
@@ -582,9 +621,26 @@ export const getAllProductsWithCreated = (): Product[] => {
     // Merge products, with created/AI products taking precedence if same ID
     const mergedProducts: Product[] = [...staticProducts];
 
+    const isRicher = (a?: any, b?: any): boolean => {
+      const aHasImages = Array.isArray((a as any)?.images) && (a as any).images.length > 0;
+      const bHasImages = Array.isArray((b as any)?.images) && (b as any).images.length > 0;
+      if (aHasImages !== bHasImages) return aHasImages; // prefer one with images array
+      // Otherwise prefer one whose image is not placeholder
+      const aImg = (a as any)?.image;
+      const bImg = (b as any)?.image;
+      const isPlaceholder = (img: string) => !img || img === '/placeholder.svg';
+      if (isPlaceholder(aImg) !== isPlaceholder(bImg)) return !isPlaceholder(aImg);
+      return true; // default to new
+    };
+
     const upsert = (p: Product) => {
       const existingIndex = mergedProducts.findIndex(x => x.id === p.id);
-      if (existingIndex !== -1) mergedProducts[existingIndex] = p; else mergedProducts.push(p);
+      if (existingIndex !== -1) {
+        const existing = mergedProducts[existingIndex];
+        mergedProducts[existingIndex] = isRicher(p, existing) ? p : existing;
+      } else {
+        mergedProducts.push(p);
+      }
     };
 
     createdProducts.forEach(upsert);

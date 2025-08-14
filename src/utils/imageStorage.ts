@@ -61,7 +61,7 @@ export const createImageStorageUtils = () => {
   // Convert base64/blob/object URL to an IndexedDB reference string
   const processImageForPersistence = async (imageUrl: string): Promise<string> => {
     if (!imageUrl || typeof imageUrl !== 'string') return '/placeholder.svg';
-    // Handle blob: object URLs by fetching and storing the blob
+    // Persist blob: object URLs into IndexedDB
     if (imageUrl.startsWith('blob:')) {
       try {
         const res = await fetch(imageUrl);
@@ -74,18 +74,32 @@ export const createImageStorageUtils = () => {
         return imageUrl;
       }
     }
-    if (!imageUrl.startsWith('data:')) {
-      return imageUrl; // keep regular URLs
+    // Persist remote HTTP(S) images to IndexedDB so refreshes don’t depend on expiring links
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      try {
+        const res = await fetch(imageUrl, { mode: 'cors' });
+        if (!res.ok) return imageUrl; // keep original if fetch fails (e.g., CORS)
+        const blob = await res.blob();
+        const hash = generateHash();
+        await putBlob(hash, blob);
+        return `idb-ref:${hash}`;
+      } catch {
+        return imageUrl; // fallback to original URL
+      }
     }
-    try {
-      const blob = base64ToBlob(imageUrl);
-      const hash = generateHash();
-      await putBlob(hash, blob);
-      return `idb-ref:${hash}`;
-    } catch (e) {
-      console.warn('Image persistence failed; keeping original base64 temporarily. Consider uploading to CDN.', e);
-      return imageUrl;
+    // Persist base64 data URLs
+    if (imageUrl.startsWith('data:')) {
+      try {
+        const blob = base64ToBlob(imageUrl);
+        const hash = generateHash();
+        await putBlob(hash, blob);
+        return `idb-ref:${hash}`;
+      } catch (e) {
+        console.warn('Image persistence failed; keeping original base64 temporarily. Consider uploading to CDN.', e);
+        return imageUrl;
+      }
     }
+    return imageUrl;
   };
 
   // Resolve reference to an object URL (async)

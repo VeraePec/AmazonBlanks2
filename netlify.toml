@@ -5,11 +5,23 @@
 [functions]
   directory = "netlify/functions"
 
-[build.environment]
-  VITE_SUPABASE_URL = "https://yedyaulecbhgviqwgaco.supabase.co"
-  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InllZHlhdWxlY2JoZ3ZpcXdnYWNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNDM0NzgsImV4cCI6MjA3MDYxOTQ3OH0.6ksIq7lICLVyGuuA9ewrMLFHy3kBVvpKDYHQ1lhuNMw"
+[dev]
+  framework = "vite"
+  targetPort = 8080
+  port = 8888
+  autoLaunch = false
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/upload-image"
+  to = "/.netlify/functions/upload-image"
+  status = 200
+
+[[redirects]]
+  from = "/api/upload-images"
+  to = "/.netlify/functions/upload-image"
   status = 200

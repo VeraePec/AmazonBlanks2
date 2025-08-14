@@ -10,6 +10,7 @@ import {
 import { useAdminAuth } from '../contexts/AdminAuthContext';
 import Header from '../components/Header';
 import { imageStorage } from '../utils/imageStorage';
+import { unifiedStorage } from '../utils/unifiedStorage';
 import { getAllDynamicProducts, deleteDynamicProduct, cleanupProductsByName } from '../utils/dynamicProductRegistry';
 
 interface ProductData {
@@ -137,17 +138,17 @@ const AdminDashboard = () => {
           createdAt: p.createdAt
         }));
 
-        // Resolve thumbnails for AI products that have idb-ref/blob-ref strings
+        // Always resolve and ensure persistence for thumbnails (AI + manual)
         const resolveThumbnails = async (items: ProductData[]): Promise<ProductData[]> => {
           const resolved = await Promise.all(items.map(async (p) => {
-            if (p.images && p.images.length > 0) {
-              const first = p.images[0];
-              if (typeof first === 'string' && (first.startsWith('idb-ref:') || first.startsWith('blob-ref:'))) {
-                const urls = await imageStorage.resolveImageUrlsAsync(p.images as any);
-                return { ...p, images: urls } as ProductData;
-              }
-            }
-            return p;
+            const rawImages = Array.isArray(p.images) ? p.images : [];
+            // Resolve any idb-ref/blob-ref to object URLs for display
+            const resolvedUrls = await imageStorage.resolveImageUrlsAsync(rawImages);
+            // Persist for durability so refresh in Admin doesn't lose images
+            const persisted = await imageStorage.processImagesForPersistence(resolvedUrls);
+            // For Admin cards, keep actual displayable URLs (resolvedUrls). Product pages will re-resolve as needed
+            const imagesForAdmin = resolvedUrls.length > 0 ? resolvedUrls : persisted;
+            return { ...p, images: imagesForAdmin } as ProductData;
           }));
           return resolved;
         };
@@ -270,23 +271,58 @@ const AdminDashboard = () => {
   };
 
   // Delete product (handles both manual and AI products)
-  const deleteProduct = (productId: string) => {
+  const deleteProduct = async (productId: string) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       const productToDelete = createdProducts.find(p => p.id === productId);
       
+      // Normalize route key for cross-source matching
+      const routeKey = (() => {
+        const r = productToDelete?.route || '';
+        if (!r) return '';
+        return r.startsWith('/') ? r.toLowerCase() : ('/' + r.toLowerCase());
+      })();
+
+      // Always remove from in-memory/local dynamic registry if AI
       if (productToDelete?.createdBy === 'ai') {
-        // Delete AI product from dynamic registry
         deleteDynamicProduct(productId);
-      } else {
-        // Delete manual product from localStorage
-        const manualProducts = createdProducts.filter(p => p.createdBy === 'manual' && p.id !== productId);
-        const manualProductsOnly = manualProducts.map(({ createdBy, createdAt, ...product }) => product);
-        localStorage.setItem('createdProducts', JSON.stringify(manualProductsOnly));
+      }
+
+      // Ensure local legacy storage also drops it (for manual or legacy formats)
+      try {
+        const manualProducts = (JSON.parse(localStorage.getItem('createdProducts') || '[]') || [])
+          .filter((p: any) => {
+            const pr = typeof p?.route === 'string' ? p.route.toLowerCase() : '';
+            const prNorm = pr ? (pr.startsWith('/') ? pr : '/' + pr) : '';
+            return p?.id !== productId && (!routeKey || prNorm !== routeKey);
+          });
+        localStorage.setItem('createdProducts', JSON.stringify(manualProducts));
+      } catch {}
+
+      // Delete from centralized backend so it disappears in all browsers (by id and by matching route duplicates)
+      try {
+        await unifiedStorage.deleteProduct(productId);
+        if (routeKey) {
+          const all = await unifiedStorage.getAllProducts();
+          const toDelete = all.filter((p) => {
+            const pr = (p.route || '').toLowerCase();
+            const prNorm = pr ? (pr.startsWith('/') ? pr : '/' + pr) : '';
+            return prNorm === routeKey && p.id !== productId;
+          });
+          for (const other of toDelete) {
+            try { await unifiedStorage.deleteProduct(other.id); } catch {}
+          }
+        }
+      } catch (e) {
+        console.warn('Centralized delete failed (will still be removed locally):', e);
       }
       
       // Update local state
       const updatedProducts = createdProducts.filter(p => p.id !== productId);
       setCreatedProducts(updatedProducts);
+
+      // Best-effort sync + notify other views to rehydrate
+      try { await unifiedStorage.forceSync(); } catch {}
+      try { window.dispatchEvent(new Event('unified-storage-hydrated')); } catch {}
     }
   };
 
@@ -837,11 +873,7 @@ const AdminDashboard = () => {
                               </button>
                               <button
                                 onClick={() => {
-                                  if (product.createdBy === 'ai') {
-                                    navigate(`/ai-product-creator?edit=${product.id}`);
-                                  } else {
-                                    navigate(`/product-builder?edit=${product.id}`);
-                                  }
+                                  navigate(`/product-builder?edit=${product.id}`);
                                 }}
                                 className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:from-green-700 hover:to-emerald-700 flex items-center justify-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                               >
@@ -923,11 +955,7 @@ const AdminDashboard = () => {
                             </button>
                             <button
                               onClick={() => {
-                                if (product.createdBy === 'ai') {
-                                  navigate(`/ai-product-creator?edit=${product.id}`);
-                                } else {
-                                  navigate(`/product-builder?edit=${product.id}`);
-                                }
+                                navigate(`/product-builder?edit=${product.id}`);
                               }}
                                 className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-2 lg:px-4 lg:py-2.5 rounded-xl text-sm font-medium hover:from-green-700 hover:to-emerald-700 flex items-center justify-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex-1 sm:flex-none"
                             >
@@ -1502,18 +1530,6 @@ const AdminDashboard = () => {
                 Create Manually
               </button>
               
-              <button
-                onClick={() => {
-                  setShowCreationModal(false);
-                  navigate('/ai-product-creator');
-                }}
-                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors flex items-center justify-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Create using AI
-              </button>
             </div>
             
             <button

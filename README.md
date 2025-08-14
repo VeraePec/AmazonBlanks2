@@ -1,3 +1,12 @@
+### Persistent product images
+
+When running the local server (`node server.js`), images uploaded by the AI Product Creator are written to `public/images/products` and served publicly at `/images/products/<file>`.
+
+Endpoints:
+- POST `/api/upload-image` `{ dataUrl?: string, url?: string, filename?: string }` → `{ success, url }`
+- POST `/api/upload-images` `{ items: Array<{ dataUrl?: string, url?: string, filename?: string }>} ` → `{ success, results }`
+
+The product page and homepage now use these persistent URLs so images survive refresh and cross‑tab navigation.
 # Welcome to your Lovable project
 
 ## Project info

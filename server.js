@@ -10,6 +10,22 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'dist')));
+// Serve public images (persisted uploads)
+const IMAGES_ROOT = path.join(__dirname, 'public', 'images');
+const PRODUCTS_DIR = path.join(IMAGES_ROOT, 'products');
+
+async function ensureImageDirs() {
+  try { await fs.mkdir(IMAGES_ROOT, { recursive: true }); } catch {}
+  try { await fs.mkdir(PRODUCTS_DIR, { recursive: true }); } catch {}
+}
+ensureImageDirs();
+
+// Expose /images/* publicly
+app.use('/images', express.static(IMAGES_ROOT, {
+  fallthrough: true,
+  maxAge: '365d',
+  etag: true,
+}));
 
 // Data storage file
 const PRODUCTS_FILE = 'products.json';
@@ -49,6 +65,62 @@ async function saveProducts(products) {
 ensureProductsFile();
 
 // API Routes
+// Upload a single image (data URL, blob/object URL after conversion client-side, or remote URL)
+app.post('/api/upload-image', async (req, res) => {
+  try {
+    const { dataUrl, url, filename } = req.body || {};
+    let buffer;
+    let ext = 'jpg';
+    if (typeof dataUrl === 'string' && dataUrl.startsWith('data:')) {
+      const match = dataUrl.match(/^data:(.*?);base64,(.*)$/);
+      if (!match) return res.status(400).json({ error: 'Invalid data URL' });
+      const mime = match[1] || 'image/jpeg';
+      ext = mime.split('/')[1] || 'jpg';
+      buffer = Buffer.from(match[2], 'base64');
+    } else if (typeof url === 'string') {
+      const r = await fetch(url);
+      if (!r.ok) return res.status(400).json({ error: `Failed to fetch remote image: ${r.status}` });
+      const arrayBuf = await r.arrayBuffer();
+      buffer = Buffer.from(arrayBuf);
+      const contentType = r.headers.get('content-type') || 'image/jpeg';
+      ext = (contentType.split('/')[1] || 'jpg').split(';')[0];
+    } else {
+      return res.status(400).json({ error: 'Provide dataUrl or url' });
+    }
+
+    const safeBase = (filename || `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`).replace(/[^a-zA-Z0-9-_\.]/g, '_');
+    const fullName = safeBase.includes('.') ? safeBase : `${safeBase}.${ext}`;
+    const finalPath = path.join(PRODUCTS_DIR, fullName);
+    await fs.writeFile(finalPath, buffer);
+    const publicUrl = `/images/products/${fullName}`;
+    res.json({ success: true, url: publicUrl });
+  } catch (err) {
+    console.error('Upload failed', err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
+// Upload multiple images
+app.post('/api/upload-images', async (req, res) => {
+  try {
+    const { items } = req.body || {};
+    if (!Array.isArray(items)) return res.status(400).json({ error: 'items must be an array' });
+    const results = [];
+    for (const item of items) {
+      const r = await fetch('http://localhost:' + PORT + '/api/upload-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item),
+      });
+      if (!r.ok) throw new Error('Batch upload failed');
+      results.push(await r.json());
+    }
+    res.json({ success: true, results });
+  } catch (err) {
+    console.error('Batch upload failed', err);
+    res.status(500).json({ error: 'Batch upload failed' });
+  }
+});
 
 // Get all products
 app.get('/api/products', async (req, res) => {

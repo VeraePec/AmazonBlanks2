@@ -262,7 +262,8 @@ const ProductBuilderSimple = () => {
   const saveProduct = (product: ProductData) => {
     try {
       const saved = JSON.parse(localStorage.getItem('createdProducts') || '[]');
-      const updated = [...saved, product];
+      const thumbnail = Array.isArray(product.images) && product.images[0] ? product.images[0] : '/placeholder.svg';
+      const updated = [...saved, { ...product, images: [thumbnail] }];
       localStorage.setItem('createdProducts', JSON.stringify(updated));
       setCreatedProducts(updated);
     } catch (error) {
@@ -274,7 +275,8 @@ const ProductBuilderSimple = () => {
   const updateProduct = (id: string, product: ProductData) => {
     try {
       const saved = JSON.parse(localStorage.getItem('createdProducts') || '[]');
-      const updated = saved.map((p: ProductData) => p.id === id ? product : p);
+      const thumbnail = Array.isArray(product.images) && product.images[0] ? product.images[0] : '/placeholder.svg';
+      const updated = saved.map((p: ProductData) => p.id === id ? { ...product, images: [thumbnail] } : p);
       localStorage.setItem('createdProducts', JSON.stringify(updated));
       setCreatedProducts(updated);
     } catch (error) {

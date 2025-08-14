@@ -3,7 +3,9 @@
 import OpenAI from 'openai';
 
 const BROWSER_OPENAI_KEY = (import.meta as any).env?.VITE_OPENAI_API_KEY || '';
-const useBrowserKey = !!BROWSER_OPENAI_KEY;
+// Only allow direct browser key in local dev to avoid production 401s and secret exposure
+const isLocalhost = typeof window !== 'undefined' && /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname);
+const useBrowserKey = !!BROWSER_OPENAI_KEY && isLocalhost;
 const openai = useBrowserKey ? new OpenAI({ apiKey: BROWSER_OPENAI_KEY, dangerouslyAllowBrowser: true }) : null as any;
 
 export interface ProductData {
