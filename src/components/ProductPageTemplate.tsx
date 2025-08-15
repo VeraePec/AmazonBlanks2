@@ -952,7 +952,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                     .filter(([key, value]) => key.trim() && value.trim()) // Only show non-empty entries
                     .map(([key, value]) => (
                     <tr key={key}>
-                      <td className="font-medium py-1 pr-4 align-top">{getTranslation(`product.detail.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}:</td>
+                      <td className="font-medium py-1 pr-4 align-top">{key}:</td>
                       <td className="py-1">{value}</td>
                     </tr>
                   ))}
