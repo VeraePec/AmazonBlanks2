@@ -12,6 +12,8 @@ import Header from '../components/Header';
 import { imageStorage } from '../utils/imageStorage';
 import { unifiedStorage } from '../utils/unifiedStorage';
 import { getAllDynamicProducts, deleteDynamicProduct, cleanupProductsByName } from '../utils/dynamicProductRegistry';
+import { useCrossBrowserSync } from '../hooks/useCrossBrowserSync';
+import { crossTabSync } from '../utils/crossTabSync';
 
 interface ProductData {
   id?: string;
@@ -69,6 +71,7 @@ const AdminDashboard = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(20); // 5 rows * 4 columns = 20 products per page
+  const [refreshKey, setRefreshKey] = useState(0); // For forcing re-renders
   
   // Categories for filtering
   const categories = [
@@ -89,9 +92,13 @@ const AdminDashboard = () => {
     }
   };
 
-  // Load products from localStorage (both manual and AI)
-  useEffect(() => {
-    if (isAuthenticated) {
+  // Function to load products
+  const loadProducts = React.useCallback(() => {
+    if (!isAuthenticated) return;
+    
+    console.log('🔄 Loading products in Admin Dashboard...');
+    
+    return new Promise<void>((resolve) => {
       try {
         // Load manual products
         const savedProducts = localStorage.getItem('createdProducts');
@@ -197,9 +204,66 @@ const AdminDashboard = () => {
       } catch (error) {
         console.error('Error loading products:', error);
         setCreatedProducts([]);
+      } finally {
+        resolve();
       }
-    }
+    });
   }, [isAuthenticated]);
+  
+  // Load products on mount and auth change
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts, refreshKey]);
+  
+  // Listen for cross-browser sync events
+  useCrossBrowserSync('product-added', React.useCallback((event) => {
+    console.log('🔄 Product added event received in Admin Dashboard:', event);
+    // Increment refresh key to trigger reload
+    setRefreshKey(prev => prev + 1);
+  }, []));
+  
+  useCrossBrowserSync('product-updated', React.useCallback((event) => {
+    console.log('🔄 Product updated event received in Admin Dashboard:', event);
+    // Increment refresh key to trigger reload
+    setRefreshKey(prev => prev + 1);
+  }, []));
+  
+  useCrossBrowserSync('product-deleted', React.useCallback((event) => {
+    console.log('🔄 Product deleted event received in Admin Dashboard:', event);
+    // Increment refresh key to trigger reload
+    setRefreshKey(prev => prev + 1);
+  }, []));
+  
+  // Listen for storage sync events
+  useCrossBrowserSync('storage-sync', React.useCallback((event) => {
+    console.log('🔄 Storage sync event received in Admin Dashboard:', event);
+    // Increment refresh key to trigger reload
+    setRefreshKey(prev => prev + 1);
+  }, []));
+  
+  // Listen for cross-tab sync events
+  useEffect(() => {
+    const unsubscribeAdded = crossTabSync.addListener('product-added', () => {
+      console.log('🔄 Cross-tab product added event received');
+      setRefreshKey(prev => prev + 1);
+    });
+    
+    const unsubscribeUpdated = crossTabSync.addListener('product-updated', () => {
+      console.log('🔄 Cross-tab product updated event received');
+      setRefreshKey(prev => prev + 1);
+    });
+    
+    const unsubscribeDeleted = crossTabSync.addListener('product-deleted', () => {
+      console.log('🔄 Cross-tab product deleted event received');
+      setRefreshKey(prev => prev + 1);
+    });
+    
+    return () => {
+      unsubscribeAdded();
+      unsubscribeUpdated();
+      unsubscribeDeleted();
+    };
+  }, []);
 
   // Close export modal when clicking outside
   useEffect(() => {

@@ -85,6 +85,7 @@ class CrossTabSync {
       data
     };
     this.broadcastEvent(event);
+    console.log('📡 Cross-tab sync: Product added event broadcast:', productId);
   }
 
   broadcastProductUpdated(productId: string, data?: any): void {

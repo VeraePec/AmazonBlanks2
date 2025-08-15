@@ -202,17 +202,21 @@ class UnifiedStorage {
       }
       
       // Broadcast change to other tabs
-      crossTabSync.broadcastProductUpdated(product.id);
+      crossTabSync.broadcastProductAdded(product.id, savedProduct);
       
       // Broadcast cross-browser sync event
       try {
-        await crossBrowserSync.broadcastProductUpdated(product.id, {
+        await crossBrowserSync.broadcastProductAdded(product.id, {
           product: savedProduct,
           timestamp: Date.now()
         });
+        console.log('🔔 Cross-browser sync broadcasted for product:', product.id);
       } catch (error) {
         console.warn('Cross-browser sync broadcast failed:', error);
       }
+      
+      // Notify storage change listeners
+      this.notifyStorageChange();
       
       return savedProduct;
     } catch (error) {
@@ -459,6 +463,14 @@ class UnifiedStorage {
     try {
       console.log('🔄 Force syncing all storages...');
       await this.syncAllStorages();
+      
+      // Broadcast sync event to all browsers
+      try {
+        await crossBrowserSync.forceSync();
+      } catch (error) {
+        console.warn('Cross-browser force sync failed:', error);
+      }
+      
       console.log('✅ Force sync completed');
     } catch (error) {
       console.error('Force sync failed:', error);

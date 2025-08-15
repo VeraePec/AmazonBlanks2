@@ -198,7 +198,7 @@ export const registerDynamicProduct = (productData: any): string => {
       });
 
       // Broadcast the addition/update
-      crossTabSync.broadcastProductUpdated(id);
+      crossTabSync.broadcastProductAdded(id, fullProduct);
 
   // Save to localStorage with comprehensive error handling
   try {
@@ -208,17 +208,19 @@ export const registerDynamicProduct = (productData: any): string => {
       console.log('🔍 Sanitizing images:', {
         originalCount: images.length,
         originalImages: images.map(img => ({
-          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : 'local',
+          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : img.startsWith('idb-ref:') ? 'idb' : 'local',
           size: img.length,
           preview: img.substring(0, 50) + '...'
         }))
       });
-      // Keep ALL images including base64 data URLs, but limit count to prevent large payloads
-      const sanitized = images.filter((img) => typeof img === 'string' && img.trim().length > 0).slice(0, 20);
+      // Keep ALL images including base64 data URLs, IDB references, and URLs
+      const sanitized = images
+        .filter((img) => typeof img === 'string' && img.trim().length > 0)
+        .slice(0, 50); // Increased limit to 50 images
       console.log('🔍 Sanitized images:', {
         finalCount: sanitized.length,
         finalImages: sanitized.map(img => ({
-          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : 'local',
+          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : img.startsWith('idb-ref:') ? 'idb' : 'local',
           size: img.length,
           preview: img.substring(0, 50) + '...'
         }))
@@ -230,13 +232,13 @@ export const registerDynamicProduct = (productData: any): string => {
       if (!Array.isArray(images)) return [];
       return (images as unknown[])
         .filter((x): x is string => typeof x === 'string' && x.trim().length > 0)
-        .slice(0, 3);
+        .slice(0, 10); // Increased to 10 review images
     };
 
     const sanitizeReviewsForStorage = (reviews: any[] | undefined): any[] => {
       if (!Array.isArray(reviews)) return [];
-      // Keep lightweight review fields and up to 3 sanitized images per review
-      return reviews.slice(0, 20).map((r) => ({
+      // Keep lightweight review fields and up to 10 sanitized images per review
+      return reviews.slice(0, 50).map((r) => ({
         id: r?.id,
         author: r?.author,
         rating: r?.rating,

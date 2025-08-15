@@ -564,22 +564,18 @@ export default function AiProductBuilder() {
 
       setProcessingStep('Saving product...');
       // 4) Save and register in parallel for faster completion
-      setProcessingStep('Saving product to storage...');
+      console.log('💾 Saving product to storage...');
       const [savePromise, registerPromise] = await Promise.allSettled([
-        unifiedStorage.saveProduct(centralized).then(async () => {
+                unifiedStorage.saveProduct(centralized).then(async (savedProduct) => {
+          console.log('✅ Product saved to unified storage');
           // Force cross-browser sync after saving
           try { 
             await unifiedStorage.forceSync(); 
-            // Also trigger cross-browser sync
-            const { crossBrowserSync } = await import('../hooks/useCrossBrowserSync');
-            await crossBrowserSync.broadcastProductAdded(centralized.id, {
-              product: centralized,
-              timestamp: Date.now()
-            });
-            console.log('✅ Cross-browser sync triggered for new product');
+            console.log('✅ Storage sync completed');
           } catch (e) {
-            console.warn('Cross-browser sync failed (non-critical):', e);
+            console.warn('Storage sync failed (non-critical):', e);
           }
+          return savedProduct;
         }),
         registerDynamicProduct({
           id: centralized.id,
@@ -634,10 +630,27 @@ export default function AiProductBuilder() {
 
       console.log('✅ Product created and registered successfully');
 
-      // Generate ad copy for Facebook ads (non-blocking)
-      setProcessingStep('Finalizing product...');
+      // Set success immediately to show the product was created
+      setResult({ success: true, message: 'Product created successfully!', route });
       
-      // Run ad copy generation in background without blocking
+      // Clear the overall timeout
+      if (overallTimeout) clearTimeout(overallTimeout);
+      
+      // Show success toast
+      toast({
+        title: "Product created!",
+        description: `${product.name} has been created successfully`,
+      });
+      
+      // Reset processing state immediately
+      setIsProcessing(false);
+      setIsUploadingImages(false);
+      setProcessingStep('');
+      
+      // Generate ad copy for Facebook ads (non-blocking)
+      console.log('🎯 Starting background tasks...');
+      
+      // Run ad copy generation in background without blocking navigation
       Promise.resolve().then(async () => {
         try {
           console.log('🔄 Starting ad copy generation in background...');
@@ -657,29 +670,15 @@ export default function AiProductBuilder() {
       }).catch(error => {
         console.warn('Ad copy generation promise failed:', error);
       });
-
-      setResult({ success: true, message: 'Product created successfully!', route });
       
-      // Clear the overall timeout
-      if (overallTimeout) clearTimeout(overallTimeout);
-      
-      // Show success toast
-      toast({
-        title: "Product created!",
-        description: `${product.name} has been created successfully`,
-      });
-      
-      // Reset processing state immediately
-      setIsProcessing(false);
-      setIsUploadingImages(false);
-      
-      // Open product page in new tab and redirect in current tab
+      // Navigate immediately - don't wait for background tasks
+      console.log('🚀 Navigating to product page...');
+      // Open in new tab
+      window.open(route, '_blank');
+      // Navigate current tab to admin dashboard after a short delay
       setTimeout(() => {
-        // Open in new tab
-        window.open(route, '_blank');
-        // Redirect current tab to admin dashboard
         navigate('/admin');
-      }, 1500);
+      }, 500);
     } catch (err: any) {
       console.error('❌ Product creation failed:', err);
       const errorMessage = err?.message || 'Failed to create product';
