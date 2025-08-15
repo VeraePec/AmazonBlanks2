@@ -701,6 +701,37 @@ export const TRANSLATIONS = {
     'product.review.content.waterproof.spacious': 'Dette ankom hurtigt. Tog 30 minutter at konstruere. Meget nemt at gøre. Idealt at have et andet par hænder til at holde stykkerne på plads, mens du sætter skruer i. Vandtæt, rummeligt og robust. Pænt.',
     'product.review.content.bin.storage': 'Meget let og ærligt talt lidt skrøbeligt. Vi har boret det fast i gulvet for at forhindre bevægelse. Det passer ikke alle genbrugscontainere på grund af højden, det passer kun de sorte. Gør jobbet med at skjule grimme containere.',
     
+    // About this item content - Danish
+    'product.about.keter.storage.shed.1': 'Ideel udendørs opbevaringsløsning til haveværktøj og udstyr, BBQ og tilbehør og x2 120L skraldespande.',
+    'product.about.keter.storage.shed.2': 'Elegante træeffektpaneler, der åbner fra toppen eller fronten og med en låsbar funktion til sikker lukning.',
+    'product.about.keter.storage.shed.3': 'Tungt gulv med indbygget støtte til hylder og 880 L kapacitet. Hylder er ikke inkluderet.',
+    'product.about.keter.storage.shed.4': 'Samlet dimensioner: 132 x 71,5 x 113,5 cm (L x B x H); interne dimensioner: 122 x 61 x 108,8 cm (L x B x H).',
+    'product.about.keter.storage.shed.5': 'Vejrbestandig, nul vedligeholdelse, nem at rense, fade-fri konstruktion.',
+    'product.about.keter.storage.shed.6': 'Indbyggede ventilationspaneler til rigelig luftstrøm.',
+    'product.about.keter.storage.shed.7': 'To døre på fronten og et toplåg med unikt låsesystem.',
+    'product.about.keter.storage.shed.8': 'Kan låse døre og top sammen eller kun låse døre for barnesikker adgang ovenfra (hængelås er ikke inkluderet).',
+    'product.about.keter.storage.shed.9': 'Samletid: cirka 20-40 minutter, anbefalet til 1 person.',
+    
+    // Product detail values - Danish
+    'product.color.light.grey.dark.cover': 'Lys grå med mørk grå låg',
+    'product.material.resin': 'Harpiks',
+    'product.dimensions.71.5x132x113.5': '71,5D x 132B x 113,5H centimeter',
+    'product.weight.21.5kg': '21,5 kilogram',
+    'product.volume.880l': '880 liter',
+    'product.uv.resistant': 'UV-bestandig',
+    'product.special.features.heavy.duty': 'Tungt, Vandbestandig, Vandtæt',
+    'product.usage.outdoor.storage': 'udendørs opbevaring, indendørs opbevaring, haveopbevaring',
+    'product.assembly.time.20.40.minutes': '20-40 minutter',
+    'product.assembly.recommended.1.person': '1 person',
+    
+    // Technical detail values - Danish
+    'product.size.132x71.5x113.5.cm': '132 x 71,5 x 113,5 cm',
+    'product.style.single': 'Enkelt',
+    'product.pattern.single': 'Enkelt',
+    'product.shape.horizontal': 'Horisontal',
+    'product.batteries.no': 'Nej',
+    'product.date.first.available.march.2021': '1. marts 2021',
+    
     // Product elements
     'product.amazons.choice': 'Amazons valg',
     'product.clearance.sale': 'Udsalg',
@@ -945,6 +976,37 @@ export const TRANSLATIONS = {
     'product.review.content.great.product': 'Godt produkt, enkelt å montere, pent og ryddig oppbevaring til hageutstyr. Den eneste kritikken er at det ikke har en enkel lokkholder, så du må holde lokket oppe med den ene hånden. Så jeg vil lage en til å holde lokket oppe etter behov.',
     'product.review.content.waterproof.spacious': 'Dette ankom raskt. Tok 30 minutter å konstruere. Veldig enkelt å gjøre. Ideelt å ha et annet par hender til å holde stykkene på plass mens du setter skruer i. Vanntett, romslig og robust. Pent.',
     'product.review.content.bin.storage': 'Veldig lett og ærlig talt litt skrøpelig. Vi har boret det fast i gulvet for å forhindre bevegelse. Det passer ikke alle resirkuleringscontainere på grunn av høyden, det passer kun de svarte. Gjør jobbet med å skjule stygge containere.',
+    
+    // About this item content - Norwegian
+    'product.about.keter.storage.shed.1': 'Ideell utendørs oppbevaringsløsning til hageverktøy og utstyr, BBQ og tilbehør og x2 120L søppelbøtter.',
+    'product.about.keter.storage.shed.2': 'Elegante treffektpaneler som åpner fra toppen eller fronten og med en låsbar funksjon til sikker lukking.',
+    'product.about.keter.storage.shed.3': 'Tungt gulv med innebygd støtte til hyller og 880 L kapasitet. Hyller er ikke inkludert.',
+    'product.about.keter.storage.shed.4': 'Samlet dimensjoner: 132 x 71,5 x 113,5 cm (L x B x H); interne dimensjoner: 122 x 61 x 108,8 cm (L x B x H).',
+    'product.about.keter.storage.shed.5': 'Værbestandig, null vedlikehold, enkel å rense, fade-fri konstruksjon.',
+    'product.about.keter.storage.shed.6': 'Innebygde ventilasjonspaneler til rikelig luftstrøm.',
+    'product.about.keter.storage.shed.7': 'To dører på fronten og et topplokk med unikt låsesystem.',
+    'product.about.keter.storage.shed.8': 'Kan låse dører og topp sammen eller kun låse dører for barnesikker tilgang ovenfra (hengelås er ikke inkludert).',
+    'product.about.keter.storage.shed.9': 'Samletid: omtrent 20-40 minutter, anbefalt til 1 person.',
+    
+    // Product detail values - Norwegian
+    'product.color.light.grey.dark.cover': 'Lys grå med mørk grå lokk',
+    'product.material.resin': 'Harpiks',
+    'product.dimensions.71.5x132x113.5': '71,5D x 132B x 113,5H centimeter',
+    'product.weight.21.5kg': '21,5 kilogram',
+    'product.volume.880l': '880 liter',
+    'product.uv.resistant': 'UV-bestandig',
+    'product.special.features.heavy.duty': 'Tungt, Vannbestandig, Vanntett',
+    'product.usage.outdoor.storage': 'utendørs oppbevaring, innendørs oppbevaring, hageoppbevaring',
+    'product.assembly.time.20.40.minutes': '20-40 minutter',
+    'product.assembly.recommended.1.person': '1 person',
+    
+    // Technical detail values - Norwegian
+    'product.size.132x71.5x113.5.cm': '132 x 71,5 x 113,5 cm',
+    'product.style.single': 'Enkelt',
+    'product.pattern.single': 'Enkelt',
+    'product.shape.horizontal': 'Horisontal',
+    'product.batteries.no': 'Nei',
+    'product.date.first.available.march.2021': '1. mars 2021',
     
     // Trust indicators
     'trust.secure': 'Sikker',
