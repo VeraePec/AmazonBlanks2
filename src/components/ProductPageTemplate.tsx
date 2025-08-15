@@ -12,6 +12,7 @@ import { handleRedirectAction } from '../utils/redirectHandler';
 import { getDeliveryInfo } from '../utils/deliveryDate';
 import { getDefaultReviews } from '../utils/defaultReviews';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
+import { generateAndSaveAdCopyForProduct } from '../utils/generateAdCopy';
 
 // Helper function to check if price is already formatted
 const isPriceFormatted = (price: string): boolean => {
@@ -240,6 +241,40 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
     });
     setSelectedVariants(newSelectedVariants);
   }, [productData.variants]);
+
+  // Generate Facebook ad copy for ProductPageTemplate products
+  useEffect(() => {
+    const generateAdCopy = async () => {
+      try {
+        // Check if this product already has ad copies
+        const existingAdCopies = localStorage.getItem('facebookAdCopies');
+        const adCopies = existingAdCopies ? JSON.parse(existingAdCopies) : [];
+        
+        // Check if ad copy already exists for this product
+        const productId = productData.name || 'unknown';
+        const hasAdCopy = adCopies.some((ad: any) => ad.id === productId);
+        
+        if (!hasAdCopy) {
+          console.log('🔄 Generating Facebook ad copy for ProductPageTemplate product:', productData.name);
+          await generateAndSaveAdCopyForProduct(productData, productId);
+        } else {
+          console.log('✅ Ad copy already exists for product:', productData.name);
+        }
+      } catch (error) {
+        console.error('❌ Error generating ad copy for ProductPageTemplate product:', error);
+      }
+    };
+
+    // Only generate ad copy if the product has the required data structure
+    if (productData.aboutThisItem && 
+        Array.isArray(productData.aboutThisItem) && 
+        productData.aboutThisItem.length > 0 &&
+        productData.features && 
+        Array.isArray(productData.features) && 
+        productData.features.length > 0) {
+      generateAdCopy();
+    }
+  }, [productData.name, productData.aboutThisItem, productData.features]);
 
   // Update images when variant selection changes or product data changes
   useEffect(() => {

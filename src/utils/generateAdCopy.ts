@@ -222,3 +222,87 @@ export async function saveAdCopy(productId: string, productName: string, headlin
     console.error('❌ Error saving ad copy:', error);
   }
 }
+
+// New function to automatically generate and save ad copies for ProductPageTemplate products
+export async function generateAndSaveAdCopyForProduct(productData: any, productId: string): Promise<void> {
+  try {
+    console.log('🔄 Generating ad copy for ProductPageTemplate product:', productData.name);
+    
+    // Generate ad copy using the existing function
+    const adCopy = await generateAdCopy({
+      name: productData.name,
+      description: productData.aboutThisItem?.join(' ') || '',
+      aboutThisItem: productData.aboutThisItem || [],
+      features: productData.features || [],
+      category: productData.breadcrumb?.[productData.breadcrumb.length - 1] || 'Product',
+      price: productData.price || '£9.99',
+      originalPrice: productData.originalPrice || '£14.99'
+    });
+    
+    // Save the generated ad copy
+    await saveAdCopy(productId, productData.name, adCopy.headline, adCopy.copy);
+    
+    console.log('✅ Ad copy generated and saved for ProductPageTemplate product:', productData.name);
+  } catch (error) {
+    console.error('❌ Error generating ad copy for ProductPageTemplate product:', error);
+  }
+}
+
+// Function to generate ad copies for all existing ProductPageTemplate products
+export async function generateAdCopiesForAllProductPageTemplateProducts(): Promise<void> {
+  try {
+    console.log('🔄 Generating ad copies for all ProductPageTemplate products...');
+    
+    // Get all products from the dynamic registry
+    const { getAllDynamicProducts } = await import('./dynamicProductRegistry');
+    const allProducts = getAllDynamicProducts();
+    
+    // Filter for products that likely use ProductPageTemplate (have specific structure)
+    const productPageTemplateProducts = allProducts.filter(product => 
+      product.aboutThisItem && 
+      Array.isArray(product.aboutThisItem) && 
+      product.aboutThisItem.length > 0 &&
+      product.features && 
+      Array.isArray(product.features) && 
+      product.features.length > 0
+    );
+    
+    console.log(`Found ${productPageTemplateProducts.length} ProductPageTemplate products to generate ad copies for`);
+    
+    // Generate ad copies for each product
+    for (const product of productPageTemplateProducts) {
+      await generateAndSaveAdCopyForProduct(product, product.id || product.name);
+    }
+    
+    console.log('✅ Finished generating ad copies for all ProductPageTemplate products');
+  } catch (error) {
+    console.error('❌ Error generating ad copies for all ProductPageTemplate products:', error);
+  }
+}
+
+// Function to generate ad copy for a specific product by name
+export async function generateAdCopyForProductByName(productName: string): Promise<void> {
+  try {
+    console.log(`🔄 Generating ad copy for specific product: ${productName}`);
+    
+    // Get all products from the dynamic registry
+    const { getAllDynamicProducts } = await import('./dynamicProductRegistry');
+    const allProducts = getAllDynamicProducts();
+    
+    // Find the specific product by name
+    const product = allProducts.find(p => 
+      p.name.toLowerCase().includes(productName.toLowerCase()) ||
+      productName.toLowerCase().includes(p.name.toLowerCase())
+    );
+    
+    if (product) {
+      console.log(`✅ Found product: ${product.name}`);
+      await generateAndSaveAdCopyForProduct(product, product.id || product.name);
+    } else {
+      console.warn(`❌ Product not found: ${productName}`);
+      console.log('Available products:', allProducts.map(p => p.name));
+    }
+  } catch (error) {
+    console.error('❌ Error generating ad copy for specific product:', error);
+  }
+}
