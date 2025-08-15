@@ -53,6 +53,24 @@ export const TRANSLATIONS = {
     'product.bought.in.month': '{count}+ bought in past month',
     'product.name.keter.storage.shed': 'Keter Store it Out Nova Outdoor Garden Storage Shed',
     
+    // Delivery and shipping information
+    'product.delivery.free': 'FREE delivery',
+    'product.delivery.free.date': 'FREE delivery {date}',
+    'product.delivery.free.august.17': 'FREE delivery 17 Aug',
+    'product.delivery.free.august.17.short': 'FREE delivery 17 Aug',
+    
+    // Customer review elements
+    'reviews.customer.review': 'Customer review',
+    'reviews.customer.review.plural': 'Customer reviews',
+    'reviews.review.button': 'Review',
+    'reviews.review.button.short': 'Review',
+    
+    // Product information labels
+    'product.info.category': 'Category',
+    'product.info.brand': 'Brand',
+    'product.info.material': 'Material',
+    'product.info.capacity': 'Capacity',
+    
     // Keter product specific translations
     'product.about.keter.storage.shed.1': 'Ideal outdoor storage solution for garden tools and equipment, BBQ and accessories and x2 120L wheelie bins.',
     'product.about.keter.storage.shed.2': 'Elegant wood effect panels that opens from the top or the front and with a lockable feature for secure closure.',
@@ -646,6 +664,24 @@ export const TRANSLATIONS = {
     'trust.easy.returns': 'Nem returnering',
     'trust.delivery.info': '{date}',
     
+    // Delivery and shipping information
+    'product.delivery.free': 'GRATIS levering',
+    'product.delivery.free.date': 'GRATIS levering {date}',
+    'product.delivery.free.august.17': 'GRATIS levering 17. august',
+    'product.delivery.free.august.17.short': 'GRATIS levering 17 aug',
+    
+    // Customer review elements
+    'reviews.customer.review': 'Kundeanmeldelse',
+    'reviews.customer.review.plural': 'Kundeanmeldelser',
+    'reviews.review.button': 'Anmeldelse',
+    'reviews.review.button.short': 'Anmeld',
+    
+    // Product information labels
+    'product.info.category': 'Kategori',
+    'product.info.brand': 'Mærke',
+    'product.info.material': 'Materiale',
+    'product.info.capacity': 'Kapacitet',
+    
     // Urgency Messages
     'urgency.clearance.sale': 'Udsalg',
     'urgency.people.viewing': '{count} personer ser nu',
@@ -653,9 +689,6 @@ export const TRANSLATIONS = {
     'urgency.ends.in': 'Slutter om: {time}',
     'urgency.bought.today': 'Købt i dag: {count} personer',
     'urgency.delivery.free.tomorrow': 'Levering: GRATIS i morgen',
-    
-    // Clearance sale specific
-    'clearance.sale.label': 'Udsalg:',
     
     // Default review content
     'reviews.amazon.customer': 'Amazon Kunde',
@@ -727,7 +760,7 @@ export const TRANSLATIONS = {
     'product.size.name': 'Størrelsesnavn',
     
     // Store and returns
-    'product.visit.store': 'Besøg {store} butikken',
+    'product.visit.store': 'Besøg {store} butikken'
   },
   
   no: { // Norwegian
@@ -809,6 +842,24 @@ export const TRANSLATIONS = {
     'trust.secure': 'Sikker',
     'trust.easy.returns': 'Enkel retur',
     'trust.delivery.info': '{date}',
+    
+    // Delivery and shipping information
+    'product.delivery.free': 'GRATIS levering',
+    'product.delivery.free.date': 'GRATIS levering {date}',
+    'product.delivery.free.august.17': 'GRATIS levering 17. august',
+    'product.delivery.free.august.17.short': 'GRATIS levering 17 aug',
+    
+    // Customer review elements
+    'reviews.customer.review': 'Kundeanmeldelse',
+    'reviews.customer.review.plural': 'Kundeanmeldelser',
+    'reviews.review.button': 'Anmeldelse',
+    'reviews.review.button.short': 'Anmeld',
+    
+    // Product information labels
+    'product.info.category': 'Kategori',
+    'product.info.brand': 'Merke',
+    'product.info.material': 'Materiale',
+    'product.info.capacity': 'Kapasitet',
     
     // Reviews
     'reviews.customer.reviews': 'Kundeanmeldelser',
