@@ -223,6 +223,62 @@ export async function saveAdCopy(productId: string, productName: string, headlin
   }
 }
 
+// Function to save ad copy with a specific route
+export async function saveAdCopyWithRoute(productId: string, productName: string, headline: string, copy: string, productRoute: string): Promise<void> {
+  try {
+    const existingAdCopies = localStorage.getItem('facebookAdCopies');
+    const adCopies = existingAdCopies ? JSON.parse(existingAdCopies) : [];
+    
+    // Try to get additional product data
+    let productImage = '/placeholder.svg';
+    let productUrl = `${window.location.origin}${productRoute}`;
+    let simplifiedName = productName;
+    
+    try {
+      const { getDynamicProduct } = await import('./dynamicProductRegistry');
+      const productData = getDynamicProduct(productId);
+      
+      if (productData) {
+        productImage = productData.images?.[0] || '/placeholder.svg';
+        
+        // Simplify product name
+        simplifiedName = productName
+          .replace(/Amazon\s+Basics\s+/gi, '')
+          .replace(/\b(Storage|Organizer|Cabinet|Chest|Box|Unit|Set|Pack)\b/gi, '')
+          .replace(/\b\d+[L|l|cm|kg|W|inch|ft]\b/g, '')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .split(' ')
+          .slice(0, 3)
+          .join(' ');
+      }
+    } catch (error) {
+      console.warn('Could not load additional product data:', error);
+    }
+    
+    const newAdCopy = {
+      id: productId,
+      productName,
+      headline,
+      copy,
+      createdAt: new Date().toISOString(),
+      originalLanguage: 'en',
+      productImage,
+      productUrl,
+      simplifiedName
+    };
+    
+    // Remove existing ad copy for this product if it exists
+    const filteredAdCopies = adCopies.filter((ad: any) => ad.id !== productId);
+    filteredAdCopies.push(newAdCopy);
+    
+    localStorage.setItem('facebookAdCopies', JSON.stringify(filteredAdCopies));
+    console.log('✅ Ad copy saved for product:', productName, 'with route:', productRoute);
+  } catch (error) {
+    console.error('❌ Error saving ad copy with route:', error);
+  }
+}
+
 // New function to automatically generate and save ad copies for ProductPageTemplate products
 export async function generateAndSaveAdCopyForProduct(productData: any, productId: string): Promise<void> {
   try {
@@ -239,8 +295,17 @@ export async function generateAndSaveAdCopyForProduct(productData: any, productI
       originalPrice: productData.originalPrice || '£14.99'
     });
     
-    // Save the generated ad copy
-    await saveAdCopy(productId, productData.name, adCopy.headline, adCopy.copy);
+    // Determine the correct product route based on productId
+    let productRoute = `/${productId}`;
+    
+    // Check if this is a known static route
+    if (productId === 'keter-storage-shed') {
+      productRoute = '/keter-storage-shed';
+    }
+    // Add more static route mappings here as needed
+    
+    // Save the generated ad copy with the correct route
+    await saveAdCopyWithRoute(productId, productData.name, adCopy.headline, adCopy.copy, productRoute);
     
     console.log('✅ Ad copy generated and saved for ProductPageTemplate product:', productData.name);
   } catch (error) {

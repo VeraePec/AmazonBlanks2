@@ -250,8 +250,16 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
         const existingAdCopies = localStorage.getItem('facebookAdCopies');
         const adCopies = existingAdCopies ? JSON.parse(existingAdCopies) : [];
         
-        // Check if ad copy already exists for this product
-        const productId = productData.name || 'unknown';
+        // Determine the correct product ID and route
+        let productId = productData.name || 'unknown';
+        let productRoute = `/${productId}`;
+        
+        // Check if this is a known static route
+        if (productData.name.toLowerCase().includes('keter') && productData.name.toLowerCase().includes('storage')) {
+          productId = 'keter-storage-shed';
+          productRoute = '/keter-storage-shed';
+        }
+        
         const hasAdCopy = adCopies.some((ad: any) => ad.id === productId);
         
         if (!hasAdCopy) {
