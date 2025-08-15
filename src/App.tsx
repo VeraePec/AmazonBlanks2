@@ -32,6 +32,7 @@ import AiProductBuilder from './pages/AiProductBuilder';
 import FacebookAdAssets from './pages/FacebookAdAssets';
 import FacebookAdsPage from './pages/FacebookAdsPage';
 import SyncTestPage from './pages/SyncTestPage';
+import KeterStorageShedPage from './pages/KeterStorageShedPage';
 // Removed AiProductCreator page per request
 import DynamicProductPageV2 from './components/DynamicProductPageV2';
 import NotFound from './pages/NotFound';
@@ -289,6 +290,7 @@ function App() {
                   <Route path="/facebook-ads" element={<FacebookAdsPage />} />
                   <Route path="/ai-product-builder" element={<AiProductBuilder />} />
                   <Route path="/sync-test" element={<SyncTestPage />} />
+                  <Route path="/keter-storage-shed" element={<KeterStorageShedPage />} />
                   
                   {/* Catch-all route for dynamic products - should be last */}
                   <Route path="*" element={<DynamicProductPageV2 />} />
