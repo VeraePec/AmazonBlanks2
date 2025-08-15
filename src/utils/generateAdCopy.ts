@@ -13,7 +13,7 @@ interface AdCopyResult {
   copy: string;
 }
 
-const adCopyPrompt = `I will be providing you Amazon product page texts, and based on that text, I want you to create me a short strong Headline (For Meta ads) and an ad copy. The ad copy should be like a regular Facebook post of someone buying a product from Amazon that was on a clearance sale, and they snatched a deal for £9.99. It should be realistic, conversational, and persuasive (for other people seeing that post to also go on the Amazon link and to buy it). The price always remains £9.99 (This case it's for UK).
+const adCopyPrompt = `I will be providing you Amazon product page texts, and based on that text, I want you to create me a short strong Headline (For Meta ads) and an ad copy. The ad copy should be like a regular Facebook post of someone buying a product from Amazon that was on a clearance sale, and they snatched a deal for the price specified in the product data. It should be realistic, conversational, and persuasive (for other people seeing that post to also go on the Amazon link and to buy it). Use the exact price from the product data provided.
 
 The ad copy should be more personal, conversational, and detailed - like someone genuinely sharing their experience. Think honest review mixed with excitement about finding a great deal.
 
@@ -23,21 +23,21 @@ Return the response in this exact JSON format:
   "copy": "Your ad copy here"
 }
 
-Example headlines:
-- "Found this Amazon gem for £9.99"
+Example headlines (replace PRICE with actual product price):
+- "Found this Amazon gem for PRICE"
 - "Clearance find that actually delivered"
 - "Amazon deal I couldn't pass up"
-- "£9.99 well spent"
+- "PRICE well spent"
 
-Example ad copy style:
+Example ad copy style (replace PRICE with actual product price):
 "I needed extra storage but didn't want to spend thousands… Saw this on clearance and figured, why not? It arrived in two days, and I was actually impressed — clean design, feels solid, and the drawers are way deeper than I expected.
 
 Took me about an hour to put together, and it looks proper in the bedroom. White finish is smooth, not cheap-looking, and the drawers glide well. If you're tired of clothes everywhere and just need a solid storage fix, this works.
 
 Only downside? I wish I ordered two.
-Order now before it sells out again — at £9.99 it's honestly a steal."
+Order now before it sells out again — at PRICE it's honestly a steal."
 
-Make it conversational, honest, detailed, and include specific benefits they experienced. Always end with urgency about the £9.99 price and ordering before it sells out.
+Make it conversational, honest, detailed, and include specific benefits they experienced. Always end with urgency about the actual product price and ordering before it sells out. Use the exact price from the product data.
 
 Now generate for this product:`;
 
@@ -50,6 +50,7 @@ export async function generateAdCopy(productData: ProductData): Promise<AdCopyRe
       productData.aboutThisItem?.length ? `Features: ${productData.aboutThisItem.join(', ')}` : '',
       productData.features?.length ? `Additional Features: ${productData.features.join(', ')}` : '',
       productData.category ? `Category: ${productData.category}` : '',
+      productData.price ? `Current Price: ${productData.price}` : '',
       productData.originalPrice ? `Original Price: ${productData.originalPrice}` : ''
     ].filter(Boolean).join('\n');
 
@@ -113,11 +114,15 @@ export async function generateAdCopy(productData: ProductData): Promise<AdCopyRe
 }
 
 function generateFallbackAdCopy(productData: ProductData): AdCopyResult {
+  // Use the actual product prices from productData
+  const price = productData.price || '£9.99';
+  const originalPrice = productData.originalPrice || '£14.99';
+  
   const headlines = [
-    "Found this Amazon gem for £9.99",
+    `Found this Amazon gem for ${price}`,
     "Clearance find that actually delivered",
     "Amazon deal I couldn't pass up",
-    "£9.99 well spent",
+    `${price} well spent`,
     "Honestly didn't expect this quality"
   ];
 
@@ -127,35 +132,35 @@ function generateFallbackAdCopy(productData: ProductData): AdCopyResult {
 Setup was straightforward, took about an hour, and it looks proper. The build quality is better than expected for the price, not cheap-looking at all. If you're looking for something functional and well-made, this definitely works.
 
 Only downside? I wish I ordered another one.
-Order now before it sells out again — at £9.99 it's honestly a steal.`,
+Order now before it sells out again — at ${price} it's honestly a steal.`,
     
-    `Wasn't planning to buy anything, but saw this ${productData.name} for £9.99 and couldn't resist… Best impulse buy I've made in ages! Quality is surprisingly good, and it's exactly what I needed.
+    `Wasn't planning to buy anything, but saw this ${productData.name} for ${price} and couldn't resist… Best impulse buy I've made in ages! Quality is surprisingly good, and it's exactly what I needed.
 
 Arrived quickly, easy to set up, and it's been working perfectly. The design is clean and modern, not cheap-looking like some budget items. Really happy with this purchase.
 
 At this price, you can't go wrong. 
-Grab it while it's still available — £9.99 for this quality is mad.`,
+Grab it while it's still available — ${price} for this quality is mad.`,
     
-    `Been looking for a ${productData.name} for months but didn't want to spend loads… Found this on Amazon's clearance section for just £9.99 and thought it was too good to be true. Turns out, it's actually brilliant!
+    `Been looking for a ${productData.name} for months but didn't want to spend loads… Found this on Amazon's clearance section for just ${price} and thought it was too good to be true. Turns out, it's actually brilliant!
 
 Quality exceeded my expectations completely. Well-made, sturdy, and looks way more expensive than it was. Assembly was simple, and it fits perfectly in my space.
 
 Seriously considering ordering another one before the price goes back up.
-If you need one of these, don't wait — £9.99 won't last long.`,
+If you need one of these, don't wait — ${price} won't last long.`,
     
-    `Honestly didn't expect much for £9.99, but this ${productData.name} has proper surprised me… Quality is excellent, arrived quickly, and it's exactly what I was looking for.
+    `Honestly didn't expect much for ${price}, but this ${productData.name} has proper surprised me… Quality is excellent, arrived quickly, and it's exactly what I was looking for.
 
 Setup took no time at all, instructions were clear, and it looks great. The materials feel solid, not flimsy like some cheap alternatives. Been using it for weeks now and no issues whatsoever.
 
-Best £9.99 I've spent in ages.
-Get yours before they realize they're selling it too cheap — this won't stay at £9.99 forever.`,
+Best ${price} I've spent in ages.
+Get yours before they realize they're selling it too cheap — this won't stay at ${price} forever.`,
     
-    `Saw this ${productData.name} in Amazon's clearance section for £9.99 and almost scrolled past… So glad I didn't! This thing is actually quality — well-built, looks good, and does exactly what it should.
+    `Saw this ${productData.name} in Amazon's clearance section for ${price} and almost scrolled past… So glad I didn't! This thing is actually quality — well-built, looks good, and does exactly what it should.
 
 Delivery was fast, packaging was decent, and assembly was straightforward. It's been brilliant so far, no complaints at all. The price feels like a mistake on Amazon's part.
 
 Definitely recommend grabbing one while they're still this cheap.
-At £9.99, it's basically free money — order before stock runs out.`
+At ${price}, it's basically free money — order before stock runs out.`
   ];
 
   const randomHeadline = headlines[Math.floor(Math.random() * headlines.length)];
