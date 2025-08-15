@@ -13,6 +13,19 @@ import { getDeliveryInfo } from '../utils/deliveryDate';
 import { getDefaultReviews } from '../utils/defaultReviews';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
 
+// Helper function to check if price is already formatted
+const isPriceFormatted = (price: string): boolean => {
+  return price.includes('kr') || price.includes('£') || price.includes('€') || price.includes('$');
+};
+
+// Helper function to format price only if needed
+const formatPriceIfNeeded = (price: string, countryCode: string): string => {
+  if (isPriceFormatted(price)) {
+    return price; // Already formatted, return as is
+  }
+  return formatPrice(price, countryCode); // Not formatted, format it
+};
+
 interface Review {
   id: string | number;
   author: string;
@@ -495,7 +508,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                   {productData.discount && (
                     <span className="text-red-700 text-2xl font-bold">-{productData.discount}</span>
                   )}
-                  <span className="text-3xl font-bold">{formatPrice(productData.price, selectedCountry.code)}</span>
+                  <span className="text-3xl font-bold">{formatPriceIfNeeded(productData.price, selectedCountry.code)}</span>
                 </div>
                 
                 {/* Price History */}
@@ -503,14 +516,14 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                   <div className="space-y-1 text-sm text-gray-600">
                     <div className="flex items-center gap-2">
                       <span>{getTranslation('product.lowest.price', getCountryConfig(selectedCountry.code).language)}</span>
-                      <span className="line-through">{formatPrice(productData.originalPrice || '', selectedCountry.code)}</span>
+                      <span className="line-through">{formatPriceIfNeeded(productData.originalPrice || '', selectedCountry.code)}</span>
                       <div className="w-4 h-4 bg-gray-300 rounded-full flex items-center justify-center cursor-pointer">
                         <span className="text-xs text-gray-600">i</span>
                       </div>
                     </div>
                     <div>
                       <span>{getTranslation('product.rrp', getCountryConfig(selectedCountry.code).language)}</span>
-                      <span className="line-through ml-1">{formatPrice(productData.originalPrice || '', selectedCountry.code)}</span>
+                      <span className="line-through ml-1">{formatPriceIfNeeded(productData.originalPrice || '', selectedCountry.code)}</span>
                       {productData.discount && (
                         <span className="text-red-700 ml-1">-{productData.discount}</span>
                       )}
@@ -552,10 +565,10 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                           onClick={() => { if (available) handleVariantSelection(variant.id, option.name); }}
                         >
                           <div className="text-xs font-medium">{option.name}</div>
-                          <div className="text-sm font-bold">{formatPrice(productData.price, selectedCountry.code)}</div>
+                          <div className="text-sm font-bold">{formatPriceIfNeeded(productData.price, selectedCountry.code)}</div>
                           {productData.originalPrice && (
                             <div className="text-xs text-gray-600">
-                              <span className="line-through">{formatPrice(productData.originalPrice, selectedCountry.code)}</span>
+                              <span className="line-through">{formatPriceIfNeeded(productData.originalPrice, selectedCountry.code)}</span>
                               {productData.discount && (
                                 <span className="text-red-700 ml-1">-{productData.discount}</span>
                               )}
@@ -593,7 +606,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                           <div className="text-xs font-medium">{color.name}</div>
                           {color.available !== false ? (
                             <>
-                              <div className="text-sm font-bold">{formatPrice(color.price, selectedCountry.code)}</div>
+                              <div className="text-sm font-bold">{formatPriceIfNeeded(color.price, selectedCountry.code)}</div>
                               {color.savings && (
                                 <div className="text-xs text-gray-600">
                                   <span className="line-through">{formatPrice(color.originalPrice || '', selectedCountry.code)}</span>
@@ -602,7 +615,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                               )}
                             </>
                           ) : (
-                            <div className="text-xs text-gray-500">{formatPrice(color.price, selectedCountry.code)} • Sold out</div>
+                            <div className="text-xs text-gray-500">{formatPriceIfNeeded(color.price, selectedCountry.code)} • Sold out</div>
                           )}
                         </div>
                       );
@@ -655,11 +668,11 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                     <div className="space-y-1">
                       <div className="flex items-baseline gap-2">
                         <span className="text-xs text-gray-600">{getTranslation('product.clearance.sale', getCountryConfig(selectedCountry.code).language)}</span>
-                        <span className="text-2xl font-bold text-red-700">{formatPrice(productData.price, selectedCountry.code)}</span>
+                        <span className="text-2xl font-bold text-red-700">{formatPriceIfNeeded(productData.price, selectedCountry.code)}</span>
                       </div>
                       {productData.originalPrice && (
                         <div className="text-xs text-gray-600">
-                          <span className="line-through">{getTranslation('product.rrp', getCountryConfig(selectedCountry.code).language)} {formatPrice(productData.originalPrice, selectedCountry.code)}</span>
+                          <span className="line-through">{getTranslation('product.rrp', getCountryConfig(selectedCountry.code).language)} {formatPriceIfNeeded(productData.originalPrice, selectedCountry.code)}</span>
                           <span className="text-red-700 ml-2">
                             {getTranslation('product.save', getCountryConfig(selectedCountry.code).language, { 
                               amount: formatPrice(`${(parseFloat(productData.originalPrice.replace(/[^0-9.]/g, '')) - parseFloat(productData.price.replace(/[^0-9.]/g, ''))).toFixed(2)}`, selectedCountry.code),
@@ -827,11 +840,11 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
               <div className="space-y-2">
                 <div className="flex items-baseline gap-2">
                   <span className="text-xs text-gray-600">{getTranslation('clearance.sale.label', getCountryConfig(selectedCountry.code).language)}</span>
-                  <span className="text-2xl font-normal text-red-700">{formatPrice(productData.price, selectedCountry.code)}</span>
+                  <span className="text-2xl font-normal text-red-700">{formatPriceIfNeeded(productData.price, selectedCountry.code)}</span>
                 </div>
                 {productData.originalPrice && (
                   <div className="text-xs text-gray-600">
-                    <span className="line-through">{getTranslation('product.rrp', getCountryConfig(selectedCountry.code).language)} {formatPrice(productData.originalPrice, selectedCountry.code)}</span>
+                    <span className="line-through">{getTranslation('product.rrp', getCountryConfig(selectedCountry.code).language)} {formatPriceIfNeeded(productData.originalPrice, selectedCountry.code)}</span>
                     <span className="text-red-700 ml-2">
                       {getTranslation('product.save', getCountryConfig(selectedCountry.code).language, { 
                         amount: formatPrice(`£${(parseFloat(productData.originalPrice.replace('£', '')) - parseFloat(productData.price.replace('£', ''))).toFixed(2)}`, selectedCountry.code),
