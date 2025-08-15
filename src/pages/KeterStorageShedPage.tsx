@@ -231,12 +231,12 @@ const KeterStorageShedPage: React.FC = () => {
         options: [
           { name: 'Light Grey with Dark Cover', images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
           { name: 'Beige Brown', images: ['https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg'] },
-          { name: 'Dark Grey', images: ['https://m.media.amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
+          { name: 'Dark Grey', images: ['https://m.media-amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
         ]
       }
-          ],
-      prime: true,
-      deliveryInfo: 'Free Prime delivery',
+    ],
+    prime: true,
+    deliveryInfo: 'Free Prime delivery',
     quantityLimit: 5,
     safetyFeatures: ['Lockable design', 'UV resistant', 'Weatherproof construction'],
     productInfo: {
@@ -260,7 +260,7 @@ const KeterStorageShedPage: React.FC = () => {
         </div>
       }>
         <ErrorBoundary onError={() => setHasError(true)}>
-          <ProductPageTemplate product={productData} />
+          <ProductPageTemplate productData={productData} />
         </ErrorBoundary>
       </React.Suspense>
     </div>
