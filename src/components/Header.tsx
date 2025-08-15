@@ -23,17 +23,27 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
+    // Check if it's mobile (screen width < 640px which is Tailwind's sm breakpoint)
+    const isMobile = window.innerWidth < 640;
+    
+    if (!isMobile) {
+      // On desktop, navigate immediately (single click)
+      navigate('/');
+      return;
+    }
+    
+    // On mobile, require 4 clicks
     const newCount = logoClickCount + 1;
     setLogoClickCount(newCount);
     
-    if (newCount >= 2) {
+    if (newCount >= 4) {
       navigate('/');
       setLogoClickCount(0); // Reset counter
     } else {
-      // Reset counter after 1 second if not completed
+      // Reset counter after 2 seconds if not completed (longer timeout for 4 clicks)
       setTimeout(() => {
         setLogoClickCount(0);
-      }, 1000);
+      }, 2000);
     }
   };
 
