@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { useCountrySelector } from '../hooks/useCountrySelector';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
-import { ArrowLeft, Copy, Eye, ExternalLink, Globe, Search, Filter, Package, Grid3X3, List, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Copy, Eye, ExternalLink, Globe, Search, Filter, Package, Grid3X3, List, CheckCircle, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface AdCopy {
@@ -16,6 +16,8 @@ interface AdCopy {
   productUrl?: string;
   simplifiedName?: string;
   isLaunched?: boolean;
+  productImages?: string[];
+  reviewImages?: string[];
 }
 
 const FacebookAdsPage: React.FC = () => {
@@ -31,6 +33,8 @@ const FacebookAdsPage: React.FC = () => {
   const [productFilter, setProductFilter] = useState('all'); // 'all', 'storage', 'garden', 'kitchen', 'bathroom', 'bedroom'
   const [lengthFilter, setLengthFilter] = useState('all'); // 'all', 'short', 'medium', 'long'
   const [performanceFilter, setPerformanceFilter] = useState('all'); // 'all', 'high', 'medium', 'low'
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
 
   // Load ad copies from localStorage and enrich with product data
   useEffect(() => {
@@ -56,9 +60,38 @@ const FacebookAdsPage: React.FC = () => {
                   productImage = resolvedImages[0] || '/placeholder.svg';
                 }
                 
+                // Get all product images
+                let productImages = productData.images || [];
+                if (productImages.length > 0 && productImages[0].startsWith('idb-ref:')) {
+                  const { imageStorage } = await import('../utils/imageStorage');
+                  productImages = await imageStorage.resolveImageUrlsAsync(productImages);
+                }
+                
+                // Get review images
+                const reviewImages: string[] = [];
+                if (productData.reviews && Array.isArray(productData.reviews)) {
+                  for (const review of productData.reviews) {
+                    if (review.images && Array.isArray(review.images)) {
+                      for (const img of review.images) {
+                        if (img && typeof img === 'string') {
+                          let resolvedImg = img;
+                          if (img.startsWith('idb-ref:')) {
+                            const { imageStorage } = await import('../utils/imageStorage');
+                            const resolved = await imageStorage.resolveImageUrlsAsync([img]);
+                            resolvedImg = resolved[0] || img;
+                          }
+                          reviewImages.push(resolvedImg);
+                        }
+                      }
+                    }
+                  }
+                }
+                
                 return {
                   ...adCopy,
-                  productImage: productImage || '/placeholder.svg',
+                  productImage: productImages[0] || '/placeholder.svg',
+                  productImages,
+                  reviewImages,
                   productUrl: `${window.location.origin}${productData.route}`,
                   simplifiedName: simplifyProductName(productData.name)
                 };
@@ -70,6 +103,8 @@ const FacebookAdsPage: React.FC = () => {
             return {
               ...adCopy,
               productImage: '/placeholder.svg',
+              productImages: [],
+              reviewImages: [],
               productUrl: `${window.location.origin}/${adCopy.id}`,
               simplifiedName: simplifyProductName(adCopy.productName)
             };
@@ -338,6 +373,49 @@ const FacebookAdsPage: React.FC = () => {
     
     setAdCopies(updatedAdCopies);
     localStorage.setItem('facebookAdCopies', JSON.stringify(updatedAdCopies));
+  };
+  
+  const handleDownloadCreatives = async (adCopy: AdCopy) => {
+    if (!adCopy.productImages || adCopy.productImages.length === 0) {
+      setCopyNotification({
+        message: 'No images available for this product',
+        type: 'info'
+      });
+      setTimeout(() => setCopyNotification(null), 3000);
+      return;
+    }
+    
+    try {
+      setDownloadingId(adCopy.id);
+      setDownloadProgress(0);
+      
+      const { downloadProductCreatives } = await import('../utils/downloadImages');
+      
+      await downloadProductCreatives(
+        adCopy.productName,
+        {
+          productImages: adCopy.productImages || [],
+          reviewImages: adCopy.reviewImages || []
+        },
+        (progress) => setDownloadProgress(progress)
+      );
+      
+      setCopyNotification({
+        message: 'Creatives downloaded successfully!',
+        type: 'success'
+      });
+      setTimeout(() => setCopyNotification(null), 3000);
+    } catch (error) {
+      console.error('Error downloading creatives:', error);
+      setCopyNotification({
+        message: 'Failed to download creatives',
+        type: 'info'
+      });
+      setTimeout(() => setCopyNotification(null), 3000);
+    } finally {
+      setDownloadingId(null);
+      setDownloadProgress(0);
+    }
   };
 
   return (
@@ -843,6 +921,23 @@ const FacebookAdsPage: React.FC = () => {
                               🔗 Copy URL
                             </button>
                           )}
+                          <button
+                            onClick={() => handleDownloadCreatives(adCopy)}
+                            disabled={downloadingId === adCopy.id}
+                            className="px-4 py-2 bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 border border-indigo-200 rounded-xl hover:from-indigo-100 hover:to-blue-100 hover:border-indigo-300 transition-all duration-200 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {downloadingId === adCopy.id ? (
+                              <>
+                                <div className="animate-spin h-4 w-4 border-2 border-indigo-700 border-t-transparent rounded-full"></div>
+                                <span>Downloading {Math.round(downloadProgress)}%</span>
+                              </>
+                            ) : (
+                              <>
+                                <Download className="w-4 h-4" />
+                                <span>Download Creatives</span>
+                              </>
+                            )}
+                          </button>
                         </div>
                       </div>
 
