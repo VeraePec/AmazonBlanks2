@@ -827,7 +827,7 @@ export const TRANSLATIONS = {
     'product.feature.uv.resistant': 'UV-resistent',
     'product.feature.weatherproof.construction': 'Vejrbestandig konstruktion',
     'product.feature.storage.capacity': 'Opbevaringskapacitet',
-    'product.feature.light.grey.dark.lid': 'Lys grå med mørk grå låg',
+    'product.feature.light.grey.dark.lid': 'Lys grå med mørk grå lokk',
     'product.feature.resin.construction': 'Harpiks konstruktion med træeffekt finish',
     'product.feature.waterproof': 'Vandtæt',
     'product.feature.security': 'Sikkerhed',
@@ -900,7 +900,7 @@ export const TRANSLATIONS = {
     
     // Product elements
     'product.amazons.choice': 'Amazons valg',
-    'product.climate.friendly': 'Klimaforpliktelse Vennlig',
+    'product.climate.friendly': 'Klimaforpligtelse Venlig',
     'product.day.returns': '30 dagers retur',
     'product.returns.eligible': 'Denne varen er kvalifisert for gratis retur innen 30 dager etter levering.',
     'product.free.delivery': 'GRATIS levering',
@@ -997,7 +997,7 @@ export const TRANSLATIONS = {
     // Detailed review content
     'reviews.detailed.well.made': 'Dette er et godt laget produkt som leverer på sine løfter. Kvaliteten er god og det fungerer som forventet. Jeg har brukt det i omtrent en måned nå og det holder seg bra. Designet er praktisk og brukervennlig, selv om det er et par mindre forbedringer som kunne gjøres. Instruksjonene var tydelige og enkle å følge, og monteringen var grei. Jeg setter pris på oppmerksomheten på detaljer i designet, og materialene som brukes føles holdbare. Selv om det ikke er perfekt, representerer det god verdi for prisklassen. Jeg ville anbefalt det til andre, spesielt hvis du leter etter noe pålitelig og godt bygget.',
     'reviews.detailed.exceeds.expectations': 'Dette produktet overgikk virkelig mine forventninger! Kvaliteten er utmerket og det føles solid og godt laget. Jeg har brukt det i flere uker nå og det fungerer perfekt. Designet er både funksjonelt og estetisk tiltalende. Instruksjonene var klare og monteringen tok bare noen minutter. Materialene bruker høy kvalitet og det ser ut til å være bygget for å vare. Det er verdt hver krone og jeg ville definitivt kjøpt det igjen. Anbefaler det til alle som leter etter et pålitelig og godt designet produkt.',
-    'reviews.detailed.great.value': 'Utmerket verdi for pengene! Dette produktet leverer på alle nivåer. Kvaliteten er overraskende god for prisen, og det fungerer akkurat som beskrevet. Jeg har brukt det i en måned og det holder seg bra. Designet er praktisk og benutzerfreundlich. Die Anweisungen waren einfach zu befolgen und die Montage war schnell. Obwohl es nicht die teuerste Option ist, fühlt es sich solide und gut gemacht an. Es ist definitiv ein Produkt, das ich anderen empfehlen würde. Gute Qualität zu einem vernünftigen Preis.',
+    'reviews.detailed.great.value': 'Utmerket verdi for pengene! Dette produktet leverer på alle nivåer. Die Qualität ist überraschend gut für den Preis, und es funktioniert genau wie beschrieben. Ich benutze es seit einem Monat und es hält sich gut. Das Design ist praktisch und benutzerfreundlich. Die Anweisungen waren einfach zu befolgen und die Montage war schnell. Obwohl es nicht die teuerste Option ist, fühlt es sich solide und gut gemacht an. Es ist definitiv ein Produkt, das ich anderen empfehlen würde. Gute Qualität zu einem vernünftigen Preis.',
     'reviews.detailed.reliable.quality': 'Sehr zufrieden mit diesem Produkt. Es ist mit guter Qualität gebaut und fühlt sich solide an. Ich benutze es seit mehreren Wochen und es funktioniert konsistent. Das Design ist praktisch und funktional. Die Anweisungen waren klar und die Montage war einfach. Die Materialien verwenden gute Qualität und es sieht so aus, als wäre es gemacht, um zu halten. Es ist ein Produkt, auf das ich vertrauen kann und würde es definitiv wieder kaufen. Empfehle es anderen, die nach etwas Zuverlässigem suchen.',
     'reviews.detailed.solid.construction': 'Solide Konstruktion und gute Qualität. Dieses Produkt ist gut gemacht und fühlt sich robust an. Ich benutze es seit einem Monat und es hält sich gut. Das Design ist funktional und benutzerfreundlich. Die Anweisungen waren klar und die Montage dauerte nicht lange. Die Materialien verwenden hohe Qualität und es sieht so aus, als wäre es gebaut, um zu halten. Es ist die Investition wert und ich würde es anderen empfehlen. Gutes Preis-Leistungs-Verhältnis.',
     

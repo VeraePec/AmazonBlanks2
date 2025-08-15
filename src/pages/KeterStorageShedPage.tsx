@@ -121,30 +121,30 @@ const KeterStorageShedPage: React.FC = () => {
       getTranslation('product.features.keter.storage.shed.10', getCountryConfig(selectedCountry.code).language)
     ],
     productDetails: {
-      'Brand': 'Keter',
-      'Colour': getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language),
-      'Material': getTranslation('product.material.resin', getCountryConfig(selectedCountry.code).language),
-      'Product Dimensions': getTranslation('product.dimensions.71.5x132x113.5', getCountryConfig(selectedCountry.code).language),
-      'Item Weight': getTranslation('product.weight.21.5kg', getCountryConfig(selectedCountry.code).language),
-      'Volume': getTranslation('product.volume.880l', getCountryConfig(selectedCountry.code).language),
-      'UV Protection': getTranslation('product.uv.resistant', getCountryConfig(selectedCountry.code).language),
-      'Special Features': getTranslation('product.special.features.heavy.duty', getCountryConfig(selectedCountry.code).language),
-      'Usage': getTranslation('product.usage.outdoor.storage', getCountryConfig(selectedCountry.code).language),
-      'Assembly Time': getTranslation('product.assembly.time.20.40.minutes', getCountryConfig(selectedCountry.code).language),
-      'Recommended Assembly': getTranslation('product.assembly.recommended.1.person', getCountryConfig(selectedCountry.code).language)
+      [getTranslation('product.detail.brand', getCountryConfig(selectedCountry.code).language)]: 'Keter',
+      [getTranslation('product.detail.colour', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.material', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.material.resin', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.product.dimensions', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.dimensions.71.5x132x113.5', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.item.weight', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.weight.21.5kg', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.volume', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.volume.880l', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.uv.protection', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.uv.resistant', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.special.features', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.special.features.heavy.duty', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.usage', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.usage.outdoor.storage', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.assembly.time', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.assembly.time.20.40.minutes', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.detail.recommended.assembly', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.assembly.recommended.1.person', getCountryConfig(selectedCountry.code).language)
     },
     technicalDetails: {
-      'Manufacturer': 'Keter',
-      'Part Number': '249317',
-      'Item Model Number': '249317',
-      'Size': getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language),
-      'Style': getTranslation('product.style.single', getCountryConfig(selectedCountry.code).language),
-      'Pattern': getTranslation('product.pattern.single', getCountryConfig(selectedCountry.code).language),
-      'Shape': getTranslation('product.shape.horizontal', getCountryConfig(selectedCountry.code).language),
-      'Item Package Quantity': '1',
-      'Batteries Required': getTranslation('product.batteries.no', getCountryConfig(selectedCountry.code).language),
-      'ASIN': 'B08XQVQPQ5',
-      'Date First Available': getTranslation('product.date.first.available.march.2021', getCountryConfig(selectedCountry.code).language)
+      [getTranslation('product.technical.manufacturer', getCountryConfig(selectedCountry.code).language)]: 'Keter',
+      [getTranslation('product.technical.part.number', getCountryConfig(selectedCountry.code).language)]: '249317',
+      [getTranslation('product.technical.item.model.number', getCountryConfig(selectedCountry.code).language)]: '249317',
+      [getTranslation('product.technical.size', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.technical.style', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.style.single', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.technical.pattern', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.pattern.single', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.technical.shape', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.shape.horizontal', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.technical.item.package.quantity', getCountryConfig(selectedCountry.code).language)]: '1',
+      [getTranslation('product.technical.batteries.required', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.batteries.no', getCountryConfig(selectedCountry.code).language),
+      [getTranslation('product.technical.asin', getCountryConfig(selectedCountry.code).language)]: 'B08XQVQPQ5',
+      [getTranslation('product.technical.date.first.available', getCountryConfig(selectedCountry.code).language)]: getTranslation('product.date.first.available.march.2021', getCountryConfig(selectedCountry.code).language)
     },
     reviews: [
       {

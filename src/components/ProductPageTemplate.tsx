@@ -994,7 +994,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                 .slice(0, Math.ceil(Object.keys(productData.technicalDetails).length / 2))
                 .map(([key, value]) => (
                 <div key={key} className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-medium">{getTranslation(`product.technical.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}</span>
+                  <span className="font-medium">{key}</span>
                   <span>{value}</span>
                 </div>
               ))}
@@ -1005,7 +1005,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                 .slice(Math.ceil(Object.keys(productData.technicalDetails).length / 2))
                 .map(([key, value]) => (
                 <div key={key} className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-medium">{getTranslation(`product.technical.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}</span>
+                  <span className="font-medium">{key}</span>
                   <span>{value}</span>
                 </div>
               ))}
@@ -1028,7 +1028,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
           <h2 className="text-lg sm:text-xl font-medium mb-4">{getTranslation('product.information.title', getCountryConfig(selectedCountry.code).language)}</h2>
           <div className="bg-gray-50 p-4 rounded text-sm space-y-2">
             {Object.entries(productData.productInfo).map(([key, value]) => (
-              <div key={key}><strong>{getTranslation(`product.info.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}:</strong> {value}</div>
+              <div key={key}><strong>{key}:</strong> {value}</div>
             ))}
           </div>
         </div>
