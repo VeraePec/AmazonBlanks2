@@ -224,7 +224,7 @@ export async function saveAdCopy(productId: string, productName: string, headlin
 }
 
 // Function to save ad copy with a specific route
-export async function saveAdCopyWithRoute(productId: string, productName: string, headline: string, copy: string, productRoute: string): Promise<void> {
+export async function saveAdCopyWithRoute(productId: string, productName: string, headline: string, copy: string, productRoute: string, productImages?: string[]): Promise<void> {
   try {
     const existingAdCopies = localStorage.getItem('facebookAdCopies');
     const adCopies = existingAdCopies ? JSON.parse(existingAdCopies) : [];
@@ -234,27 +234,32 @@ export async function saveAdCopyWithRoute(productId: string, productName: string
     let productUrl = `${window.location.origin}${productRoute}`;
     let simplifiedName = productName;
     
-    try {
-      const { getDynamicProduct } = await import('./dynamicProductRegistry');
-      const productData = getDynamicProduct(productId);
-      
-      if (productData) {
-        productImage = productData.images?.[0] || '/placeholder.svg';
+    // Use provided product images if available, otherwise try to get from dynamic registry
+    if (productImages && productImages.length > 0) {
+      productImage = productImages[0];
+    } else {
+      try {
+        const { getDynamicProduct } = await import('./dynamicProductRegistry');
+        const productData = getDynamicProduct(productId);
         
-        // Simplify product name
-        simplifiedName = productName
-          .replace(/Amazon\s+Basics\s+/gi, '')
-          .replace(/\b(Storage|Organizer|Cabinet|Chest|Box|Unit|Set|Pack)\b/gi, '')
-          .replace(/\b\d+[L|l|cm|kg|W|inch|ft]\b/g, '')
-          .replace(/\s+/g, ' ')
-          .trim()
-          .split(' ')
-          .slice(0, 3)
-          .join(' ');
+        if (productData) {
+          productImage = productData.images?.[0] || '/placeholder.svg';
+        }
+      } catch (error) {
+        console.warn('Could not load additional product data:', error);
       }
-    } catch (error) {
-      console.warn('Could not load additional product data:', error);
     }
+    
+    // Simplify product name
+    simplifiedName = productName
+      .replace(/Amazon\s+Basics\s+/gi, '')
+      .replace(/\b(Storage|Organizer|Cabinet|Chest|Box|Unit|Set|Pack)\b/gi, '')
+      .replace(/\b\d+[L|l|cm|kg|W|inch|ft]\b/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ')
+      .slice(0, 3)
+      .join(' ');
     
     const newAdCopy = {
       id: productId,
@@ -273,7 +278,7 @@ export async function saveAdCopyWithRoute(productId: string, productName: string
     filteredAdCopies.push(newAdCopy);
     
     localStorage.setItem('facebookAdCopies', JSON.stringify(filteredAdCopies));
-    console.log('✅ Ad copy saved for product:', productName, 'with route:', productRoute);
+    console.log('✅ Ad copy saved for product:', productName, 'with route:', productRoute, 'and image:', productImage);
   } catch (error) {
     console.error('❌ Error saving ad copy with route:', error);
   }
@@ -304,8 +309,8 @@ export async function generateAndSaveAdCopyForProduct(productData: any, productI
     }
     // Add more static route mappings here as needed
     
-    // Save the generated ad copy with the correct route
-    await saveAdCopyWithRoute(productId, productData.name, adCopy.headline, adCopy.copy, productRoute);
+    // Save the generated ad copy with the correct route and images
+    await saveAdCopyWithRoute(productId, productData.name, adCopy.headline, adCopy.copy, productRoute, productData.images);
     
     console.log('✅ Ad copy generated and saved for ProductPageTemplate product:', productData.name);
   } catch (error) {
