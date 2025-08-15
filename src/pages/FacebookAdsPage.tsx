@@ -151,7 +151,7 @@ const FacebookAdsPage: React.FC = () => {
       return { headline, copy };
     }
 
-    // Translation mappings for common phrases
+    // Translation mappings for common phrases and Keter Storage Shed specific content
     const translations = {
       dk: {
         // Headlines
@@ -159,6 +159,8 @@ const FacebookAdsPage: React.FC = () => {
         'Clearance Sale Find!': 'Udsalgs Fund!',
         'Secret Amazon Sale!': 'Hemmelig Amazon Udsalg!',
         'Limited Time Deal!': 'Begrænset Tid Tilbud!',
+        'Honestly didn\'t expect this quality': 'Ærligt talt forventede jeg ikke denne kvalitet',
+        '£9.99 well spent': '£9.99 godt brugt',
         
         // Ad copy phrases
         'Just snagged this': 'Har lige snuppet denne',
@@ -171,7 +173,19 @@ const FacebookAdsPage: React.FC = () => {
         'Link in comments': 'Link i kommentarerne',
         'Thank me later': 'Tak mig senere',
         'Still available': 'Stadig tilgængelig',
-        'Hurry before it\'s gone': 'Skynd dig før den forsvinder'
+        'Hurry before it\'s gone': 'Skynd dig før den forsvinder',
+        
+        // Keter Storage Shed specific translations
+        'Wasn\'t planning to buy anything, but saw this Keter Store it Out Nova Outdoor Garden Storage Shed for £9.99 and couldn\'t resist': 'Planlagde ikke at købe noget, men så denne Keter Store it Out Nova Udendørs Have Opbevaring Skur for £9.99 og kunne ikke modstå',
+        'Best impulse buy I\'ve made in ages': 'Bedste impulsindkøb jeg har lavet i årevis',
+        'Quality is surprisingly good, and it\'s exactly what I needed': 'Kvaliteten er overraskende god, og det er præcis hvad jeg havde brug for',
+        'Arrived quickly, easy to set up, and it\'s been working perfectly': 'Ankom hurtigt, nem at sætte op, og det har fungeret perfekt',
+        'The design is clean and modern, not cheap-looking like some budget items': 'Designet er rent og moderne, ikke billigt udseende som nogle budgetvarer',
+        'Really happy with this purchase': 'Virkelig tilfreds med dette køb',
+        'At this price, you can\'t go wrong': 'Til denne pris kan du ikke gå galt',
+        'Grab it while it\'s still available': 'Snup den mens den stadig er tilgængelig',
+        '£9.99 for this quality is mad': '£9.99 for denne kvalitet er vanvittigt',
+        'Keter Store it Out Nova Outdoor Garden Storage Shed': 'Keter Store it Out Nova Udendørs Have Opbevaring Skur'
       },
       no: {
         // Headlines
@@ -179,6 +193,8 @@ const FacebookAdsPage: React.FC = () => {
         'Clearance Sale Find!': 'Utsalgsfunn!',
         'Secret Amazon Sale!': 'Hemmelig Amazon Utsalg!',
         'Limited Time Deal!': 'Begrenset Tid Tilbud!',
+        'Honestly didn\'t expect this quality': 'Ærlig talt forventet jeg ikke denne kvaliteten',
+        '£9.99 well spent': '£9.99 godt brukt',
         
         // Ad copy phrases
         'Just snagged this': 'Har akkurat snappet denne',
@@ -191,7 +207,19 @@ const FacebookAdsPage: React.FC = () => {
         'Link in comments': 'Link i kommentarene',
         'Thank me later': 'Takk meg senere',
         'Still available': 'Fortsatt tilgjengelig',
-        'Hurry before it\'s gone': 'Skynd deg før den forsvinner'
+        'Hurry before it\'s gone': 'Skynd deg før den forsvinner',
+        
+        // Keter Storage Shed specific translations
+        'Wasn\'t planning to buy anything, but saw this Keter Store it Out Nova Outdoor Garden Storage Shed for £9.99 and couldn\'t resist': 'Planla ikke å kjøpe noe, men så denne Keter Store it Out Nova Utenomhus Hage Oppbevaring Skur for £9.99 og kunne ikke motstå',
+        'Best impulse buy I\'ve made in ages': 'Beste impulsinnkjøp jeg har gjort på årevis',
+        'Quality is surprisingly good, and it\'s exactly what I needed': 'Kvaliteten er overraskende god, og det er akkurat det jeg trengte',
+        'Arrived quickly, easy to set up, and it\'s been working perfectly': 'Ankom raskt, enkelt å sette opp, og det har fungert perfekt',
+        'The design is clean and modern, not cheap-looking like some budget items': 'Designet er rent og moderne, ikke billig utseende som noen budgetvarer',
+        'Really happy with this purchase': 'Virkelig fornøyd med dette kjøpet',
+        'At this price, you can\'t go wrong': 'Til denne prisen kan du ikke gå galt',
+        'Grab it while it\'s still available': 'Ta den mens den fortsatt er tilgjengelig',
+        '£9.99 for this quality is mad': '£9.99 for denne kvaliteten er galskap',
+        'Keter Store it Out Nova Outdoor Garden Storage Shed': 'Keter Store it Out Nova Utenomhus Hage Oppbevaring Skur'
       },
       es: {
         // Headlines
@@ -199,6 +227,8 @@ const FacebookAdsPage: React.FC = () => {
         'Clearance Sale Find!': '¡Hallazgo de Liquidación!',
         'Secret Amazon Sale!': '¡Venta Secreta de Amazon!',
         'Limited Time Deal!': '¡Oferta por Tiempo Limitado!',
+        'Honestly didn\'t expect this quality': 'Honestamente no esperaba esta calidad',
+        '£9.99 well spent': '£9.99 bien gastado',
         
         // Ad copy phrases
         'Just snagged this': 'Acabo de conseguir esto',
@@ -211,7 +241,19 @@ const FacebookAdsPage: React.FC = () => {
         'Link in comments': 'Enlace en los comentarios',
         'Thank me later': 'Agradéceme después',
         'Still available': 'Todavía disponible',
-        'Hurry before it\'s gone': 'Date prisa antes de que se vaya'
+        'Hurry before it\'s gone': 'Date prisa antes de que se vaya',
+        
+        // Keter Storage Shed specific translations
+        'Wasn\'t planning to buy anything, but saw this Keter Store it Out Nova Outdoor Garden Storage Shed for £9.99 and couldn\'t resist': 'No planeaba comprar nada, pero vi este Keter Store it Out Nova Cobertizo de Almacenamiento de Jardín Exterior por £9.99 y no pude resistir',
+        'Best impulse buy I\'ve made in ages': 'La mejor compra por impulso que he hecho en años',
+        'Quality is surprisingly good, and it\'s exactly what I needed': 'La calidad es sorprendentemente buena, y es exactamente lo que necesitaba',
+        'Arrived quickly, easy to set up, and it\'s been working perfectly': 'Llegó rápidamente, fácil de configurar, y ha estado funcionando perfectamente',
+        'The design is clean and modern, not cheap-looking like some budget items': 'El diseño es limpio y moderno, no se ve barato como algunos artículos de presupuesto',
+        'Really happy with this purchase': 'Realmente feliz con esta compra',
+        'At this price, you can\'t go wrong': 'A este precio, no puedes equivocarte',
+        'Grab it while it\'s still available': 'Agárralo mientras aún esté disponible',
+        '£9.99 for this quality is mad': '£9.99 por esta calidad es una locura',
+        'Keter Store it Out Nova Outdoor Garden Storage Shed': 'Keter Store it Out Nova Cobertizo de Almacenamiento de Jardín Exterior'
       },
       ch: {
         // Headlines
@@ -219,6 +261,8 @@ const FacebookAdsPage: React.FC = () => {
         'Clearance Sale Find!': 'Ausverkaufs-Fund!',
         'Secret Amazon Sale!': 'Geheimer Amazon Ausverkauf!',
         'Limited Time Deal!': 'Zeitlich begrenztes Angebot!',
+        'Honestly didn\'t expect this quality': 'Ehrlich gesagt habe ich diese Qualität nicht erwartet',
+        '£9.99 well spent': '£9.99 gut investiert',
         
         // Ad copy phrases
         'Just snagged this': 'Habe gerade das hier geschnappt',
@@ -231,7 +275,19 @@ const FacebookAdsPage: React.FC = () => {
         'Link in comments': 'Link in den Kommentaren',
         'Thank me later': 'Dankt mir später',
         'Still available': 'Noch verfügbar',
-        'Hurry before it\'s gone': 'Beeilt euch bevor es weg ist'
+        'Hurry before it\'s gone': 'Beeilt euch bevor es weg ist',
+        
+        // Keter Storage Shed specific translations
+        'Wasn\'t planning to buy anything, but saw this Keter Store it Out Nova Outdoor Garden Storage Shed for £9.99 and couldn\'t resist': 'Hatte nicht vor, etwas zu kaufen, aber sah diesen Keter Store it Out Nova Außen-Garten-Lagerschuppen für £9.99 und konnte nicht widerstehen',
+        'Best impulse buy I\'ve made in ages': 'Der beste Impulskauf, den ich seit Jahren gemacht habe',
+        'Quality is surprisingly good, and it\'s exactly what I needed': 'Die Qualität ist überraschend gut und es ist genau das, was ich brauchte',
+        'Arrived quickly, easy to set up, and it\'s been working perfectly': 'Kam schnell an, einfach aufzubauen und funktioniert perfekt',
+        'The design is clean and modern, not cheap-looking like some budget items': 'Das Design ist sauber und modern, sieht nicht billig aus wie einige Budget-Artikel',
+        'Really happy with this purchase': 'Wirklich zufrieden mit diesem Kauf',
+        'At this price, you can\'t go wrong': 'Zu diesem Preis kann nichts schiefgehen',
+        'Grab it while it\'s still available': 'Schnapp es dir, solange es noch verfügbar ist',
+        '£9.99 for this quality is mad': '£9.99 für diese Qualität ist verrückt',
+        'Keter Store it Out Nova Outdoor Garden Storage Shed': 'Keter Store it Out Nova Außen-Garten-Lagerschuppen'
       }
     };
 
