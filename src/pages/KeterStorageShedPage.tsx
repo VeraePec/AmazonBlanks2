@@ -3,21 +3,86 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import ProductPageTemplate from '../components/ProductPageTemplate';
 import { useCountrySelector } from '../hooks/useCountrySelector';
+import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
+import { getDeliveryInfo } from '../utils/deliveryDate';
+
+// Simple Error Boundary Component
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; onError: () => void },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; onError: () => void }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('Error caught by boundary:', error, errorInfo);
+    this.props.onError();
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null; // Let parent handle the error
+    }
+    return this.props.children;
+  }
+}
 
 const KeterStorageShedPage: React.FC = () => {
   const navigate = useNavigate();
   const { selectedCountry } = useCountrySelector();
+  
+  // Add error boundary state
+  const [hasError, setHasError] = React.useState(false);
+  
+  // Handle country changes and update product data
+  React.useEffect(() => {
+    // Reset error state when country changes
+    setHasError(false);
+  }, [selectedCountry.code]);
+  
+  // Error boundary
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+            <p className="text-gray-600 mb-4">The product page encountered an error.</p>
+            <button 
+              onClick={() => setHasError(false)}
+              className="px-4 py-2 bg-[#007185] text-white rounded hover:bg-[#005a6b] mr-2"
+            >
+              Try Again
+            </button>
+            <button 
+              onClick={() => navigate('/')}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const productData = {
-    name: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
+    name: getTranslation('product.name.keter.storage.shed', getCountryConfig(selectedCountry.code).language),
     brand: 'Keter',
     store: 'Keter',
     rating: 4.4,
     ratingsCount: 7246,
     boughtInMonth: '1K+',
     amazonChoice: true,
-    price: '£125.00',
-    originalPrice: '£181.02',
+    price: formatPrice('125.00', selectedCountry.code),
+    originalPrice: formatPrice('181.02', selectedCountry.code),
     discount: '31%',
     images: [
       'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -27,7 +92,12 @@ const KeterStorageShedPage: React.FC = () => {
       'https://m.media-amazon.com/images/I/911s9OrxX-L._AC_SL1500_.jpg',
       'https://m.media-amazon.com/images/I/611Ypdn2IlL._AC_SL1500_.jpg'
     ],
-    breadcrumb: ['Home', 'Garden', 'Storage', 'Keter Storage Shed'],
+    breadcrumb: [
+      getTranslation('nav.home', getCountryConfig(selectedCountry.code).language),
+      getTranslation('nav.garden', getCountryConfig(selectedCountry.code).language),
+      getTranslation('nav.storage', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.name.keter.storage.shed', getCountryConfig(selectedCountry.code).language)
+    ],
     stockCount: 15,
     aboutThisItem: [
       'Ideal outdoor storage solution for garden tools and equipment, BBQ and accessories and x2 120L wheelie bins.',
@@ -181,7 +251,18 @@ const KeterStorageShedPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
       <Header />
-      <ProductPageTemplate product={productData} />
+      <React.Suspense fallback={
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#007185] mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading product...</p>
+          </div>
+        </div>
+      }>
+        <ErrorBoundary onError={() => setHasError(true)}>
+          <ProductPageTemplate product={productData} />
+        </ErrorBoundary>
+      </React.Suspense>
     </div>
   );
 };

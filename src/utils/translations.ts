@@ -30,6 +30,11 @@ export const TRANSLATIONS = {
     'account.cart': 'Cart',
     'deliver.to': 'Deliver to',
     
+    // Navigation
+    'nav.home': 'Home',
+    'nav.garden': 'Garden',
+    'nav.storage': 'Storage',
+    
     // Footer
     'footer.back.to.top': 'Back to top',
     'footer.copyright': '© 1996-2024, Amazon.com, Inc. or its affiliates',
@@ -46,6 +51,7 @@ export const TRANSLATIONS = {
     'product.out.of.stars': '{rating} out of 5 stars',
     'product.ratings': '{count} ratings',
     'product.bought.in.month': '{count}+ bought in past month',
+    'product.name.keter.storage.shed': 'Keter Store it Out Nova Outdoor Garden Storage Shed',
     
     // Customer Reviews
     'reviews.customer.reviews': 'Customer reviews',
@@ -502,6 +508,11 @@ export const TRANSLATIONS = {
     'account.returns': 'Returner og ordrer',
     'account.cart': 'Indkøbskurv',
     'deliver.to': 'Lever til',
+    
+    // Navigation
+    'nav.home': 'Hjem',
+    'nav.garden': 'Have',
+    'nav.storage': 'Opbevaring',
     'product.add.to.basket': 'Tilføj til kurv',
     'product.buy.now': 'Køb nu',
     'product.in.stock': 'På lager',
@@ -595,6 +606,7 @@ export const TRANSLATIONS = {
     'reviews.highly.recommended': 'Varmt anbefalet!',
     'reviews.excellent.quality': 'Fremragende kvalitet og overgik mine forventninger!',
     'reviews.works.expected': 'Meget godt produkt med mindre overvejelser',
+    'product.name.keter.storage.shed': 'Keter Store it Out Nova Udendørs Haveopbevaring',
     'reviews.perfect.needs': 'Perfekt! Præcis hvad jeg havde brug for',
     
     // Default review content (long reviews)
@@ -664,6 +676,11 @@ export const TRANSLATIONS = {
     'account.returns': 'Returer og bestillinger',
     'account.cart': 'Handlekurv',
     'deliver.to': 'Lever til',
+    
+    // Navigation
+    'nav.home': 'Hjem',
+    'nav.garden': 'Hage',
+    'nav.storage': 'Oppbevaring',
     'product.add.to.basket': 'Legg til i handlekurv',
     'product.buy.now': 'Kjøp nå',
     'product.in.stock': 'På lager',
@@ -756,6 +773,7 @@ export const TRANSLATIONS = {
     'reviews.excellent.quality': 'Utmerket kvalitet og overgikk mine forventninger!',
     'reviews.works.expected': 'Meget godt produkt med mindre overveielser',
     'reviews.perfect.needs': 'Perfekt! Nøyaktig det jeg trengte',
+    'product.name.keter.storage.shed': 'Keter Store it Out Nova Utenomshus Hageoppbevaring',
     
     // Detailed review content
     'reviews.detailed.well.made': 'Dette er et godt laget produkt som leverer på sine løfter. Kvaliteten er god og det fungerer som forventet. Jeg har brukt det i omtrent en måned nå og det holder seg bra. Designet er praktisk og brukervennlig, selv om det er et par mindre forbedringer som kunne gjøres. Instruksjonene var tydelige og enkle å følge, og monteringen var grei. Jeg setter pris på oppmerksomheten på detaljer i designet, og materialene som brukes føles holdbare. Selv om det ikke er perfekt, representerer det god verdi for prisklassen. Jeg ville anbefalt det til andre, spesielt hvis du leter etter noe pålitelig og godt bygget.',
@@ -1451,33 +1469,33 @@ export const formatPrice = (price: string, countryCode: string): string => {
   
   if (isNaN(numericPrice)) return price;
   
-  // Convert base price (£9.99) to local currency based on country
+  // Convert GBP price to local currency based on country
   let convertedPrice = numericPrice;
   
   switch (country.currency) {
     case 'EUR':
-      // Convert £9.99 to € (approximately €11.50)
+      // Convert £ to € (approximately €1.15 per £1)
       convertedPrice = numericPrice * 1.15;
       return `€${convertedPrice.toFixed(2)}`;
     case 'DKK':
-      // Convert £9.99 to DKK (63.58 kr)
-      convertedPrice = numericPrice * 6.36;
-      return `${convertedPrice.toFixed(2)} kr`;
+      // Convert £ to DKK (approximately 8.5 kr per £1)
+      convertedPrice = numericPrice * 8.5;
+      return `${convertedPrice.toFixed(0)} kr`;
     case 'NOK':
-      // Convert £9.99 to NOK (99 kr)
-      convertedPrice = numericPrice * 9.91;
+      // Convert £ to NOK (approximately 13 kr per £1)
+      convertedPrice = numericPrice * 13;
       return `${convertedPrice.toFixed(0)} kr`;
     case 'CHF':
-      // Convert £9.99 to CHF (approximately CHF 11.20)
+      // Convert £ to CHF (approximately CHF 1.12 per £1)
       convertedPrice = numericPrice * 1.12;
       return `CHF ${convertedPrice.toFixed(2)}`;
     case 'TRY':
-      // Convert £9.99 to TRY (approximately ₺390)
-      convertedPrice = numericPrice * 39.0;
+      // Convert £ to TRY (approximately ₺40 per £1)
+      convertedPrice = numericPrice * 40;
       return `₺${convertedPrice.toFixed(0)}`;
     case 'ZAR':
-      // Convert £9.99 to ZAR (approximately R 230)
-      convertedPrice = numericPrice * 23.0;
+      // Convert £ to ZAR (approximately R 23 per £1)
+      convertedPrice = numericPrice * 23;
       return `R${convertedPrice.toFixed(0)}`;
     default:
       // Keep original price for GBP
