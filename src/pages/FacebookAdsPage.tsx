@@ -45,16 +45,16 @@ const FacebookAdsPage: React.FC = () => {
           
           // Filter ad copies based on selected language/country
           const filteredAdCopies = adCopies.filter((adCopy: AdCopy) => {
-            // If it's a country-specific ad copy, check if it matches the selected language
+            // If it's a country-specific ad copy, check if it matches the selected country
             if (adCopy.id.includes('-')) {
               const countryCode = adCopy.id.split('-').pop();
-              return countryCode === selectedLanguage;
+              return countryCode === selectedCountry.code;
             }
             // If it's a general ad copy, include it for all languages
             return true;
           });
           
-          console.log(`🔍 Filtered ad copies for ${selectedLanguage}:`, filteredAdCopies.length, 'out of', adCopies.length);
+          console.log(`🔍 Filtered ad copies for ${selectedCountry.code}:`, filteredAdCopies.length, 'out of', adCopies.length);
           
           // Enrich ad copies with product data from dynamic registry
           const enrichedAdCopies = await Promise.all(
@@ -129,7 +129,7 @@ const FacebookAdsPage: React.FC = () => {
     };
     
     loadAdCopiesWithProductData();
-  }, [selectedLanguage]);
+  }, [selectedCountry.code]);
 
   // Function to simplify product names for ad naming
   const simplifyProductName = (name: string): string => {
