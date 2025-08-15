@@ -9,8 +9,13 @@ const KeterStorageShedPage: React.FC = () => {
   const { selectedCountry } = useCountrySelector();
 
   const productData = {
-    id: 'keter-storage-shed-nova',
     name: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
+    brand: 'Keter',
+    store: 'Keter',
+    rating: 4.4,
+    ratingsCount: 7246,
+    boughtInMonth: '1K+',
+    amazonChoice: true,
     price: '£125.00',
     originalPrice: '£181.02',
     discount: '31%',
@@ -22,10 +27,8 @@ const KeterStorageShedPage: React.FC = () => {
       'https://m.media-amazon.com/images/I/911s9OrxX-L._AC_SL1500_.jpg',
       'https://m.media-amazon.com/images/I/611Ypdn2IlL._AC_SL1500_.jpg'
     ],
-    store: 'Keter',
-    category: 'Garden Storage',
-    rating: 4.4,
-    reviewCount: 7246,
+    breadcrumb: ['Home', 'Garden', 'Storage', 'Keter Storage Shed'],
+    stockCount: 15,
     aboutThisItem: [
       'Ideal outdoor storage solution for garden tools and equipment, BBQ and accessories and x2 120L wheelie bins.',
       'Elegant wood effect panels that opens from the top or the front and with a lockable feature for secure closure.',
@@ -81,7 +84,7 @@ const KeterStorageShedPage: React.FC = () => {
         author: 'PaTi',
         rating: 5,
         title: 'Your Space-Saving Storage Solution!',
-        content: 'The Keter 249317 Store it Out Nova Outdoor Garden Storage Shed is the perfect storage solution for your outdoor space. With its compact size and clever design, this storage shed offers ample space to keep your garden tools, equipment, and other belongings organized and protected from the elements. Space-Saving Design: The standout feature of the Keter Store it Out Nova is its space-saving design. Despite its generous storage capacity, the shed\'s compact dimensions of 32 x 71.5 x 113.5 cm allow it to fit easily in small outdoor spaces, such as patios, balconies, or gardens. Ample Storage Space: Don\'t let the size fool you; this storage shed offers plenty of room to store your gardening essentials and more. Whether it\'s gardening tools, cushions, outdoor toys, or even bicycles, you can keep them all neatly stored and easily accessible. Weather-Resistant and Durable: The Store it Out Nova is built to withstand the elements. Made from high-quality, weather-resistant materials, this storage shed ensures that your belongings stay dry and protected from rain, sun, and wind. Easy Access: The double doors with a hinged lid provide easy access to the contents of the shed. You can easily open and close the doors to retrieve or store items without any hassle. Light Grey Wood-Look Finish: The shed features a stylish light grey wood-look finish, adding a touch of elegance to your outdoor space. It blends seamlessly with your garden decor and complements any setting. Lockable for Security: For added security, the Store it Out Nova comes with a built-in locking mechanism. You can securely lock the doors to keep your belongings safe and protected. Easy Assembly: The storage shed is designed for easy assembly, allowing you to set it up quickly and start using it right away. Versatile Use: While perfect for garden storage, this shed is also versatile in its use. It can be used as additional storage for your patio, poolside, or even in a garage or utility area. In conclusion, the Keter 249317 Store it Out Nova Outdoor Garden Storage Shed is a smart and practical solution to keep your outdoor space organized and clutter-free. With its space-saving design, ample storage space, weather-resistant construction, and easy access, this shed ticks all the boxes for efficient outdoor storage. Upgrade your outdoor organization with the Keter Store it Out Nova and enjoy a tidy and well-kept garden space.',
+        content: 'The Keter 249317 Store it Out Nova Outdoor Garden Storage Shed is the perfect storage solution for your outdoor space. With its compact size and clever design, this storage shed offers ample space to keep your garden tools, equipment, and other belongings organized and protected from the elements.',
         date: '2023-07-23',
         verified: true,
         helpful: 45,
@@ -132,32 +135,47 @@ const KeterStorageShedPage: React.FC = () => {
         images: ['https://m.media-amazon.com/images/I/81zZUOHACSL.jpg']
       }
     ],
+    colorOptions: [
+      { name: 'Light Grey with Dark Cover', price: '£125.00', available: true },
+      { name: 'Beige Brown', price: '£125.00', available: true },
+      { name: 'Dark Grey', price: '£125.00', available: true }
+    ],
+    sizeOptions: [
+      { name: '132 x 71.5 x 113.5 cm', price: '£125.00', available: true },
+      { name: 'Ultra', price: '£181.02', available: true }
+    ],
     variants: [
       {
+        id: 'size',
+        type: 'size',
         name: 'Size',
         options: [
-          { name: '132 x 71.5 x 113.5 cm', price: '£125.00', selected: true },
-          { name: 'Ultra', price: '£181.02' }
+          { name: '132 x 71.5 x 113.5 cm', images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
+          { name: 'Ultra', images: ['https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg'] }
         ]
       },
       {
+        id: 'color',
+        type: 'color',
         name: 'Colour',
         options: [
-          { name: 'Light Grey with Dark Cover', price: '£125.00', selected: true },
-          { name: 'Beige Brown', price: '£125.00' },
-          { name: 'Dark Grey', price: '£125.00' }
-        ]
-      },
-      {
-        name: 'Pattern',
-        options: [
-          { name: 'Single', price: '£125.00', selected: true },
-          { name: 'Solid Wood Effect', price: '£125.00' }
+          { name: 'Light Grey with Dark Cover', images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
+          { name: 'Beige Brown', images: ['https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg'] },
+          { name: 'Dark Grey', images: ['https://m.media.amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
         ]
       }
     ],
     amazonChoice: true,
     prime: true,
+    deliveryInfo: 'Free Prime delivery',
+    quantityLimit: 5,
+    safetyFeatures: ['Lockable design', 'UV resistant', 'Weatherproof construction'],
+    productInfo: {
+      'Category': 'Garden Storage',
+      'Brand': 'Keter',
+      'Material': 'Resin',
+      'Capacity': '880L'
+    },
     countryRedirects: []
   };
 

@@ -96,6 +96,42 @@ export const productRegistry: Product[] = [
     createdAt: 1704240000000 // January 3, 2024
   },
   {
+    id: 'keter-storage-shed',
+    name: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
+    price: '£125.00',
+    originalPrice: '£181.02',
+    rating: 4.4,
+    reviews: 7246,
+    image: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
+    images: [
+      'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
+      'https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg',
+      'https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg',
+      'https://m.media-amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg',
+      'https://m.media-amazon.com/images/I/911s9OrxX-L._AC_SL1500_.jpg',
+      'https://m.media-amazon.com/images/I/611Ypdn2IlL._AC_SL1500_.jpg'
+    ],
+    prime: true,
+    amazonChoice: true,
+    category: 'Garden Storage',
+    route: '/keter-storage-shed',
+    description: 'Ideal outdoor storage solution for garden tools and equipment, BBQ and accessories and x2 120L wheelie bins. Elegant wood effect panels that opens from the top or the front and with a lockable feature for secure closure.',
+    features: [
+      '880L storage capacity',
+      'Light Grey with Dark Grey Lid',
+      'Resin construction with wood effect finish',
+      'UV resistant and waterproof',
+      'Lockable for security',
+      'Built-in shelf support',
+      'Ventilated design',
+      'Heavy-duty floor panel',
+      'Easy assembly',
+      'Weatherproof outdoor storage'
+    ],
+    collection: 'garden-outdoor',
+    createdAt: Date.now()
+  },
+  {
     id: 'vacuum-cleaner',
     name: 'Amazon Basics Cylinder Bagless Vacuum Cleaner with HEPA filter for Hardfloor, Carpet & Car, Compact & Lightweight, 700W, 1.5L, Black',
     price: '£9.99',
