@@ -39,13 +39,26 @@ const FacebookAdsPage: React.FC = () => {
   // Load ad copies from localStorage and enrich with product data
   useEffect(() => {
     const loadAdCopiesWithProductData = async () => {
-      const savedAdCopies = localStorage.getItem('facebookAdCopies');
-      if (savedAdCopies) {
-        const adCopies = JSON.parse(savedAdCopies);
-        
-        // Enrich ad copies with product data from dynamic registry
-        const enrichedAdCopies = await Promise.all(
-          adCopies.map(async (adCopy: AdCopy) => {
+              const savedAdCopies = localStorage.getItem('facebookAdCopies');
+        if (savedAdCopies) {
+          const adCopies = JSON.parse(savedAdCopies);
+          
+          // Filter ad copies based on selected language/country
+          const filteredAdCopies = adCopies.filter((adCopy: AdCopy) => {
+            // If it's a country-specific ad copy, check if it matches the selected language
+            if (adCopy.id.includes('-')) {
+              const countryCode = adCopy.id.split('-').pop();
+              return countryCode === selectedLanguage;
+            }
+            // If it's a general ad copy, include it for all languages
+            return true;
+          });
+          
+          console.log(`🔍 Filtered ad copies for ${selectedLanguage}:`, filteredAdCopies.length, 'out of', adCopies.length);
+          
+          // Enrich ad copies with product data from dynamic registry
+          const enrichedAdCopies = await Promise.all(
+            filteredAdCopies.map(async (adCopy: AdCopy) => {
             try {
               // Try to get product data from dynamic registry
               const { getDynamicProduct } = await import('../utils/dynamicProductRegistry');
@@ -116,7 +129,7 @@ const FacebookAdsPage: React.FC = () => {
     };
     
     loadAdCopiesWithProductData();
-  }, []);
+  }, [selectedLanguage]);
 
   // Function to simplify product names for ad naming
   const simplifyProductName = (name: string): string => {
