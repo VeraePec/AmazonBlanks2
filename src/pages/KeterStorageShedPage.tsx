@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import ProductPageTemplate from '../components/ProductPageTemplate';
 import { useCountrySelector } from '../hooks/useCountrySelector';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
@@ -50,7 +49,6 @@ const KeterStorageShedPage: React.FC = () => {
   if (hasError) {
     return (
       <div className="min-h-screen bg-white flex flex-col">
-        <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
@@ -81,9 +79,9 @@ const KeterStorageShedPage: React.FC = () => {
     ratingsCount: 7246,
     boughtInMonth: '1K+',
     amazonChoice: true,
-    price: formatPrice('125.00', selectedCountry.code),
-    originalPrice: formatPrice('181.02', selectedCountry.code),
-    discount: '31%',
+    price: selectedCountry.code === 'gb' ? '£9.99' : formatPrice('9.99', selectedCountry.code),
+    originalPrice: selectedCountry.code === 'gb' ? '£14.99' : formatPrice('14.99', selectedCountry.code),
+    discount: '33%',
     images: [
       'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
       'https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg',
@@ -100,61 +98,61 @@ const KeterStorageShedPage: React.FC = () => {
     ],
     stockCount: 15,
     aboutThisItem: [
-      'Ideal outdoor storage solution for garden tools and equipment, BBQ and accessories and x2 120L wheelie bins.',
-      'Elegant wood effect panels that opens from the top or the front and with a lockable feature for secure closure.',
-      'Heavy-duty floor with built-in support for shelving and 880 L capacity. Shelves not included.',
-      'Assembled dimensions: 132 x 71.5 x 113.5 cm (L x W x H); internal dimensions: 122 x 61 x 108.8 cm (L x W x H).',
-      'Weatherproof, zero maintenance, easy clean, fade free construction.',
-      'Built-in ventilation panels for ample airflow.',
-      'Two doors on front and a top lid with unique locking system.',
-      'Can lock doors and top together or just lock doors for child-safe access from above (padlock not included).',
-      'Assembly time: approximately 20-40 minutes, recommended for 1 person.'
+      getTranslation('product.about.keter.storage.shed.1', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.2', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.3', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.4', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.5', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.6', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.7', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.8', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.about.keter.storage.shed.9', getCountryConfig(selectedCountry.code).language)
     ],
     features: [
-      '880L storage capacity',
-      'Light Grey with Dark Grey Lid',
-      'Resin construction with wood effect finish',
-      'UV resistant and waterproof',
-      'Lockable for security',
-      'Built-in shelf support',
-      'Ventilated design',
-      'Heavy-duty floor panel',
-      'Easy assembly',
-      'Weatherproof outdoor storage'
+      getTranslation('product.features.keter.storage.shed.1', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.2', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.3', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.4', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.5', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.6', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.7', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.8', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.9', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.features.keter.storage.shed.10', getCountryConfig(selectedCountry.code).language)
     ],
     productDetails: {
       'Brand': 'Keter',
-      'Colour': 'Light Grey with Dark Cover',
-      'Material': 'Resin',
-      'Product Dimensions': '71.5D x 132W x 113.5H centimetres',
-      'Item Weight': '21.5 Kilograms',
-      'Volume': '880 litres',
-      'UV Protection': 'UV Resistant',
-      'Special Features': 'Heavy Duty, Water-Resistant, Waterproof',
-      'Usage': 'outdoor storage, indoor storage, garden storage',
-      'Assembly Time': '20-40 minutes',
-      'Recommended Assembly': '1 person'
+      'Colour': getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language),
+      'Material': getTranslation('product.material.resin', getCountryConfig(selectedCountry.code).language),
+      'Product Dimensions': getTranslation('product.dimensions.71.5x132x113.5', getCountryConfig(selectedCountry.code).language),
+      'Item Weight': getTranslation('product.weight.21.5kg', getCountryConfig(selectedCountry.code).language),
+      'Volume': getTranslation('product.volume.880l', getCountryConfig(selectedCountry.code).language),
+      'UV Protection': getTranslation('product.uv.resistant', getCountryConfig(selectedCountry.code).language),
+      'Special Features': getTranslation('product.special.features.heavy.duty', getCountryConfig(selectedCountry.code).language),
+      'Usage': getTranslation('product.usage.outdoor.storage', getCountryConfig(selectedCountry.code).language),
+      'Assembly Time': getTranslation('product.assembly.time.20.40.minutes', getCountryConfig(selectedCountry.code).language),
+      'Recommended Assembly': getTranslation('product.assembly.recommended.1.person', getCountryConfig(selectedCountry.code).language)
     },
     technicalDetails: {
       'Manufacturer': 'Keter',
       'Part Number': '249317',
       'Item Model Number': '249317',
-      'Size': '132 x 71.5 x 113.5 cm',
-      'Style': 'Single',
-      'Pattern': 'Single',
-      'Shape': 'Horizontal',
+      'Size': getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language),
+      'Style': getTranslation('product.style.single', getCountryConfig(selectedCountry.code).language),
+      'Pattern': getTranslation('product.pattern.single', getCountryConfig(selectedCountry.code).language),
+      'Shape': getTranslation('product.shape.horizontal', getCountryConfig(selectedCountry.code).language),
       'Item Package Quantity': '1',
-      'Batteries Required': 'No',
+      'Batteries Required': getTranslation('product.batteries.no', getCountryConfig(selectedCountry.code).language),
       'ASIN': 'B08XQVQPQ5',
-      'Date First Available': '1 Mar. 2021'
+      'Date First Available': getTranslation('product.date.first.available.march.2021', getCountryConfig(selectedCountry.code).language)
     },
     reviews: [
       {
         id: '1',
         author: 'PaTi',
         rating: 5,
-        title: 'Your Space-Saving Storage Solution!',
-        content: 'The Keter 249317 Store it Out Nova Outdoor Garden Storage Shed is the perfect storage solution for your outdoor space. With its compact size and clever design, this storage shed offers ample space to keep your garden tools, equipment, and other belongings organized and protected from the elements.',
+        title: getTranslation('product.review.title.space.saving', getCountryConfig(selectedCountry.code).language),
+        content: getTranslation('product.review.content.space.saving', getCountryConfig(selectedCountry.code).language),
         date: '2023-07-23',
         verified: true,
         helpful: 45,
@@ -164,8 +162,8 @@ const KeterStorageShedPage: React.FC = () => {
         id: '2',
         author: 'Miss Pickles',
         rating: 5,
-        title: 'Fab',
-        content: 'Once built, the storage unit appears nice and sturdy. Everything lines up during build and the lock device is a nice touch. You have two holes for locks. I haven\'t noticed any leaks of yet!! Cons, my product didn\'t come with instructions but it took me all of ten minutes to figure out construction and another 10mins to put together. I was informed later, instruction can found on utube!!. That aside, it looks good and all belonging are safe and dry.... so it\'s perfect.',
+        title: getTranslation('product.review.title.fab', getCountryConfig(selectedCountry.code).language),
+        content: getTranslation('product.review.content.fab', getCountryConfig(selectedCountry.code).language),
         date: '2025-06-04',
         verified: true,
         helpful: 6,
@@ -175,8 +173,8 @@ const KeterStorageShedPage: React.FC = () => {
         id: '3',
         author: 'Steve Bowden',
         rating: 4,
-        title: 'Great product, easy to assemble, neat and tidy storage for garden stuff',
-        content: 'Great product, easy to assemble, neat and tidy storage for garden stuff. The only criticism is that it does not have a simple lid stay, so you need to hold up the lid with one hand. So I will make one to hold the lid up as necessary.',
+        title: getTranslation('product.review.title.great.product', getCountryConfig(selectedCountry.code).language),
+        content: getTranslation('product.review.content.great.product', getCountryConfig(selectedCountry.code).language),
         date: '2025-08-08',
         verified: true,
         helpful: 1,
@@ -186,8 +184,8 @@ const KeterStorageShedPage: React.FC = () => {
         id: '4',
         author: 'Nia',
         rating: 5,
-        title: 'Waterproof, spacious & easy to build',
-        content: 'This arrived quickly. Took 30 mins to construct. Very easy to do. Ideal to have second pair of hands to hold pieces in place whilst putting screws in. Watertight, spacious and robust. Nice 😊',
+        title: getTranslation('product.review.title.waterproof.spacious', getCountryConfig(selectedCountry.code).language),
+        content: getTranslation('product.review.content.waterproof.spacious', getCountryConfig(selectedCountry.code).language),
         date: '2025-08-03',
         verified: true,
         helpful: 1,
@@ -197,8 +195,8 @@ const KeterStorageShedPage: React.FC = () => {
         id: '5',
         author: 'Janey',
         rating: 5,
-        title: 'Bin storage',
-        content: 'Very lightweight and if honest a little flimsy we have drilled it into the floor to prevent movement. Doesnt fit all of the recycling bins in due to hight it on fits the black ones. Does the job of hiding unsightly bins',
+        title: getTranslation('product.review.title.bin.storage', getCountryConfig(selectedCountry.code).language),
+        content: getTranslation('product.review.content.bin.storage', getCountryConfig(selectedCountry.code).language),
         date: '2025-04-24',
         verified: true,
         helpful: 0,
@@ -206,43 +204,47 @@ const KeterStorageShedPage: React.FC = () => {
       }
     ],
     colorOptions: [
-      { name: 'Light Grey with Dark Cover', price: '£125.00', available: true },
-      { name: 'Beige Brown', price: '£125.00', available: true },
-      { name: 'Dark Grey', price: '£125.00', available: true }
+      { name: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : formatPrice('9.99', selectedCountry.code), available: true },
+      { name: getTranslation('product.color.beige.brown', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : formatPrice('9.99', selectedCountry.code), available: true },
+      { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : formatPrice('9.99', selectedCountry.code), available: true }
     ],
     sizeOptions: [
-      { name: '132 x 71.5 x 113.5 cm', price: '£125.00', available: true },
-      { name: 'Ultra', price: '£181.02', available: true }
+      { name: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : formatPrice('9.99', selectedCountry.code), available: true },
+      { name: getTranslation('product.size.ultra', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£14.99' : formatPrice('14.99', selectedCountry.code), available: true }
     ],
     variants: [
       {
         id: 'size',
         type: 'size',
-        name: 'Size',
+        name: getTranslation('product.variant.size', getCountryConfig(selectedCountry.code).language),
         options: [
-          { name: '132 x 71.5 x 113.5 cm', images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
-          { name: 'Ultra', images: ['https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg'] }
+          { name: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
+          { name: getTranslation('product.size.ultra', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg'] }
         ]
       },
       {
         id: 'color',
         type: 'color',
-        name: 'Colour',
+        name: getTranslation('product.variant.colour', getCountryConfig(selectedCountry.code).language),
         options: [
-          { name: 'Light Grey with Dark Cover', images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
-          { name: 'Beige Brown', images: ['https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg'] },
-          { name: 'Dark Grey', images: ['https://m.media-amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
+          { name: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
+          { name: getTranslation('product.color.beige.brown', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg'] },
+          { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
         ]
       }
     ],
     prime: true,
-    deliveryInfo: 'Free Prime delivery',
+    deliveryInfo: getTranslation('product.delivery.free.prime', getCountryConfig(selectedCountry.code).language),
     quantityLimit: 5,
-    safetyFeatures: ['Lockable design', 'UV resistant', 'Weatherproof construction'],
+    safetyFeatures: [
+      getTranslation('product.safety.lockable.design', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.safety.uv.resistant', getCountryConfig(selectedCountry.code).language),
+      getTranslation('product.safety.weatherproof.construction', getCountryConfig(selectedCountry.code).language)
+    ],
     productInfo: {
-      'Category': 'Garden Storage',
+      'Category': getTranslation('product.category.garden.storage', getCountryConfig(selectedCountry.code).language),
       'Brand': 'Keter',
-      'Material': 'Resin',
+      'Material': getTranslation('product.material.resin', getCountryConfig(selectedCountry.code).language),
       'Capacity': '880L'
     },
     countryRedirects: []
@@ -250,7 +252,6 @@ const KeterStorageShedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
-      <Header />
       <React.Suspense fallback={
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
