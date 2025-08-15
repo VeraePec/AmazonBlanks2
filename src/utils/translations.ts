@@ -71,6 +71,32 @@ export const TRANSLATIONS = {
     'product.info.material': 'Material',
     'product.info.capacity': 'Capacity',
     
+    // Product detail labels
+    'product.detail.brand': 'Brand',
+    'product.detail.colour': 'Colour',
+    'product.detail.material': 'Material',
+    'product.detail.product.dimensions': 'Product Dimensions',
+    'product.detail.item.weight': 'Item Weight',
+    'product.detail.volume': 'Volume',
+    'product.detail.uv.protection': 'UV Protection',
+    'product.detail.special.features': 'Special Features',
+    'product.detail.usage': 'Usage',
+    'product.detail.assembly.time': 'Assembly Time',
+    'product.detail.recommended.assembly': 'Recommended Assembly',
+    
+    // Technical detail labels
+    'product.technical.manufacturer': 'Manufacturer',
+    'product.technical.part.number': 'Part Number',
+    'product.technical.item.model.number': 'Item Model Number',
+    'product.technical.size': 'Size',
+    'product.technical.style': 'Style',
+    'product.technical.pattern': 'Pattern',
+    'product.technical.shape': 'Shape',
+    'product.technical.item.package.quantity': 'Item Package Quantity',
+    'product.technical.batteries.required': 'Batteries Required',
+    'product.technical.asin': 'ASIN',
+    'product.technical.date.first.available': 'Date First Available',
+    
     // Keter product specific translations
     'product.about.keter.storage.shed.1': 'Ideal outdoor storage solution for garden tools and equipment, BBQ and accessories and x2 120L wheelie bins.',
     'product.about.keter.storage.shed.2': 'Elegant wood effect panels that opens from the top or the front and with a lockable feature for secure closure.',
@@ -443,6 +469,21 @@ export const TRANSLATIONS = {
     'product.feature.safety.tested': 'Safety tested',
     'product.feature.return.policy': '30-day return policy',
     
+    // Product features - generic
+    'product.feature.lockable.design': 'Lockable design',
+    'product.feature.uv.resistant': 'UV resistant',
+    'product.feature.weatherproof.construction': 'Weatherproof construction',
+    'product.feature.storage.capacity': 'Storage capacity',
+    'product.feature.light.grey.dark.lid': 'Light Grey with Dark Grey Lid',
+    'product.feature.resin.construction': 'Resin construction with wood effect finish',
+    'product.feature.waterproof': 'Waterproof',
+    'product.feature.security': 'Security',
+    'product.feature.built.in.shelf.support': 'Built-in shelf support',
+    'product.feature.ventilated.design': 'Ventilated design',
+    'product.feature.heavy.duty.floor': 'Heavy-duty floor panel',
+    'product.feature.easy.assembly': 'Easy assembly',
+    'product.feature.outdoor.storage': 'Outdoor storage',
+    
     // Store and returns (moved to main section)
     
     // Color and size options
@@ -682,6 +723,32 @@ export const TRANSLATIONS = {
     'product.info.material': 'Materiale',
     'product.info.capacity': 'Kapacitet',
     
+    // Product detail labels
+    'product.detail.brand': 'Mærke',
+    'product.detail.colour': 'Farve',
+    'product.detail.material': 'Materiale',
+    'product.detail.product.dimensions': 'Produktdimensioner',
+    'product.detail.item.weight': 'Varevægt',
+    'product.detail.volume': 'Volumen',
+    'product.detail.uv.protection': 'UV-beskyttelse',
+    'product.detail.special.features': 'Særlige funktioner',
+    'product.detail.usage': 'Anvendelse',
+    'product.detail.assembly.time': 'Samletid',
+    'product.detail.recommended.assembly': 'Anbefalet samling',
+    
+    // Technical detail labels
+    'product.technical.manufacturer': 'Producent',
+    'product.technical.part.number': 'Varenummer',
+    'product.technical.item.model.number': 'Varemodelnummer',
+    'product.technical.size': 'Størrelse',
+    'product.technical.style': 'Stil',
+    'product.technical.pattern': 'Mønster',
+    'product.technical.shape': 'Form',
+    'product.technical.item.package.quantity': 'Varepakkeantal',
+    'product.technical.batteries.required': 'Batterier påkrevd',
+    'product.technical.asin': 'ASIN',
+    'product.technical.date.first.available': 'Dato først tilgjengelig',
+    
     // Urgency Messages
     'urgency.clearance.sale': 'Udsalg',
     'urgency.people.viewing': '{count} personer ser nu',
@@ -754,6 +821,21 @@ export const TRANSLATIONS = {
     'product.feature.high.quality.construction': 'Højkvalitets konstruktion',
     'product.feature.safety.tested': 'Sikkerhedstestet',
     'product.feature.return.policy': '30 dages returpolitik',
+    
+    // Product features - generic
+    'product.feature.lockable.design': 'Låsbar design',
+    'product.feature.uv.resistant': 'UV-resistent',
+    'product.feature.weatherproof.construction': 'Vejrbestandig konstruktion',
+    'product.feature.storage.capacity': 'Opbevaringskapacitet',
+    'product.feature.light.grey.dark.lid': 'Lys grå med mørk grå låg',
+    'product.feature.resin.construction': 'Harpiks konstruktion med træeffekt finish',
+    'product.feature.waterproof': 'Vandtæt',
+    'product.feature.security': 'Sikkerhed',
+    'product.feature.built.in.shelf.support': 'Indbygget hyldestøtte',
+    'product.feature.ventilated.design': 'Ventileret design',
+    'product.feature.heavy.duty.floor': 'Kraftig gulvpanel',
+    'product.feature.easy.assembly': 'Nem samling',
+    'product.feature.outdoor.storage': 'Udendørs opbevaring',
     
     // Color and size options
     'product.color.name': 'Farvenavn',
@@ -860,6 +942,32 @@ export const TRANSLATIONS = {
     'product.info.brand': 'Merke',
     'product.info.material': 'Materiale',
     'product.info.capacity': 'Kapasitet',
+    
+    // Product detail labels
+    'product.detail.brand': 'Merke',
+    'product.detail.colour': 'Farge',
+    'product.detail.material': 'Materiale',
+    'product.detail.product.dimensions': 'Produktdimensjoner',
+    'product.detail.item.weight': 'Varevekt',
+    'product.detail.volume': 'Volum',
+    'product.detail.uv.protection': 'UV-beskyttelse',
+    'product.detail.special.features': 'Spesielle funksjoner',
+    'product.detail.usage': 'Bruk',
+    'product.detail.assembly.time': 'Samletid',
+    'product.detail.recommended.assembly': 'Anbefalt samling',
+    
+    // Technical detail labels
+    'product.technical.manufacturer': 'Produsent',
+    'product.technical.part.number': 'Varenummer',
+    'product.technical.item.model.number': 'Varemodelnummer',
+    'product.technical.size': 'Størrelse',
+    'product.technical.style': 'Stil',
+    'product.technical.pattern': 'Mønster',
+    'product.technical.shape': 'Form',
+    'product.technical.item.package.quantity': 'Varepakkeantall',
+    'product.technical.batteries.required': 'Batterier påkrevd',
+    'product.technical.asin': 'ASIN',
+    'product.technical.date.first.available': 'Dato først tilgjengelig',
     
     // Reviews
     'reviews.customer.reviews': 'Kundeanmeldelser',
@@ -978,7 +1086,22 @@ export const TRANSLATIONS = {
     // Product features
     'product.feature.high.quality.construction': 'Høy kvalitets konstruksjon',
     'product.feature.safety.tested': 'Sikkerhetstestet',
-    'product.feature.return.policy': '30 dagers returpolitikk',
+    'product.feature.return.policy': '30 dages returpolitikk',
+    
+    // Product features - generic
+    'product.feature.lockable.design': 'Låsbar design',
+    'product.feature.uv.resistant': 'UV-bestandig',
+    'product.feature.weatherproof.construction': 'Værbestandig konstruksjon',
+    'product.feature.storage.capacity': 'Lagringskapasitet',
+    'product.feature.light.grey.dark.lid': 'Lys grå med mørk grå lokk',
+    'product.feature.resin.construction': 'Harpiks konstruksjon med tre-effekt finish',
+    'product.feature.waterproof': 'Vanntett',
+    'product.feature.security': 'Sikkerhet',
+    'product.feature.built.in.shelf.support': 'Innebygd hyllebrakett',
+    'product.feature.ventilated.design': 'Ventilert design',
+    'product.feature.heavy.duty.floor': 'Kraftig gulvpanel',
+    'product.feature.easy.assembly': 'Enkel montering',
+    'product.feature.outdoor.storage': 'Utendørs lagring',
     
     // Color and size options
     'product.color.name': 'Fargenavn',

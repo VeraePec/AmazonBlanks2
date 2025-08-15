@@ -786,9 +786,36 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
               {/* Product Features */}
               <div className="border-t border-gray-300 pt-3 sm:pt-4">
                 <ul className="space-y-1 text-sm">
-                  {productData.features.map((feature, index) => (
-                    <li key={index}>• {feature}</li>
-                  ))}
+                  {productData.features.map((feature, index) => {
+                    // Translate features based on their content
+                    let translatedFeature = feature;
+                    if (feature.includes('Lockable design') || feature.includes('Lockable for security')) {
+                      translatedFeature = getTranslation('product.feature.lockable.design', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('UV resistant')) {
+                      translatedFeature = getTranslation('product.feature.uv.resistant', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Weatherproof construction') || feature.includes('Weatherproof outdoor storage')) {
+                      translatedFeature = getTranslation('product.feature.weatherproof.construction', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('880L storage capacity')) {
+                      translatedFeature = getTranslation('product.feature.storage.capacity', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Light Grey with Dark Grey Lid')) {
+                      translatedFeature = getTranslation('product.feature.light.grey.dark.lid', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Resin construction with wood effect finish')) {
+                      translatedFeature = getTranslation('product.feature.resin.construction', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Waterproof')) {
+                      translatedFeature = getTranslation('product.feature.waterproof', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Built-in shelf support')) {
+                      translatedFeature = getTranslation('product.feature.built.in.shelf.support', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Ventilated design')) {
+                      translatedFeature = getTranslation('product.feature.ventilated.design', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Heavy-duty floor panel')) {
+                      translatedFeature = getTranslation('product.feature.heavy.duty.floor', getCountryConfig(selectedCountry.code).language);
+                    } else if (feature.includes('Easy assembly')) {
+                      translatedFeature = getTranslation('product.feature.easy.assembly', getCountryConfig(selectedCountry.code).language);
+                    }
+                    return (
+                      <li key={index}>• {translatedFeature}</li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
@@ -925,7 +952,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                     .filter(([key, value]) => key.trim() && value.trim()) // Only show non-empty entries
                     .map(([key, value]) => (
                     <tr key={key}>
-                      <td className="font-medium py-1 pr-4 align-top">{key}:</td>
+                      <td className="font-medium py-1 pr-4 align-top">{getTranslation(`product.detail.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}:</td>
                       <td className="py-1">{value}</td>
                     </tr>
                   ))}
@@ -967,7 +994,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                 .slice(0, Math.ceil(Object.keys(productData.technicalDetails).length / 2))
                 .map(([key, value]) => (
                 <div key={key} className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-medium">{key}</span>
+                  <span className="font-medium">{getTranslation(`product.technical.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}</span>
                   <span>{value}</span>
                 </div>
               ))}
@@ -978,7 +1005,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                 .slice(Math.ceil(Object.keys(productData.technicalDetails).length / 2))
                 .map(([key, value]) => (
                 <div key={key} className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-medium">{key}</span>
+                  <span className="font-medium">{getTranslation(`product.technical.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}</span>
                   <span>{value}</span>
                 </div>
               ))}
@@ -1001,7 +1028,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
           <h2 className="text-lg sm:text-xl font-medium mb-4">{getTranslation('product.information.title', getCountryConfig(selectedCountry.code).language)}</h2>
           <div className="bg-gray-50 p-4 rounded text-sm space-y-2">
             {Object.entries(productData.productInfo).map(([key, value]) => (
-              <div key={key}><strong>{key}:</strong> {value}</div>
+              <div key={key}><strong>{getTranslation(`product.info.${key.toLowerCase().replace(/\s+/g, '.')}`, getCountryConfig(selectedCountry.code).language) || key}:</strong> {value}</div>
             ))}
           </div>
         </div>
