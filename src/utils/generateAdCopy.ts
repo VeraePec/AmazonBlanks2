@@ -323,6 +323,161 @@ export async function generateAndSaveAdCopyForProduct(productData: any, productI
   }
 }
 
+// Function to generate country-specific ad copies for ProductPageTemplate products
+export async function generateCountrySpecificAdCopies(productData: any, productId: string): Promise<void> {
+  try {
+    console.log('🔄 Generating country-specific ad copies for ProductPageTemplate product:', productData.name);
+    
+    // Define country configurations with proper pricing
+    const countryConfigs = {
+      gb: { price: '£9.99', originalPrice: '£14.99', currency: 'GBP' },
+      dk: { price: '63.58 kr', originalPrice: '95.37 kr', currency: 'DKK' },
+      no: { price: '99 kr', originalPrice: '148.50 kr', currency: 'NOK' },
+      es: { price: '€11.50', originalPrice: '€17.25', currency: 'EUR' },
+      ch: { price: 'CHF 10.50', originalPrice: 'CHF 15.75', currency: 'CHF' }
+    };
+    
+    // Generate ad copy for each country
+    for (const [countryCode, config] of Object.entries(countryConfigs)) {
+      // Create country-specific product data
+      const countryProductData = {
+        ...productData,
+        price: config.price,
+        originalPrice: config.originalPrice
+      };
+      
+      const countrySpecificAdCopy = await generateCountrySpecificAdCopy(countryProductData, countryCode, config);
+      
+      // Save the country-specific ad copy
+      await saveAdCopyWithRoute(
+        `${productId}-${countryCode}`, 
+        productData.name, 
+        countrySpecificAdCopy.headline, 
+        countrySpecificAdCopy.copy, 
+        `/${productId}`, 
+        productData.images
+      );
+    }
+    
+    console.log('✅ Country-specific ad copies generated and saved for ProductPageTemplate product:', productData.name);
+  } catch (error) {
+    console.error('❌ Error generating country-specific ad copies for ProductPageTemplate product:', error);
+  }
+}
+
+// Function to generate ad copy for a specific country
+async function generateCountrySpecificAdCopy(productData: any, countryCode: string, config: any): Promise<AdCopyResult> {
+  // Country-specific ad copy templates
+  const countryTemplates = {
+    gb: {
+      headlines: [
+        "Found this Amazon gem for £9.99",
+        "Clearance find that actually delivered",
+        "Amazon deal I couldn't pass up",
+        "£9.99 well spent",
+        "Honestly didn't expect this quality"
+      ],
+      copyTemplates: [
+        `I needed something like this but didn't want to spend a fortune… Saw this ${productData.name} on clearance and figured, why not? It arrived in two days, and I was actually impressed — great quality, feels solid, and works exactly as described.
+
+Setup was straightforward, took about an hour, and it looks proper. The build quality is better than expected for the price, not cheap-looking at all. If you're looking for something functional and well-made, this definitely works.
+
+Only downside? I wish I ordered another one.
+Order now before it sells out again — at £9.99 it's honestly a steal.`
+      ]
+    },
+    dk: {
+      headlines: [
+        "Fantastisk Amazon fund for 63.58 kr",
+        "Udsalgs fund der faktisk leverede",
+        "Amazon tilbud jeg ikke kunne sige nej til",
+        "63.58 kr godt brugt",
+        "Ærligt talt forventede jeg ikke denne kvalitet"
+      ],
+      copyTemplates: [
+        `Jeg havde brug for noget som dette, men ville ikke bruge en formue… Så denne ${productData.name} på udsalg og tænkte, hvorfor ikke? Den ankom på to dage, og jeg var faktisk imponeret — god kvalitet, føles solid og fungerer præcis som beskrevet.
+
+Opsætning var ligetil, tog omkring en time, og det ser ordentligt ud. Kvaliteten er bedre end forventet til prisen, slet ikke billigt udseende. Hvis du leder efter noget funktionelt og velgjort, virker dette helt sikkert.
+
+Eneste ulempe? Jeg ønsker jeg havde bestilt en til.
+Bestil nu før den bliver udsolgt igen — til 63.58 kr er det ærligt talt et røverkøb.`
+      ]
+    },
+    no: {
+      headlines: [
+        "Fantastisk Amazon funn for 99 kr",
+        "Utsalgsfunn som faktisk leverte",
+        "Amazon tilbud jeg ikke kunne si nei til",
+        "99 kr godt brukt",
+        "Ærlig talt forventet jeg ikke denne kvaliteten"
+      ],
+      copyTemplates: [
+        `Jeg trengte noe som dette, men ville ikke bruke en formue… Så denne ${productData.name} på utsalg og tenkte, hvorfor ikke? Den ankom på to dager, og jeg var faktisk imponert — god kvalitet, føles solid og fungerer akkurat som beskrevet.
+
+Oppsett var greit, tok omkring en time, og det ser ordentlig ut. Kvaliteten er bedre enn forventet til prisen, slett ikke billig utseende. Hvis du leter etter noe funksjonelt og velgjort, fungerer dette helt sikkert.
+
+Eneste ulempe? Jeg ønsker jeg hadde bestilt en til.
+Bestill nå før den blir utsolgt igjen — til 99 kr er det ærlig talt et røverkjøp.`
+      ]
+    },
+    es: {
+      headlines: [
+        "¡Encontré esta joya de Amazon por €11.50",
+        "Hallazgo de liquidación que realmente cumplió",
+        "Oferta de Amazon que no pude rechazar",
+        "€11.50 bien gastados",
+        "Honestamente no esperaba esta calidad"
+      ],
+      copyTemplates: [
+        `Necesitaba algo como esto pero no quería gastar una fortuna… Vi esto ${productData.name} en liquidación y pensé, ¿por qué no? Llegó en dos días, y honestamente me impresionó — gran calidad, se siente sólido y funciona exactamente como se describe.
+
+La configuración fue sencilla, tomó aproximadamente una hora, y se ve apropiado. La calidad de construcción es mejor de lo esperado por el precio, no se ve barato en absoluto. Si buscas algo funcional y bien hecho, esto definitivamente funciona.
+
+¿La única desventaja? Desearía haber pedido otro.
+Pídelo ahora antes de que se agote nuevamente — a €11.50 es honestamente una ganga.`
+      ]
+    },
+    ch: {
+      headlines: [
+        "Unglaubliches Amazon Fund für CHF 10.50",
+        "Ausverkaufs-Fund der tatsächlich geliefert hat",
+        "Amazon Angebot das ich nicht ablehnen konnte",
+        "CHF 10.50 gut investiert",
+        "Ehrlich gesagt habe ich diese Qualität nicht erwartet"
+      ],
+      copyTemplates: [
+        `Ich brauchte so etwas, aber wollte kein Vermögen ausgeben… Sah diesen ${productData.name} im Ausverkauf und dachte, warum nicht? Er kam in zwei Tagen an und ich war ehrlich gesagt beeindruckt — tolle Qualität, fühlt sich solide an und funktioniert genau wie beschrieben.
+
+Der Aufbau war unkompliziert, dauerte etwa eine Stunde und sieht ordentlich aus. Die Verarbeitungsqualität ist besser als erwartet für den Preis, sieht überhaupt nicht billig aus. Wenn Sie nach etwas Funktionalem und gut Gemachtem suchen, funktioniert das definitiv.
+
+Der einzige Nachteil? Ich wünschte, ich hätte einen zweiten bestellt.
+Bestellen Sie jetzt, bevor er wieder ausverkauft ist — für CHF 10.50 ist es ehrlich gesagt ein Schnäppchen.`
+      ]
+    }
+  };
+  
+  const template = countryTemplates[countryCode as keyof typeof countryTemplates];
+  if (!template) {
+    // Fallback to UK template
+    const fallbackTemplate = countryTemplates.gb;
+    const randomHeadline = fallbackTemplate.headlines[Math.floor(Math.random() * fallbackTemplate.headlines.length)];
+    const randomCopy = fallbackTemplate.copyTemplates[Math.floor(Math.random() * fallbackTemplate.copyTemplates.length)];
+    
+    return {
+      headline: randomHeadline,
+      copy: randomCopy
+    };
+  }
+  
+  const randomHeadline = template.headlines[Math.floor(Math.random() * template.headlines.length)];
+  const randomCopy = template.copyTemplates[Math.floor(Math.random() * template.copyTemplates.length)];
+  
+  return {
+    headline: randomHeadline,
+    copy: randomCopy
+  };
+}
+
 // Function to generate ad copies for all existing ProductPageTemplate products
 export async function generateAdCopiesForAllProductPageTemplateProducts(): Promise<void> {
   try {

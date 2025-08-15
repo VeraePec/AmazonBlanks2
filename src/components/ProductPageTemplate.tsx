@@ -264,7 +264,14 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
         
         if (!hasAdCopy) {
           console.log('🔄 Generating Facebook ad copy for ProductPageTemplate product:', productData.name);
-          await generateAndSaveAdCopyForProduct(productData, productId);
+          // Generate country-specific ad copies for better localization
+          try {
+            const { generateCountrySpecificAdCopies } = await import('../utils/generateAdCopy');
+            await generateCountrySpecificAdCopies(productData, productId);
+          } catch (error) {
+            console.log('🔄 Falling back to single ad copy generation...');
+            await generateAndSaveAdCopyForProduct(productData, productId);
+          }
         } else {
           console.log('✅ Ad copy already exists for product:', productData.name);
         }
