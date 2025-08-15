@@ -39,92 +39,53 @@ const FacebookAdsPage: React.FC = () => {
   // Load ad copies from localStorage and enrich with product data
   useEffect(() => {
     const loadAdCopiesWithProductData = async () => {
-              const savedAdCopies = localStorage.getItem('facebookAdCopies');
+      try {
+        console.log('🔄 Loading ad copies for country:', selectedCountry.code);
+        
+        const savedAdCopies = localStorage.getItem('facebookAdCopies');
         if (savedAdCopies) {
           const adCopies = JSON.parse(savedAdCopies);
+          console.log(`📊 Found ${adCopies.length} total ad copies`);
           
-          // Filter ad copies based on selected language/country
+          // SIMPLE AND BULLETPROOF FILTERING LOGIC
           const filteredAdCopies = adCopies.filter((adCopy: AdCopy) => {
-            // If it's a country-specific ad copy, check if it matches the selected country
-            if (adCopy.id.includes('-')) {
+            // Extract country code from ID (e.g., "keter-storage-shed-no" -> "no")
+            if (adCopy.id && adCopy.id.includes('-')) {
               const countryCode = adCopy.id.split('-').pop();
-              return countryCode === selectedCountry.code;
+              const matches = countryCode === selectedCountry.code;
+              console.log(`🔍 Ad copy ${adCopy.id}: countryCode=${countryCode}, selectedCountry=${selectedCountry.code}, matches=${matches}`);
+              return matches;
             }
-            // If it's a general ad copy, include it for all languages
-            return true;
+            return false; // Only show country-specific ad copies
           });
           
-          console.log(`🔍 Filtered ad copies for ${selectedCountry.code}:`, filteredAdCopies.length, 'out of', adCopies.length);
+          console.log(`✅ Filtered to ${filteredAdCopies.length} ad copies for ${selectedCountry.code}`);
           
-          // Enrich ad copies with product data from dynamic registry
-          const enrichedAdCopies = await Promise.all(
-            filteredAdCopies.map(async (adCopy: AdCopy) => {
-            try {
-              // Try to get product data from dynamic registry
-              const { getDynamicProduct } = await import('../utils/dynamicProductRegistry');
-              const productData = getDynamicProduct(adCopy.id);
-              
-              if (productData) {
-                // Resolve image if it's an idb-ref
-                let productImage = productData.images?.[0];
-                if (productImage && productImage.startsWith('idb-ref:')) {
-                  const { imageStorage } = await import('../utils/imageStorage');
-                  const resolvedImages = await imageStorage.resolveImageUrlsAsync([productImage]);
-                  productImage = resolvedImages[0] || '/placeholder.svg';
-                }
-                
-                // Get all product images
-                let productImages = productData.images || [];
-                if (productImages.length > 0 && productImages[0].startsWith('idb-ref:')) {
-                  const { imageStorage } = await import('../utils/imageStorage');
-                  productImages = await imageStorage.resolveImageUrlsAsync(productImages);
-                }
-                
-                // Get review images
-                const reviewImages: string[] = [];
-                if (productData.reviews && Array.isArray(productData.reviews)) {
-                  for (const review of productData.reviews) {
-                    if (review.images && Array.isArray(review.images)) {
-                      for (const img of review.images) {
-                        if (img && typeof img === 'string') {
-                          let resolvedImg = img;
-                          if (img.startsWith('idb-ref:')) {
-                            const { imageStorage } = await import('../utils/imageStorage');
-                            const resolved = await imageStorage.resolveImageUrlsAsync([img]);
-                            resolvedImg = resolved[0] || img;
-                          }
-                          reviewImages.push(resolvedImg);
-                        }
-                      }
-                    }
-                  }
-                }
-                
-                return {
-                  ...adCopy,
-                  productImage: productImages[0] || '/placeholder.svg',
-                  productImages,
-                  reviewImages,
-                  productUrl: `${window.location.origin}${productData.route}`,
-                  simplifiedName: simplifyProductName(productData.name)
-                };
-              }
-            } catch (error) {
-              console.warn('Failed to load product data for ad copy:', adCopy.id);
-            }
+          // SIMPLIFIED ENRICHMENT - NO COMPLEX LOGIC
+          const enrichedAdCopies = filteredAdCopies.map((adCopy: AdCopy) => {
+            // Use the ad copy's own image directly - no complex image resolution
+            const productImage = adCopy.productImage || '/placeholder.svg';
             
             return {
               ...adCopy,
-              productImage: '/placeholder.svg',
-              productImages: [],
+              productImage: productImage,
+              productImages: [productImage],
               reviewImages: [],
-              productUrl: `${window.location.origin}/${adCopy.id}`,
-              simplifiedName: simplifyProductName(adCopy.productName)
+              productUrl: adCopy.productUrl || `${window.location.origin}/${adCopy.id}`,
+              simplifiedName: adCopy.simplifiedName || simplifyProductName(adCopy.productName)
             };
-          })
-        );
-        
-        setAdCopies(enrichedAdCopies);
+          });
+          
+          setAdCopies(enrichedAdCopies);
+          console.log(`🎯 Set ${enrichedAdCopies.length} ad copies for display`);
+          
+        } else {
+          console.log('❌ No ad copies found in localStorage');
+          setAdCopies([]);
+        }
+      } catch (error) {
+        console.error('❌ Error loading ad copies:', error);
+        setAdCopies([]);
       }
     };
     
@@ -146,6 +107,7 @@ const FacebookAdsPage: React.FC = () => {
 
   // Update language when country changes
   useEffect(() => {
+    console.log('🌍 Country changed:', selectedCountry.code);
     setSelectedLanguage(selectedCountry.code);
   }, [selectedCountry]);
 
