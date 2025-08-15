@@ -115,6 +115,8 @@ const AllProductsSection = () => {
             </button>
           </div>
         )}
+
+
       </div>
     </div>
   );

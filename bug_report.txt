@@ -1,0 +1,5 @@
+Cross-browser synchronization issue: products created in Chrome are not visible in Safari.
+
+The problem is that when a user creates a product using the AI Product Builder in Chrome, that product is not automatically synced to other browsers like Safari. This breaks the cross-device experience.
+
+Current implementation has cross-browser sync utilities but they are not properly integrated with the product creation flow.

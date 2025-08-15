@@ -94,8 +94,26 @@ const createTemplateData = (product: DynamicProduct & { reviews?: any[] }) => {
     originalPrice: product.originalPrice,
     discount: calculateDiscount(product.price, product.originalPrice),
     images: (() => {
-      const valid = (product.images || []).filter(img => typeof img === 'string' && img.trim().length > 0);
-      return valid.length > 0 ? valid : ['/placeholder.svg'];
+      console.log('🖼️ Processing images for product:', product.name);
+      console.log('🖼️ Raw images:', product.images);
+      
+      const valid = (product.images || []).filter(img => {
+        const isValid = typeof img === 'string' && img.trim().length > 0;
+        if (!isValid) {
+          console.warn('🖼️ Invalid image removed:', img);
+        }
+        return isValid;
+      });
+      
+      console.log('🖼️ Valid images count:', valid.length);
+      console.log('🖼️ First valid image:', valid[0]);
+      
+      if (valid.length === 0) {
+        console.warn('🖼️ No valid images found, using placeholder');
+        return ['/placeholder.svg'];
+      }
+      
+      return valid;
     })(),
     breadcrumb: generateBreadcrumb(product.category),
     colorOptions,
@@ -329,34 +347,89 @@ const DynamicProductPageV2 = () => {
 
         // Resolve any persisted image references to usable URLs; if regular URLs, also persist for durability
         // Resolve any references, then ensure every image is persisted to IndexedDB so refresh works across browsers
-        const resolvedImages = await imageStorage.resolveImageUrlsAsync(product.images || []);
-        const ensuredPersistedImages = await imageStorage.processImagesForPersistence(resolvedImages);
-
-        // If images are not already under /images/products, upload them once to server and rewrite
-        const makePersistent = async (imgs: string[]): Promise<string[]> => {
-          const out: string[] = [];
-          for (const img of imgs || []) {
-            if (typeof img === 'string' && (img.startsWith('/images/products/') || (img.startsWith('http') && img.includes('/images/products/')))) {
-              out.push(img);
-              continue;
-            }
-            try {
-              const payload = img.startsWith('http') || img.startsWith('/') ? { url: img } : { dataUrl: img };
-              const resp = await fetch('/api/upload-image', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-              });
-              const json = await resp.json();
-              out.push(json?.url || img);
-            } catch {
-              out.push(img);
-            }
+        console.log('🖼️ Original product images:', product.images);
+        
+        let finalImages: string[] = ['/placeholder.svg'];
+        
+        try {
+          // Process images using imageStorage for proper resolution
+          const { imageStorage } = await import('../utils/imageStorage');
+          
+          if (product.images && product.images.length > 0) {
+            console.log('🖼️ Processing images with imageStorage...');
+            
+            // Resolve all images to their final URLs
+            const resolvedImages = await Promise.all(
+              product.images.map(async (img) => {
+                if (!img || typeof img !== 'string' || img.trim().length === 0) {
+                  return null;
+                }
+                
+                try {
+                  // For base64 data URLs, they should work directly
+                  if (img.startsWith('data:')) {
+                    console.log('🖼️ Found base64 image, using directly');
+                    return img;
+                  }
+                  
+                  // For blob URLs, they should work directly
+                  if (img.startsWith('blob:')) {
+                    console.log('🖼️ Found blob URL, using directly');
+                    return img;
+                  }
+                  
+                  // For IndexedDB references, resolve them
+                  if (img.startsWith('idb-ref:') || img.startsWith('blob-ref:')) {
+                    console.log('🖼️ Found IndexedDB reference, resolving...');
+                    const resolved = await imageStorage.resolveImageUrlAsync(img);
+                    console.log('🖼️ Resolved IndexedDB reference:', resolved?.substring(0, 50) + '...');
+                    return resolved;
+                  }
+                  
+                  // For HTTP URLs, use them directly
+                  if (img.startsWith('http://') || img.startsWith('https://')) {
+                    console.log('🖼️ Found HTTP URL, using directly');
+                    return img;
+                  }
+                  
+                  // For local paths, use them directly
+                  if (img.startsWith('/')) {
+                    console.log('🖼️ Found local path, using directly');
+                    return img;
+                  }
+                  
+                  console.log('🖼️ Unknown image format, using as-is:', img?.substring(0, 50) + '...');
+                  return img;
+                } catch (error) {
+                  console.error('🖼️ Error resolving image:', img, error);
+                  return null;
+                }
+              })
+            );
+            
+            // Filter out null values and ensure we have valid images
+            finalImages = resolvedImages.filter(img => img !== null && img !== '/placeholder.svg');
+            
+            console.log('🖼️ Final processed images:', {
+              count: finalImages.length,
+              images: finalImages.map(img => ({
+                type: img.startsWith('data:') ? 'base64' : img.startsWith('blob:') ? 'blob' : img.startsWith('http') ? 'http' : 'local',
+                size: img.length,
+                preview: img.substring(0, 50) + '...'
+              }))
+            });
           }
-          return out;
-        };
+          
+          // Ensure we always have at least one image
+          if (finalImages.length === 0) {
+            console.warn('🖼️ No valid images found after processing, using placeholder');
+            finalImages = ['/placeholder.svg'];
+          }
+        } catch (imageError) {
+          console.error('🖼️ Error processing images:', imageError);
+          finalImages = ['/placeholder.svg'];
+        }
 
-        const persistentImages = await makePersistent(ensuredPersistedImages);
         const resolvedVariants = Array.isArray(product.variants)
           ? await Promise.all(
               product.variants.map(async (v: any) => ({
@@ -365,9 +438,7 @@ const DynamicProductPageV2 = () => {
                   ? await Promise.all(
                       v.options.map(async (o: any) => ({
                         ...o,
-                        images: Array.isArray(o?.images)
-                          ? await makePersistent(await imageStorage.processImagesForPersistence(await imageStorage.resolveImageUrlsAsync(o.images)))
-                          : [],
+                        images: Array.isArray(o?.images) ? o.images : [],
                       }))
                     )
                   : [],
@@ -380,9 +451,7 @@ const DynamicProductPageV2 = () => {
           ? await Promise.all(
               product.reviews.map(async (review: any) => ({
                 ...review,
-                images: Array.isArray(review?.images)
-                  ? await makePersistent(await imageStorage.processImagesForPersistence(await imageStorage.resolveImageUrlsAsync(review.images)))
-                  : []
+                images: Array.isArray(review?.images) ? review.images : []
               }))
             )
           : [];
@@ -396,19 +465,28 @@ const DynamicProductPageV2 = () => {
 
         let transformed = createTemplateData({
           ...(product as any),
-          images: persistentImages,
+          images: finalImages,
           variants: resolvedVariants,
           reviews: resolvedReviews // Pass resolved reviews with working image URLs
         });
+        
         try {
           const lang = getCountryConfig(selectedCountry.code).language as any;
           transformed = await translateProductData(lang, transformed);
-        } catch {
+        } catch (translationError) {
+          console.warn('Translation failed, continuing without translation:', translationError);
           // Continue without translation if it fails
         }
+        
+        console.log('✅ Template data created successfully:', transformed);
         setTemplateData(transformed);
       } catch (err) {
         console.error('Error loading dynamic product:', err);
+        console.error('Error details:', {
+          message: err.message,
+          stack: err.stack,
+          productId: identifier
+        });
         setError('Error loading product data');
       } finally {
         setIsLoading(false);

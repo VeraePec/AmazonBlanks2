@@ -1,5 +1,6 @@
 // New simplified dynamic product registry system
 // This avoids localStorage overflow by using in-memory storage with fallback mechanisms
+import { crossTabSync } from './crossTabSync';
 
 export interface DynamicProduct {
   id: string;
@@ -52,6 +53,56 @@ interface LightweightProduct {
 // Storage keys
 const STORAGE_KEY = 'dynamicProducts';
 const PRODUCT_DATA_PREFIX = 'product_';
+
+// Cross-tab synchronization
+const setupCrossTabSync = () => {
+  // Listen for storage events from other tabs
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'dynamic-registry-sync' && event.newValue) {
+      try {
+        const syncData = JSON.parse(event.newValue);
+        console.log('🔄 Dynamic registry cross-tab sync event received:', syncData);
+        
+        if (syncData.type === 'product-added' || syncData.type === 'product-updated') {
+          // Reinitialize registry to get latest data
+          initializeDynamicRegistry();
+          // Notify listeners
+          window.dispatchEvent(new CustomEvent('dynamic-registry-updated'));
+        } else if (syncData.type === 'product-deleted') {
+          // Remove from in-memory registry
+          inMemoryRegistry.delete(syncData.productId);
+          // Notify listeners
+          window.dispatchEvent(new CustomEvent('dynamic-registry-updated'));
+        }
+      } catch (error) {
+        console.warn('Error parsing dynamic registry sync data:', error);
+      }
+    }
+  });
+};
+
+// Broadcast changes to other tabs
+const broadcastRegistryChange = (type: 'product-added' | 'product-updated' | 'product-deleted', productId?: string) => {
+  const syncData = {
+    type,
+    productId,
+    timestamp: Date.now(),
+    tabId: Math.random().toString(36).substr(2, 9)
+  };
+
+  try {
+    localStorage.setItem('dynamic-registry-sync', JSON.stringify(syncData));
+    // Remove the item immediately to avoid accumulation
+    setTimeout(() => {
+      localStorage.removeItem('dynamic-registry-sync');
+    }, 100);
+  } catch (error) {
+    console.warn('Failed to broadcast registry change:', error);
+  }
+};
+
+// Initialize cross-tab sync
+setupCrossTabSync();
 
 // Initialize from localStorage
 export const initializeDynamicRegistry = () => {
@@ -136,33 +187,49 @@ export const registerDynamicProduct = (productData: any): string => {
 
   // Store in memory for immediate access
   inMemoryRegistry.set(id, fullProduct);
-  console.log('✅ Product registered in memory:', fullProduct.name);
-  console.log('🔍 Registry - Images in fullProduct:', {
-    imageCount: fullProduct.images.length,
-    images: fullProduct.images.map(img => ({
-      type: img.startsWith('data:') ? 'base64' : 'url',
-      size: img.length,
-      preview: img.substring(0, 50) + '...'
-    }))
-  });
+        console.log('✅ Product registered in memory:', fullProduct.name);
+      console.log('🔍 Registry - Images in fullProduct:', {
+        imageCount: fullProduct.images.length,
+        images: fullProduct.images.map(img => ({
+          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : 'local',
+          size: img.length,
+          preview: img.substring(0, 50) + '...'
+        }))
+      });
+
+      // Broadcast the addition/update
+      crossTabSync.broadcastProductUpdated(id);
 
   // Save to localStorage with comprehensive error handling
   try {
     // Prepare a storage-safe version to avoid exceeding localStorage quotas
     const sanitizeImagesForStorage = (images: string[] | undefined): string[] => {
       if (!Array.isArray(images)) return [];
-      // Keep ALL images (including idb-ref: and blob-ref: references) but limit count to prevent large payloads
-      // Only filter out raw base64 data: URLs as they should have been processed already
-      return images.filter((img) => typeof img === 'string' && 
-        (img.startsWith('http') || img.startsWith('/') || img.startsWith('idb-ref:') || img.startsWith('blob-ref:'))
-      ).slice(0, 20);
+      console.log('🔍 Sanitizing images:', {
+        originalCount: images.length,
+        originalImages: images.map(img => ({
+          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : 'local',
+          size: img.length,
+          preview: img.substring(0, 50) + '...'
+        }))
+      });
+      // Keep ALL images including base64 data URLs, but limit count to prevent large payloads
+      const sanitized = images.filter((img) => typeof img === 'string' && img.trim().length > 0).slice(0, 20);
+      console.log('🔍 Sanitized images:', {
+        finalCount: sanitized.length,
+        finalImages: sanitized.map(img => ({
+          type: img.startsWith('data:') ? 'base64' : img.startsWith('http') ? 'url' : 'local',
+          size: img.length,
+          preview: img.substring(0, 50) + '...'
+        }))
+      });
+      return sanitized;
     };
 
     const sanitizeReviewImages = (images: unknown): string[] => {
       if (!Array.isArray(images)) return [];
       return (images as unknown[])
-        .filter((x): x is string => typeof x === 'string')
-        .filter((img) => img.startsWith('http') || img.startsWith('/') || img.startsWith('idb-ref:') || img.startsWith('blob-ref:'))
+        .filter((x): x is string => typeof x === 'string' && x.trim().length > 0)
         .slice(0, 3);
     };
 
@@ -546,6 +613,9 @@ export const deleteDynamicProduct = (productId: string): boolean => {
     // Remove full product data
     localStorage.removeItem(PRODUCT_DATA_PREFIX + productId);
     
+          // Broadcast the deletion
+      crossTabSync.broadcastProductDeleted(productId);
+
     console.log('✅ Product deleted:', productId);
     return true;
   } catch (error) {

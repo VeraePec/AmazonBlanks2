@@ -135,6 +135,8 @@ const AmazonHero = () => {
                 </div>
               </div>
             ))}
+            
+
           </div>
         </div>
       </div>

@@ -1,10 +1,43 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Heart, Share2, ZoomIn, X } from 'lucide-react';
+import { useResolvedImage } from '../hooks/useResolvedImage';
 
 interface ProductImageGalleryProps {
   images: string[];
   productName: string;
 }
+
+// Helper component for resolved thumbnail images
+const ResolvedThumbnail: React.FC<{
+  src: string;
+  alt: string;
+  className: string;
+  onClick: () => void;
+  isSelected: boolean;
+}> = ({ src, alt, className, onClick, isSelected }) => {
+  const resolvedSrc = useResolvedImage(src);
+  return (
+    <div
+      className={`w-12 h-12 sm:w-16 sm:h-16 border-2 rounded cursor-pointer hover:border-[#007185] transition-colors flex items-center justify-center bg-white ${
+        isSelected ? 'border-[#007185]' : 'border-gray-300'
+      }`}
+      onClick={onClick}
+    >
+      <img
+        src={resolvedSrc}
+        alt={alt}
+        className={className}
+        onLoad={() => console.log('🖼️ Thumbnail loaded successfully:', resolvedSrc?.substring(0, 50) + '...')}
+        onError={(e) => {
+          console.error('🖼️ Thumbnail failed to load:', resolvedSrc, e);
+          // Fallback to placeholder if thumbnail fails to load
+          e.currentTarget.src = '/placeholder.svg';
+          e.currentTarget.alt = 'Thumbnail failed to load';
+        }}
+      />
+    </div>
+  );
+};
 
 const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, productName }) => {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -13,6 +46,27 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
+
+  // Ensure we have valid images
+  const validImages = images?.filter(img => img && img.trim().length > 0) || [];
+  if (validImages.length === 0) {
+    console.warn('🖼️ No valid images found, using placeholder');
+    validImages.push('/placeholder.svg');
+  }
+
+  // Resolve the currently selected image
+  const resolvedSelectedImage = useResolvedImage(validImages[selectedImage]);
+
+  // Debug logging
+  console.log('🖼️ ProductImageGallery - Received props:', {
+    productName,
+    imagesCount: images?.length || 0,
+    images: images,
+    selectedImage,
+    firstImageType: images?.[0]?.substring(0, 50) + '...',
+    hasBase64: images?.some(img => img?.startsWith('data:')),
+    resolvedSelectedImage: resolvedSelectedImage?.substring(0, 50) + '...'
+  });
 
   // Swipe functionality
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -30,7 +84,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe && selectedImage < images.length - 1) {
+    if (isLeftSwipe && selectedImage < validImages.length - 1) {
       setSelectedImage(selectedImage + 1);
     } else if (isRightSwipe && selectedImage > 0) {
       setSelectedImage(selectedImage - 1);
@@ -48,7 +102,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
           setShowFullscreen(false);
         } else if (e.key === 'ArrowLeft' && selectedImage > 0) {
           setSelectedImage(selectedImage - 1);
-        } else if (e.key === 'ArrowRight' && selectedImage < images.length - 1) {
+        } else if (e.key === 'ArrowRight' && selectedImage < validImages.length - 1) {
           setSelectedImage(selectedImage + 1);
         }
       }
@@ -59,7 +113,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
   }, [showFullscreen, selectedImage, images.length]);
 
   const nextImage = () => {
-    if (selectedImage < images.length - 1) {
+    if (selectedImage < validImages.length - 1) {
       setSelectedImage(selectedImage + 1);
     }
   };
@@ -95,13 +149,20 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
           >
             <img
               ref={imageRef}
-              src={images[selectedImage]}
+              src={resolvedSelectedImage}
               alt={`${productName} - View ${selectedImage + 1}`}
               className="max-w-full max-h-full object-contain transition-transform duration-300 md:hover:scale-105"
+              onLoad={() => console.log('🖼️ Image loaded successfully:', resolvedSelectedImage?.substring(0, 50) + '...')}
+              onError={(e) => {
+                console.error('🖼️ Image failed to load:', resolvedSelectedImage, e);
+                // Fallback to placeholder if image fails to load
+                e.currentTarget.src = '/placeholder.svg';
+                e.currentTarget.alt = 'Image failed to load';
+              }}
             />
             
             {/* Navigation Arrows */}
-            {images.length > 1 && (
+            {validImages.length > 1 && (
               <>
                 <button
                   onClick={(e) => {
@@ -152,38 +213,26 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
             </div>
 
             {/* Image Counter */}
-            {images.length > 1 && (
+            {validImages.length > 1 && (
               <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                {selectedImage + 1} of {images.length}
+                {selectedImage + 1} of {validImages.length}
               </div>
             )}
           </div>
         </div>
         
         {/* Thumbnail Images */}
-        {images.length > 1 && (
-          <div className="flex gap-2 order-2 overflow-x-auto pb-2 scrollbar-hide">
-            {images.map((image, index) => (
-              <div
+        {validImages.length > 1 && (
+                      <div className="flex gap-2 order-2 overflow-x-auto pb-2 scrollbar-hide">
+              {validImages.map((image, index) => (
+              <ResolvedThumbnail
                 key={index}
-                className="relative flex-shrink-0"
-              >
-                <div
-                  className={`w-12 h-12 sm:w-16 sm:h-16 border-2 rounded cursor-pointer hover:border-[#007185] transition-colors flex items-center justify-center bg-white ${
-                    selectedImage === index ? 'border-[#007185]' : 'border-gray-300'
-                  }`}
-                  onClick={() => setSelectedImage(index)}
-                >
-                  <img
-                    src={image}
-                    alt={`${productName} thumbnail ${index + 1}`}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-                {selectedImage === index && (
-                  <div className="absolute inset-0 bg-[#007185] bg-opacity-20 rounded pointer-events-none" />
-                )}
-              </div>
+                src={image}
+                alt={`${productName} thumbnail ${index + 1}`}
+                className="max-w-full max-h-full object-contain"
+                onClick={() => setSelectedImage(index)}
+                isSelected={selectedImage === index}
+              />
             ))}
           </div>
         )}
@@ -206,15 +255,15 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
 
             {/* Fullscreen Image */}
             <div className="relative">
-              <img
-                src={images[selectedImage]}
-                alt={`${productName} - Fullscreen view ${selectedImage + 1}`}
-                className="max-w-full max-h-[80vh] object-contain cursor-default"
-                onClick={(e) => e.stopPropagation()}
-              />
+                          <img
+              src={resolvedSelectedImage}
+              alt={`${productName} - Fullscreen view ${selectedImage + 1}`}
+              className="max-w-full max-h-[80vh] object-contain cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            />
               
               {/* Navigation Arrows */}
-              {images.length > 1 && (
+              {validImages.length > 1 && (
                 <>
                   <button
                     onClick={(e) => {
@@ -240,9 +289,9 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ images, produ
               )}
 
               {/* Image Counter */}
-              {images.length > 1 && (
+              {validImages.length > 1 && (
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full cursor-default">
-                  {selectedImage + 1} of {images.length}
+                  {selectedImage + 1} of {validImages.length}
                 </div>
               )}
             </div>

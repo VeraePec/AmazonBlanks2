@@ -1,6 +1,8 @@
 import { centralizedStorage, CentralizedProduct } from './centralizedStorage';
 import { serverStorage } from '../services/serverStorage';
 import { supabaseStorage, isSupabaseConfigured } from '../services/supabaseStorage';
+import { crossTabSync } from './crossTabSync';
+import { crossBrowserSync } from './crossBrowserSync';
 
 export interface StorageStatus {
   localStorage: boolean;
@@ -15,11 +17,84 @@ class UnifiedStorage {
   private storageMode: 'hybrid' | 'local' | 'server' | 'supabase' = 'hybrid';
   private lastSyncTime: number = 0;
   private syncInterval: NodeJS.Timeout | null = null;
-  private readonly SYNC_INTERVAL = 60000; // 1 minute
+  private readonly SYNC_INTERVAL = 30000; // 30 seconds for more frequent sync
+  private storageEventListeners: Set<() => void> = new Set();
 
   constructor() {
     this.initializeStorage();
     this.startSyncTimer();
+    this.setupCrossTabSync();
+  }
+
+  private setupCrossTabSync(): void {
+    // Listen for storage events from other tabs
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'unified-storage-sync' && event.newValue) {
+        try {
+          const syncData = JSON.parse(event.newValue);
+          console.log('🔄 Cross-tab sync event received:', syncData);
+          
+          if (syncData.type === 'product-updated' || syncData.type === 'product-deleted') {
+            // Trigger a full sync to get the latest data
+            this.forceSync();
+            // Notify listeners
+            this.notifyStorageChange();
+          }
+        } catch (error) {
+          console.warn('Error parsing cross-tab sync data:', error);
+        }
+      }
+    });
+
+    // Listen for custom events for same-tab communication
+    window.addEventListener('unified-storage-change', () => {
+      this.notifyStorageChange();
+    });
+  }
+
+  private notifyStorageChange(): void {
+    // Dispatch custom event for same-tab listeners
+    window.dispatchEvent(new CustomEvent('unified-storage-hydrated'));
+    
+    // Notify all registered listeners
+    this.storageEventListeners.forEach(listener => {
+      try {
+        listener();
+      } catch (error) {
+        console.warn('Error in storage change listener:', error);
+      }
+    });
+  }
+
+  private broadcastStorageChange(type: 'product-updated' | 'product-deleted', productId?: string): void {
+    const syncData = {
+      type,
+      productId,
+      timestamp: Date.now(),
+      tabId: Math.random().toString(36).substr(2, 9) // Simple tab identifier
+    };
+
+    // Broadcast to other tabs via localStorage
+    try {
+      localStorage.setItem('unified-storage-sync', JSON.stringify(syncData));
+      // Remove the item immediately to avoid accumulation
+      setTimeout(() => {
+        localStorage.removeItem('unified-storage-sync');
+      }, 100);
+    } catch (error) {
+      console.warn('Failed to broadcast storage change:', error);
+    }
+
+    // Dispatch custom event for same-tab listeners
+    window.dispatchEvent(new CustomEvent('unified-storage-change', { detail: syncData }));
+  }
+
+  // Add listener for storage changes
+  addStorageChangeListener(listener: () => void): () => void {
+    this.storageEventListeners.add(listener);
+    return () => {
+      this.storageEventListeners.delete(listener);
+    };
   }
 
   private async initializeStorage(): Promise<void> {
@@ -126,6 +201,19 @@ class UnifiedStorage {
         }
       }
       
+      // Broadcast change to other tabs
+      crossTabSync.broadcastProductUpdated(product.id);
+      
+      // Broadcast cross-browser sync event
+      try {
+        await crossBrowserSync.broadcastProductUpdated(product.id, {
+          product: savedProduct,
+          timestamp: Date.now()
+        });
+      } catch (error) {
+        console.warn('Cross-browser sync broadcast failed:', error);
+      }
+      
       return savedProduct;
     } catch (error) {
       console.error('Failed to save product:', error);
@@ -225,6 +313,16 @@ class UnifiedStorage {
         } catch (error) {
           console.warn('Server delete failed, but local delete succeeded:', error);
         }
+      }
+      
+      // Broadcast deletion to other tabs
+      crossTabSync.broadcastProductDeleted(id);
+      
+      // Broadcast cross-browser sync event
+      try {
+        await crossBrowserSync.broadcastProductDeleted(id);
+      } catch (error) {
+        console.warn('Cross-browser sync broadcast failed:', error);
       }
       
       return localResult;

@@ -1522,6 +1522,17 @@ const AdminDashboard = () => {
               <button
                 onClick={() => {
                   setShowCreationModal(false);
+                  navigate('/ai-product-builder');
+                }}
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                Create with AI
+              </button>
+              
+              <button
+                onClick={() => {
+                  setShowCreationModal(false);
                   navigate('/product-builder?create=true');
                 }}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"

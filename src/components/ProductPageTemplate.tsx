@@ -234,6 +234,16 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
     const finalImages = newImages.length > 0 ? newImages : (productData.images || []);
     
     // Debug logging (can be removed in production)
+    console.log('🖼️ ProductPageTemplate - Image Debug:', {
+      productName: productData.name,
+      originalImages: productData.images,
+      newImages,
+      finalImages,
+      finalImagesLength: finalImages.length,
+      firstImageType: finalImages[0]?.substring(0, 50) + '...',
+      hasBase64: finalImages.some(img => img?.startsWith('data:'))
+    });
+    
     if (finalImages.length === 0) {
       console.warn('ProductPageTemplate: No images found for product', productData.name);
     }

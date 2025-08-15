@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Browser Sync Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .status.online { background: rgba(34, 197, 94, 0.2); }
+        .status.offline { background: rgba(239, 68, 68, 0.2); }
+        .status.syncing { background: rgba(59, 130, 246, 0.2); }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .log-entry.success { background: rgba(34, 197, 94, 0.2); }
+        .log-entry.error { background: rgba(239, 68, 68, 0.2); }
+        .log-entry.info { background: rgba(59, 130, 246, 0.2); }
+        .browser-id {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Cross-Browser Sync Test</h1>
+        <p>This page tests cross-browser synchronization. Open this page in multiple browsers to see real-time sync.</p>
+        
+        <div class="status" id="connectionStatus">
+            <span id="connectionIcon">🌐</span>
+            <span id="connectionText">Checking connection...</span>
+        </div>
+        
+        <div class="browser-id">
+            <strong>Browser ID:</strong> <span id="browserId">Generating...</span>
+        </div>
+        
+        <div class="container">
+            <h3>Test Controls</h3>
+            <button onclick="testBroadcast()">📡 Test Broadcast</button>
+            <button onclick="testFetch()">📥 Test Fetch Events</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+        
+        <div class="container">
+            <h3>Event Log</h3>
+            <div class="log" id="eventLog">
+                <div class="log-entry info">Waiting for events...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let browserId = '';
+        let lastSyncTime = Date.now();
+        let isOnline = navigator.onLine;
+
+        // Generate unique browser ID
+        function generateBrowserId() {
+            const existingId = localStorage.getItem('browser-id');
+            if (existingId) return existingId;
+            
+            const newId = `browser_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem('browser-id', newId);
+            return newId;
+        }
+
+        // Log events
+        function logEvent(message, type = 'info') {
+            const log = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Update connection status
+        function updateConnectionStatus() {
+            const status = document.getElementById('connectionStatus');
+            const icon = document.getElementById('connectionIcon');
+            const text = document.getElementById('connectionText');
+            
+            if (isOnline) {
+                status.className = 'status online';
+                icon.textContent = '🟢';
+                text.textContent = 'Online - Server connected';
+            } else {
+                status.className = 'status offline';
+                icon.textContent = '🔴';
+                text.textContent = 'Offline - Server disconnected';
+            }
+        }
+
+        // Test broadcast functionality
+        async function testBroadcast() {
+            try {
+                const event = {
+                    type: 'test-event',
+                    productId: `test-${Date.now()}`,
+                    browserId: browserId,
+                    timestamp: Date.now(),
+                    data: { message: 'Test event from ' + browserId }
+                };
+
+                const response = await fetch('http://localhost:3001/api/broadcast-sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(event)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    logEvent(`✅ Broadcast successful: ${result.message}`, 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                logEvent(`❌ Broadcast failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Test fetch events
+        async function testFetch() {
+            try {
+                const response = await fetch(`http://localhost:3001/api/sync-events?browserId=${browserId}&since=${lastSyncTime}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.events.length > 0) {
+                        logEvent(`📥 Fetched ${data.events.length} events from server`, 'success');
+                        data.events.forEach(event => {
+                            logEvent(`📡 Event: ${event.type} from ${event.browserId}`, 'info');
+                        });
+                    } else {
+                        logEvent('📥 No new events to fetch', 'info');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                logEvent(`❌ Fetch failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Clear log
+        function clearLog() {
+            document.getElementById('eventLog').innerHTML = '<div class="log-entry info">Log cleared...</div>';
+        }
+
+        // Check server health
+        async function checkServerHealth() {
+            try {
+                const response = await fetch('http://localhost:3001/api/health');
+                if (response.ok) {
+                    isOnline = true;
+                    logEvent('✅ Server is healthy and responding', 'success');
+                } else {
+                    isOnline = false;
+                    logEvent('❌ Server responded with error', 'error');
+                }
+            } catch (error) {
+                isOnline = false;
+                logEvent('❌ Cannot connect to server - make sure it\'s running on port 3001', 'error');
+            }
+            updateConnectionStatus();
+        }
+
+        // Initialize
+        function init() {
+            browserId = generateBrowserId();
+            document.getElementById('browserId').textContent = browserId;
+            
+            logEvent(`🚀 Browser initialized with ID: ${browserId}`, 'info');
+            
+            // Check server health
+            checkServerHealth();
+            
+            // Set up periodic health checks
+            setInterval(checkServerHealth, 10000);
+            
+            // Set up periodic event fetching
+            setInterval(testFetch, 5000);
+            
+            // Listen for online/offline events
+            window.addEventListener('online', () => {
+                isOnline = true;
+                updateConnectionStatus();
+                logEvent('🌐 Browser is online', 'success');
+            });
+            
+            window.addEventListener('offline', () => {
+                isOnline = false;
+                updateConnectionStatus();
+                logEvent('📴 Browser is offline', 'error');
+            });
+        }
+
+        // Start when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

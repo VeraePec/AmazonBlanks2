@@ -2,7 +2,7 @@ import { CentralizedProduct } from '../utils/centralizedStorage';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://your-production-domain.com/api' 
-  : 'http://localhost:3002/api';
+  : 'http://localhost:3001/api';
 
 class ServerStorage {
   private isOnline: boolean = true;

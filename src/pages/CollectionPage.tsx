@@ -160,12 +160,26 @@ const CollectionPage = () => {
           {collection.products.length === 0 && (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">No products in this collection yet.</p>
-              <button 
-                onClick={() => navigate('/')}
-                className="text-[#007185] hover:underline mt-4"
-              >
-                Browse other collections
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+                <button 
+                  onClick={() => navigate('/ai-product-builder')}
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  🚀 Create with AI
+                </button>
+                <button 
+                  onClick={() => navigate('/product-builder?create=true')}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  ✏️ Create Manually
+                </button>
+                <button 
+                  onClick={() => navigate('/')}
+                  className="text-[#007185] hover:underline px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
+                >
+                  Browse other collections
+                </button>
+              </div>
             </div>
           )}
         </div>

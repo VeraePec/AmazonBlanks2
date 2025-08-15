@@ -60,66 +60,106 @@ export const createImageStorageUtils = () => {
 
   // Convert base64/blob/object URL to an IndexedDB reference string
   const processImageForPersistence = async (imageUrl: string): Promise<string> => {
-    if (!imageUrl || typeof imageUrl !== 'string') return '/placeholder.svg';
+    console.log('🖼️ Processing image for persistence:', imageUrl?.substring(0, 50) + '...');
+    
+    if (!imageUrl || typeof imageUrl !== 'string') {
+      console.log('🖼️ Invalid image URL, returning placeholder');
+      return '/placeholder.svg';
+    }
+    
     // Persist blob: object URLs into IndexedDB
     if (imageUrl.startsWith('blob:')) {
+      console.log('🖼️ Processing blob URL');
       try {
         const res = await fetch(imageUrl);
         const blob = await res.blob();
         const hash = generateHash();
         await putBlob(hash, blob);
-        return `idb-ref:${hash}`;
+        const result = `idb-ref:${hash}`;
+        console.log('🖼️ Converted blob to IndexedDB reference:', result);
+        return result;
       } catch (e) {
         console.warn('Failed to persist blob URL, keeping as-is', e);
         return imageUrl;
       }
     }
-    // Persist remote HTTP(S) images to IndexedDB so refreshes don’t depend on expiring links
+    
+    // Persist remote HTTP(S) images to IndexedDB so refreshes don't depend on expiring links
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      console.log('🖼️ Processing HTTP URL');
       try {
         const res = await fetch(imageUrl, { mode: 'cors' });
         if (!res.ok) return imageUrl; // keep original if fetch fails (e.g., CORS)
         const blob = await res.blob();
         const hash = generateHash();
         await putBlob(hash, blob);
-        return `idb-ref:${hash}`;
+        const result = `idb-ref:${hash}`;
+        console.log('🖼️ Converted HTTP URL to IndexedDB reference:', result);
+        return result;
       } catch {
         return imageUrl; // fallback to original URL
       }
     }
+    
     // Persist base64 data URLs
     if (imageUrl.startsWith('data:')) {
+      console.log('🖼️ Processing base64 data URL');
       try {
         const blob = base64ToBlob(imageUrl);
         const hash = generateHash();
         await putBlob(hash, blob);
-        return `idb-ref:${hash}`;
+        const result = `idb-ref:${hash}`;
+        console.log('🖼️ Converted base64 to IndexedDB reference:', result);
+        return result;
       } catch (e) {
         console.warn('Image persistence failed; keeping original base64 temporarily. Consider uploading to CDN.', e);
         return imageUrl;
       }
     }
+    
+    console.log('🖼️ Returning original URL (no processing needed):', imageUrl);
     return imageUrl;
   };
 
   // Resolve reference to an object URL (async)
   const resolveImageUrlAsync = async (reference: string): Promise<string> => {
-    if (!reference || typeof reference !== 'string') return '/placeholder.svg';
+    console.log('🖼️ Resolving image URL:', reference);
+    
+    if (!reference || typeof reference !== 'string') {
+      console.log('🖼️ Invalid reference, returning placeholder');
+      return '/placeholder.svg';
+    }
+    
     if (reference.startsWith('idb-ref:')) {
       const hash = reference.replace('idb-ref:', '');
+      console.log('🖼️ Resolving IndexedDB reference:', hash);
+      
       const existing = blobRegistry.get(hash);
-      if (existing) return existing;
+      if (existing) {
+        console.log('🖼️ Found existing blob URL:', existing);
+        return existing;
+      }
+      
       const blob = await getBlob(hash);
-      if (!blob) return '/placeholder.svg';
+      if (!blob) {
+        console.log('🖼️ No blob found for hash, returning placeholder');
+        return '/placeholder.svg';
+      }
+      
       const url = URL.createObjectURL(blob);
       blobRegistry.set(hash, url);
+      console.log('🖼️ Created new blob URL:', url);
       return url;
     }
+    
     if (reference.startsWith('blob-ref:')) {
       const hash = reference.replace('blob-ref:', '');
       const blobUrl = blobRegistry.get(hash);
+      console.log('🖼️ Resolving blob reference:', hash, '->', blobUrl);
       return blobUrl || '/placeholder.svg';
     }
+    
+    console.log('🖼️ Returning direct reference:', reference);
     return reference;
   };
 

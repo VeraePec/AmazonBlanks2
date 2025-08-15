@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "test-sync-123",
+    "name": "Cross-Browser Test Product",
+    "price": "£9.99",
+    "images": [
+      "https://via.placeholder.com/300"
+    ],
+    "description": "Testing sync"
+  }
+]

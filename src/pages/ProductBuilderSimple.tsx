@@ -6,6 +6,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { addProductWithAutoCollection } from '../data/productRegistry';
 import { registerDynamicProduct } from '../utils/dynamicProductRegistry';
+import { unifiedStorage } from '../utils/unifiedStorage';
+import { crossBrowserSync } from '../utils/crossBrowserSync';
+import { imageStorage } from '../utils/imageStorage';
 
 interface Review {
   id: string;
@@ -258,39 +261,105 @@ const ProductBuilderSimple = () => {
     </div>
   );
 
-  // Product management functions
-  const saveProduct = (product: ProductData) => {
+  // Product management functions  
+  const saveProduct = async (product: ProductData) => {
     try {
-      const saved = JSON.parse(localStorage.getItem('createdProducts') || '[]');
-      const thumbnail = Array.isArray(product.images) && product.images[0] ? product.images[0] : '/placeholder.svg';
-      const updated = [...saved, { ...product, images: [thumbnail] }];
-      localStorage.setItem('createdProducts', JSON.stringify(updated));
-      setCreatedProducts(updated);
+      // Process images for cross-browser compatibility
+      const processedImages = await imageStorage.processImagesForPersistence(product.images);
+      
+      // Convert to unified storage format
+      const unifiedProduct = {
+        id: product.id,
+        globalId: product.id,
+        name: product.name,
+        description: product.description || '',
+        price: product.price,
+        originalPrice: product.originalPrice,
+        rating: product.rating || 4.5,
+        reviews: product.reviews || [],
+        images: processedImages,
+        features: product.features || [],
+        category: product.category || 'General',
+        amazonChoice: product.amazonChoice || false,
+        prime: product.prime || true,
+        variants: product.variants || [],
+        countryRedirects: product.countryRedirects || [],
+        pageViews: 0,
+        createdAt: Date.now(),
+        lastUpdated: Date.now()
+      };
+
+      // Save using unified storage (this handles all sync automatically)
+      await unifiedStorage.saveProduct(unifiedProduct);
+      
+      // Explicitly broadcast cross-browser sync event
+      await crossBrowserSync.broadcastProductAdded(product.id, unifiedProduct);
+      
+      // Refresh the product list from unified storage
+      window.dispatchEvent(new CustomEvent('unified-storage-hydrated'));
+      
+      console.log('✅ Product saved successfully with cross-browser sync');
     } catch (error) {
       console.error('Error saving product:', error);
       alert('Error saving product. Please try again.');
     }
   };
 
-  const updateProduct = (id: string, product: ProductData) => {
+  const updateProduct = async (id: string, product: ProductData) => {
     try {
-      const saved = JSON.parse(localStorage.getItem('createdProducts') || '[]');
-      const thumbnail = Array.isArray(product.images) && product.images[0] ? product.images[0] : '/placeholder.svg';
-      const updated = saved.map((p: ProductData) => p.id === id ? { ...product, images: [thumbnail] } : p);
-      localStorage.setItem('createdProducts', JSON.stringify(updated));
-      setCreatedProducts(updated);
+      // Process images for cross-browser compatibility
+      const processedImages = await imageStorage.processImagesForPersistence(product.images);
+      
+      // Convert to unified storage format
+      const unifiedProduct = {
+        id: product.id,
+        globalId: product.id,
+        name: product.name,
+        description: product.description || '',
+        price: product.price,
+        originalPrice: product.originalPrice,
+        rating: product.rating || 4.5,
+        reviews: product.reviews || [],
+        images: processedImages,
+        features: product.features || [],
+        category: product.category || 'General',
+        amazonChoice: product.amazonChoice || false,
+        prime: product.prime || true,
+        variants: product.variants || [],
+        countryRedirects: product.countryRedirects || [],
+        pageViews: 0,
+        createdAt: Date.now(),
+        lastUpdated: Date.now()
+      };
+
+      // Update using unified storage
+      await unifiedStorage.saveProduct(unifiedProduct);
+      
+      // Broadcast cross-browser sync event
+      await crossBrowserSync.broadcastProductUpdated(product.id, unifiedProduct);
+      
+      // Refresh the product list
+      window.dispatchEvent(new CustomEvent('unified-storage-hydrated'));
+      
+      console.log('✅ Product updated successfully with cross-browser sync');
     } catch (error) {
       console.error('Error updating product:', error);
       alert('Error updating product. Please try again.');
     }
   };
 
-  const deleteProduct = (id: string) => {
+  const deleteProduct = async (id: string) => {
     try {
-      const saved = JSON.parse(localStorage.getItem('createdProducts') || '[]');
-      const updated = saved.filter((p: ProductData) => p.id !== id);
-      localStorage.setItem('createdProducts', JSON.stringify(updated));
-      setCreatedProducts(updated);
+      // Delete using unified storage
+      await unifiedStorage.deleteProduct(id);
+      
+      // Broadcast cross-browser sync event
+      await crossBrowserSync.broadcastProductDeleted(id);
+      
+      // Refresh the product list
+      window.dispatchEvent(new CustomEvent('unified-storage-hydrated'));
+      
+      console.log('✅ Product deleted successfully with cross-browser sync');
     } catch (error) {
       console.error('Error deleting product:', error);
       alert('Error deleting product. Please try again.');
@@ -750,12 +819,12 @@ const ProductBuilderSimple = () => {
     }
   };
 
-  const importProducts = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const importProducts = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const importedProducts = JSON.parse(e.target?.result as string);
         
@@ -769,9 +838,14 @@ const ProductBuilderSimple = () => {
             return;
           }
 
-          const updatedProducts = [...createdProducts, ...newProducts];
-          localStorage.setItem('createdProducts', JSON.stringify(updatedProducts));
-          setCreatedProducts(updatedProducts);
+          // Save each imported product using unified storage
+          for (const product of newProducts) {
+            try {
+              await saveProduct(product);
+            } catch (error) {
+              console.error('Failed to save imported product:', product.name, error);
+            }
+          }
           
           alert(`Successfully imported ${newProducts.length} products!`);
         } else {
@@ -832,7 +906,7 @@ const ProductBuilderSimple = () => {
     setFolders(remainingFolders);
     setCreatedProducts(productsToUpdate);
     localStorage.setItem('productFolders', JSON.stringify(remainingFolders));
-    localStorage.setItem('createdProducts', JSON.stringify(productsToUpdate));
+    // Products are now managed by unified storage, no localStorage needed
   };
 
   const getFolderTree = () => {
@@ -938,11 +1012,11 @@ const ProductBuilderSimple = () => {
       };
 
       if (editingProduct) {
-        updateProduct(productId, fullProduct);
+        await updateProduct(productId, fullProduct);
         alert('Product updated successfully!');
       } else {
         addProductWithAutoCollection(registryProduct);
-        saveProduct(fullProduct);
+        await saveProduct(fullProduct);
         alert('Product created successfully!');
       }
 
@@ -1065,6 +1139,15 @@ const ProductBuilderSimple = () => {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Dashboard
               </button>
+              
+              {/* AI Product Builder Button */}
+              <button
+                onClick={() => navigate('/ai-product-builder')}
+                className="flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-md hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                🚀 AI Builder
+              </button>
+              
               <button
                 onClick={() => {
                   setViewMode(viewMode === 'manage' ? 'create' : 'manage');

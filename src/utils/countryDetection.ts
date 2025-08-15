@@ -26,7 +26,15 @@ const FALLBACK_COUNTRY = 'gb';
 export const detectUserCountry = async (): Promise<CountryDetectionResult> => {
   try {
     // Method 1: Try IP-based geolocation (most accurate)
-    const ipResult = await detectCountryByIP();
+    // Guard: browsers can block or rate-limit these services and cause CORS/429 spam. Throttle to once per session.
+    let ipResult: { countryCode: string } | null = null;
+    try {
+      const alreadyTried = sessionStorage.getItem('ipGeoTried');
+      if (!alreadyTried) {
+        sessionStorage.setItem('ipGeoTried', '1');
+        ipResult = await detectCountryByIP();
+      }
+    } catch {}
     if (ipResult && SUPPORTED_COUNTRIES[ipResult.countryCode as keyof typeof SUPPORTED_COUNTRIES]) {
       return {
         countryCode: SUPPORTED_COUNTRIES[ipResult.countryCode as keyof typeof SUPPORTED_COUNTRIES],
@@ -103,8 +111,14 @@ const detectCountryByIP = async (): Promise<{ countryCode: string } | null> => {
             return { countryCode: countryCode.toUpperCase() };
           }
         }
-      } catch (serviceError) {
-        console.warn(`IP geolocation service ${service} failed:`, serviceError);
+      } catch (serviceError: any) {
+        // Silence noisy CORS/429 errors to avoid console spam in dev
+        const msg = String(serviceError?.message || '');
+        const isCors = /CORS/i.test(msg) || /disallows reading/i.test(msg);
+        const is429 = /429/.test(msg);
+        if (!isCors && !is429) {
+          console.warn(`IP geolocation service ${service} failed:`, serviceError);
+        }
         continue; // Try next service
       }
     }

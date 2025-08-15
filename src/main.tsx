@@ -5,6 +5,7 @@ import { initializeDynamicRegistry } from './utils/dynamicProductRegistry'
 import { unifiedStorage } from './utils/unifiedStorage'
 import type { CentralizedProduct } from './utils/centralizedStorage'
 import { imageStorage } from './utils/imageStorage'
+import { crossBrowserSync } from './utils/crossBrowserSync'
 
 // Initialize dynamic product registry on app start
 console.log('🔍 App starting - initializing dynamic registry...');
@@ -164,11 +165,30 @@ try {
         }
       }
       console.log(`✅ Hydrated ${products.length} products from unified storage`);
-      try { window.dispatchEvent(new Event('unified-storage-hydrated')); } catch (err) {}
+          try { window.dispatchEvent(new Event('unified-storage-hydrated')); } catch (err) {}
+    
+    // Initialize cross-browser sync and force sync on startup
+    console.log('🔄 Initializing cross-browser sync...');
+    try {
+      await crossBrowserSync.forceSync();
+      
+      // Set up periodic cross-browser sync
+      setInterval(async () => {
+        try {
+          await crossBrowserSync.forceSync();
+        } catch (error) {
+          console.warn('Periodic cross-browser sync failed:', error);
+        }
+      }, 30000); // Every 30 seconds
+      
+      console.log('✅ Cross-browser sync initialized with periodic sync');
+    } catch (error) {
+      console.warn('Cross-browser sync initialization failed:', error);
     }
-  } catch (e) {
-    console.warn('Unified storage hydration skipped:', e);
   }
+} catch (e) {
+  console.warn('Unified storage hydration skipped:', e);
+}
 })();
 
 createRoot(document.getElementById("root")!).render(<App />);

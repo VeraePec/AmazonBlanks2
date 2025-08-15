@@ -4,12 +4,28 @@ const path = require('path');
 const fs = require('fs').promises;
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'dist')));
+// Serve public images (persisted uploads)
+const IMAGES_ROOT = path.join(__dirname, 'public', 'images');
+const PRODUCTS_DIR = path.join(IMAGES_ROOT, 'products');
+
+async function ensureImageDirs() {
+  try { await fs.mkdir(IMAGES_ROOT, { recursive: true }); } catch {}
+  try { await fs.mkdir(PRODUCTS_DIR, { recursive: true }); } catch {}
+}
+ensureImageDirs();
+
+// Expose /images/* publicly
+app.use('/images', express.static(IMAGES_ROOT, {
+  fallthrough: true,
+  maxAge: '365d',
+  etag: true,
+}));
 
 // Data storage file
 const PRODUCTS_FILE = 'products.json';
@@ -48,7 +64,139 @@ async function saveProducts(products) {
 // Initialize products file
 ensureProductsFile();
 
+// Cross-browser sync storage
+const syncEvents = new Map();
+const SYNC_EVENT_TTL = 5 * 60 * 1000; // 5 minutes
+
+// Clean up old sync events
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, event] of syncEvents.entries()) {
+    if (now - event.timestamp > SYNC_EVENT_TTL) {
+      syncEvents.delete(key);
+    }
+  }
+}, 60000); // Clean up every minute
+
 // API Routes
+// Broadcast sync events across browsers
+app.post('/api/broadcast-sync', async (req, res) => {
+  try {
+    const event = req.body;
+    if (!event || !event.type) {
+      return res.status(400).json({ error: 'Invalid event data' });
+    }
+
+    // Store the event for other browsers to fetch
+    const eventKey = `${event.browserId}_${event.timestamp}`;
+    syncEvents.set(eventKey, {
+      ...event,
+      receivedAt: Date.now()
+    });
+
+    // Keep only recent events (last 100)
+    if (syncEvents.size > 100) {
+      const sortedKeys = Array.from(syncEvents.keys()).sort((a, b) => {
+        const eventA = syncEvents.get(a);
+        const eventB = syncEvents.get(b);
+        return eventB.timestamp - eventA.timestamp;
+      });
+      
+      // Remove oldest events
+      for (let i = 50; i < sortedKeys.length; i++) {
+        syncEvents.delete(sortedKeys[i]);
+      }
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Event broadcasted',
+      eventCount: syncEvents.size 
+    });
+  } catch (error) {
+    console.error('Broadcast sync failed:', error);
+    res.status(500).json({ error: 'Broadcast failed' });
+  }
+});
+
+// Get recent sync events for other browsers
+app.get('/api/sync-events', async (req, res) => {
+  try {
+    const { browserId, since } = req.query;
+    const sinceTime = since ? parseInt(since) : Date.now() - 60000; // Default to last minute
+    
+    const recentEvents = Array.from(syncEvents.values())
+      .filter(event => event.timestamp > sinceTime && event.browserId !== browserId)
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 50); // Limit to 50 most recent events
+
+    res.json({ 
+      success: true, 
+      events: recentEvents,
+      totalEvents: syncEvents.size
+    });
+  } catch (error) {
+    console.error('Get sync events failed:', error);
+    res.status(500).json({ error: 'Failed to get events' });
+  }
+});
+
+// Upload a single image (data URL, blob/object URL after conversion client-side, or remote URL)
+app.post('/api/upload-image', async (req, res) => {
+  try {
+    const { dataUrl, url, filename } = req.body || {};
+    let buffer;
+    let ext = 'jpg';
+    if (typeof dataUrl === 'string' && dataUrl.startsWith('data:')) {
+      const match = dataUrl.match(/^data:(.*?);base64,(.*)$/);
+      if (!match) return res.status(400).json({ error: 'Invalid data URL' });
+      const mime = match[1] || 'image/jpeg';
+      ext = mime.split('/')[1] || 'jpg';
+      buffer = Buffer.from(match[2], 'base64');
+    } else if (typeof url === 'string') {
+      const r = await fetch(url);
+      if (!r.ok) return res.status(400).json({ error: `Failed to fetch remote image: ${r.status}` });
+      const arrayBuf = await r.arrayBuffer();
+      buffer = Buffer.from(arrayBuf);
+      const contentType = r.headers.get('content-type') || 'image/jpeg';
+      ext = (contentType.split('/')[1] || 'jpg').split(';')[0];
+    } else {
+      return res.status(400).json({ error: 'Provide dataUrl or url' });
+    }
+
+    const safeBase = (filename || `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`).replace(/[^a-zA-Z0-9-_\.]/g, '_');
+    const fullName = safeBase.includes('.') ? safeBase : `${safeBase}.${ext}`;
+    const finalPath = path.join(PRODUCTS_DIR, fullName);
+    await fs.writeFile(finalPath, buffer);
+    const publicUrl = `/images/products/${fullName}`;
+    res.json({ success: true, url: publicUrl });
+  } catch (err) {
+    console.error('Upload failed', err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
+// Upload multiple images
+app.post('/api/upload-images', async (req, res) => {
+  try {
+    const { items } = req.body || {};
+    if (!Array.isArray(items)) return res.status(400).json({ error: 'items must be an array' });
+    const results = [];
+    for (const item of items) {
+      const r = await fetch('http://localhost:' + PORT + '/api/upload-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item),
+      });
+      if (!r.ok) throw new Error('Batch upload failed');
+      results.push(await r.json());
+    }
+    res.json({ success: true, results });
+  } catch (err) {
+    console.error('Batch upload failed', err);
+    res.status(500).json({ error: 'Batch upload failed' });
+  }
+});
 
 // Get all products
 app.get('/api/products', async (req, res) => {

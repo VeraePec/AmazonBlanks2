@@ -228,13 +228,30 @@ const SearchResults = () => {
               <h2 className="text-xl font-bold mb-4">No results found for "{query}"</h2>
               <div className="text-sm text-gray-600 space-y-2 max-w-md mx-auto">
                 <p>Try checking your spelling or use more general terms</p>
-                <div className="mt-4">
-                  <button 
-                    onClick={() => navigate('/')}
-                    className="text-[#0066c0] hover:text-[#c45500] hover:underline"
-                  >
-                    ← Back to Amazon.co.uk
-                  </button>
+                <div className="mt-6 space-y-3">
+                  <p className="text-sm font-medium text-gray-700">Or create your own product:</p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button 
+                      onClick={() => navigate('/ai-product-builder')}
+                      className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                    >
+                      🚀 Create with AI
+                    </button>
+                    <button 
+                      onClick={() => navigate('/product-builder?create=true')}
+                      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      ✏️ Create Manually
+                    </button>
+                  </div>
+                  <div className="mt-4">
+                    <button 
+                      onClick={() => navigate('/')}
+                      className="text-[#0066c0] hover:text-[#c45500] hover:underline"
+                    >
+                      ← Back to Amazon.co.uk
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
