@@ -164,10 +164,9 @@ const KeterStorageShedPage: React.FC = () => {
           { name: 'Dark Grey', images: ['https://m.media.amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
         ]
       }
-    ],
-    amazonChoice: true,
-    prime: true,
-    deliveryInfo: 'Free Prime delivery',
+          ],
+      prime: true,
+      deliveryInfo: 'Free Prime delivery',
     quantityLimit: 5,
     safetyFeatures: ['Lockable design', 'UV resistant', 'Weatherproof construction'],
     productInfo: {
