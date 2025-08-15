@@ -427,6 +427,12 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
       }))
     : undefined;
 
+  // Memoize default reviews to prevent regeneration on every render
+  const defaultReviews = React.useMemo(() => 
+    getDefaultReviews(getCountryConfig(selectedCountry.code).language),
+    [selectedCountry.code]
+  );
+
   // Note: ProductReviews will render the strings; DynamicProductPageV2 resolves gallery images.
 
   return (
@@ -1030,7 +1036,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
         <ProductReviews 
           reviews={[
             ...(resolvedReviews || []),
-            ...getDefaultReviews(getCountryConfig(selectedCountry.code).language)
+            ...defaultReviews
           ]} 
           productRating={productData.rating}
           totalReviewCount={productData.ratingsCount} // Use the total count from product data

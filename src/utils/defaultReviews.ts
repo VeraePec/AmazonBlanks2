@@ -12,9 +12,9 @@ export const getDefaultReviews = (language: string = 'en') => {
       rating: 5,
       title: getTranslation('reviews.default.long.1.title', language),
       content: getTranslation('reviews.default.long.1.content', language),
-      date: new Date(currentDate.getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
+      date: new Date(currentDate.getTime() - 25 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
       verified: true,
-      helpful: Math.floor(Math.random() * 50) + 10,
+      helpful: 37,
       size: undefined,
       images: []
     },
@@ -25,9 +25,9 @@ export const getDefaultReviews = (language: string = 'en') => {
       rating: 4,
       title: getTranslation('reviews.default.long.2.title', language),
       content: getTranslation('reviews.default.long.2.content', language),
-      date: new Date(currentDate.getTime() - Math.random() * 45 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
+      date: new Date(currentDate.getTime() - 42 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
       verified: true,
-      helpful: Math.floor(Math.random() * 30) + 5,
+      helpful: 24,
       size: undefined,
       images: []
     },
@@ -38,9 +38,9 @@ export const getDefaultReviews = (language: string = 'en') => {
       rating: 5,
       title: getTranslation('reviews.default.short.1.title', language),
       content: getTranslation('reviews.default.short.1.content', language),
-      date: new Date(currentDate.getTime() - Math.random() * 20 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
+      date: new Date(currentDate.getTime() - 18 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
       verified: true,
-      helpful: Math.floor(Math.random() * 20) + 3,
+      helpful: 15,
       size: undefined,
       images: []
     },
@@ -51,9 +51,9 @@ export const getDefaultReviews = (language: string = 'en') => {
       rating: 4,
       title: getTranslation('reviews.default.short.2.title', language),
       content: getTranslation('reviews.default.short.2.content', language),
-      date: new Date(currentDate.getTime() - Math.random() * 15 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
+      date: new Date(currentDate.getTime() - 12 * 24 * 60 * 60 * 1000).toLocaleDateString(language === 'da' ? 'da-DK' : language === 'no' ? 'nb-NO' : language === 'es' ? 'es-ES' : language === 'ch' ? 'de-CH' : 'en-GB'),
       verified: true,
-      helpful: Math.floor(Math.random() * 15) + 2,
+      helpful: 8,
       size: undefined,
       images: []
     }

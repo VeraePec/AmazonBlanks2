@@ -3,7 +3,6 @@ import { Star, ThumbsUp, X } from 'lucide-react';
 import { getTranslation, getCountryConfig } from '../utils/translations';
 import { useCountrySelector } from '../hooks/useCountrySelector';
 import { useResolvedImage } from '../hooks/useResolvedImage';
-import { getDefaultReviews } from '../utils/defaultReviews';
 
 interface Review {
   id: string | number;
@@ -50,11 +49,8 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews, productRating,
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
-  // Get default reviews from utility with proper translations
-  const defaultReviews = getDefaultReviews(getCountryConfig(selectedCountry.code).language);
-
-  // Use provided reviews or default ones for backward compatibility
-  const displayReviews = reviews && reviews.length > 0 ? reviews : defaultReviews;
+  // Use provided reviews (which now include memoized default reviews from parent)
+  const displayReviews = reviews || [];
   const displayRating = productRating || 4.5;
 
   const renderStars = (rating: number) => {
