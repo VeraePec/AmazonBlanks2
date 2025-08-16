@@ -80,10 +80,13 @@ const FacebookAdsPage: React.FC = () => {
                     'https://m.media-amazon.com/images/I/611Ypdn2IlL._AC_SL1500_.jpg'
                   ];
                   
-                  // Add some sample review images to make the folder not empty
+                  // Use real review images from the Keter product
                   fullReviewImages = [
-                    'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
-                    'https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg'
+                    'https://m.media-amazon.com/images/I/810IFH0goHL.jpg',
+                    'https://m.media-amazon.com/images/I/81THZPlwE7L.jpg',
+                    'https://m.media-amazon.com/images/I/714V2x9+LKL.jpg',
+                    'https://m.media-amazon.com/images/I/71FX507VNHL.jpg',
+                    'https://m.media-amazon.com/images/I/81zZUOHACSL.jpg'
                   ];
                 } else {
                   // For other products, try to get from dynamic registry
