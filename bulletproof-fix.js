@@ -19,8 +19,8 @@
       {
         id: 'keter-storage-shed-gb',
         productName: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
-        headline: 'Found this Amazon gem for £9.99',
-        copy: 'I needed something like this but didn\'t want to spend a fortune… Saw this Keter Store it Out Nova Outdoor Garden Storage Shed on clearance and figured, why not? It arrived in two days, and I was actually impressed — great quality, feels solid, and works exactly as described.\n\nSetup was straightforward, took about an hour, and it looks proper. The build quality is better than expected for the price, not cheap-looking at all. If you\'re looking for something functional and well-made, this definitely works.\n\nOnly downside? I wish I ordered another one.\nOrder now before it sells out again — at £9.99 it\'s honestly a steal.',
+        headline: 'Amazon clearance secret: £120 shed for £9.99',
+        copy: 'Okay, I need to share this because I still can\'t believe it happened. I was scrolling through Amazon last night, not planning to buy anything, when I stumbled across this Keter storage shed that\'s normally £120+ for just £9.99.\n\nAt first I thought it was a mistake or some scam, but nope - it\'s legit. Amazon has these hidden clearance sales that almost nobody knows about. I grabbed it immediately because I\'ve been needing storage space for ages.\n\nIt arrived today and honestly? The quality is insane for the price. Solid build, proper materials, not some flimsy rubbish. I\'m genuinely shocked they\'re selling it this cheap.\n\nIf you need outdoor storage, grab this NOW before they realise the pricing error and put it back up to £120+. Link in comments - thank me later!',
         createdAt: new Date().toISOString(),
         originalLanguage: 'gb',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -32,8 +32,8 @@
       {
         id: 'keter-storage-shed-dk',
         productName: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
-        headline: 'Fantastisk Amazon fund for 63.58 kr',
-        copy: 'Jeg havde brug for noget som dette, men ville ikke bruge en formue… Så denne Keter Store it Out Nova udendørs have opbevaring skur på udsalg og tænkte, hvorfor ikke? Den ankom på to dage, og jeg var faktisk imponeret — god kvalitet, føles solid og fungerer præcis som beskrevet.\n\nOpsætning var ligetil, tog omkring en time, og det ser ordentligt ud. Kvaliteten er bedre end forventet til prisen, slet ikke billigt udseende. Hvis du leder efter noget funktionelt og velgjort, virker dette helt sikkert.\n\nEneste ulempe? Jeg ønsker jeg havde bestilt en til.\nBestil nu før den bliver udsolgt igen — til 63.58 kr er det ærligt talt et røverkøb.',
+        headline: 'Amazon udsalgshemmelighed: 1200 kr skur for 63 kr',
+        copy: 'Okay, jeg er nødt til at dele dette, for jeg kan stadig ikke tro det skete. Jeg scrolled gennem Amazon i går aftes, uden at planlægge at købe noget, da jeg stødte på dette Keter opbevaringsskur, der normalt koster 1200+ kr, for kun 63 kr.\n\nFørst troede jeg det var en fejl eller et scam, men nej - det er ægte. Amazon har disse skjulte udsalg, som næsten ingen ved noget om. Jeg snuppede det med det samme, fordi jeg har haft brug for opbevaringsplads i evigheder.\n\nDet ankom i dag og ærligt? Kvaliteten er vanvittig for prisen. Solid byggekvalitet, ordentlige materialer, ikke noget skrøbeligt lort. Jeg er oprigtigt chokeret over, at de sælger det så billigt.\n\nHvis du har brug for udendørs opbevaring, snup dette NU, før de opdager prisfejlen og sætter den tilbage op på 1200 kr. Link i kommentarerne - tak mig senere!',
         createdAt: new Date().toISOString(),
         originalLanguage: 'dk',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -45,8 +45,8 @@
       {
         id: 'keter-storage-shed-no',
         productName: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
-        headline: 'Fantastisk Amazon funn for 99 kr',
-        copy: 'Jeg trengte noe som dette, men ville ikke bruke en formue… Så denne Keter Store it Out Nova utendørs hage lagringsskur på utsalg og tenkte, hvorfor ikke? Den ankom på to dager, og jeg var faktisk imponert — god kvalitet, føles solid og fungerer akkurat som beskrevet.\n\nOppsett var ligetil, tok omkring en time, og det ser ordentlig ut. Kvaliteten er bedre enn forventet til prisen, slett ikke billig utseende. Hvis du leter etter noe funksjonelt og velgjort, fungerer dette helt sikkert.\n\nEneste ulempe? Jeg ønsker jeg hadde bestilt en til.\nBestill nå før den blir utsolgt igjen — til 99 kr er det ærlig talt et røverkjøp.',
+        headline: 'Amazon utsalgshemmelighet: 1300 kr skur for 99 kr',
+        copy: 'Okay, jeg må dele dette, for jeg kan fortsatt ikke tro det skjedde. Jeg scrollet gjennom Amazon i går kveld, uten å planlegge å kjøpe noe, da jeg støtte på dette Keter lagringsskur, som normalt koster 1300+ kr, for bare 99 kr.\n\nFørst trodde jeg det var en feil eller et scam, men nei - det er ekte. Amazon har disse skjulte utsalg, som nesten ingen vet om. Jeg snappet det med det samme, fordi jeg har trengt lagringsplass i evigheter.\n\nDet ankom i dag og ærlig? Kvaliteten er vanvittig for prisen. Solid byggekvalitet, ordentlige materialer, ikke noe skrøpelig dritt. Jeg er oppriktig sjokkert over at de selger det så billig.\n\nHvis du trenger utendørs lagring, snapp dette NÅ, før de oppdager prisfeilen og setter den tilbake opp på 1300 kr. Link i kommentarene - takk meg senere!',
         createdAt: new Date().toISOString(),
         originalLanguage: 'no',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -58,8 +58,8 @@
       {
         id: 'keter-storage-shed-es',
         productName: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
-        headline: '¡Encontré esta joya de Amazon por €11.50',
-        copy: 'Necesitaba algo como esto pero no quería gastar una fortuna… Vi esto Keter Store it Out Nova cobertizo de almacenamiento de jardín al aire libre en liquidación y pensé, ¿por qué no? Llegó en dos días, y honestamente me impresionó — gran calidad, se siente sólido y funciona exactamente como se describe.\n\nLa configuración fue sencilla, tomó aproximadamente una hora, y se ve apropiado. La calidad de construcción es mejor de lo esperado por el precio, no se ve barato en absoluto. Si buscas algo funcional y bien hecho, esto definitivamente funciona.\n\n¿La única desventaja? Desearía haber pedido otro.\nPídelo ahora antes de que se agote nuevamente — a €11.50 es honestamente una ganga.',
+        headline: 'Secreto de liquidación Amazon: cobertizo de €120 por €11.50',
+        copy: 'Vale, necesito compartir esto porque aún no me lo puedo creer. Estaba navegando por Amazon anoche, sin intención de comprar nada, cuando me topé con este cobertizo de almacenamiento Keter que normalmente cuesta €120+ por solo €11.50.\n\nAl principio pensé que era un error o una estafa, pero no - es real. Amazon tiene estas liquidaciones secretas que casi nadie conoce. Lo compré inmediatamente porque llevo tiempo necesitando espacio de almacenamiento.\n\nLlegó hoy y honestamente? La calidad es increíble para el precio. Construcción sólida, materiales buenos, no es basura frágil. Estoy genuinamente sorprendido de que lo estén vendiendo tan barato.\n\nSi necesitas almacenamiento exterior, cómpralo AHORA antes de que se den cuenta del error de precio y lo pongan de vuelta a €120. Enlace en comentarios - ¡agradéceme después!',
         createdAt: new Date().toISOString(),
         originalLanguage: 'es',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -71,8 +71,8 @@
       {
         id: 'keter-storage-shed-ch',
         productName: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
-        headline: 'Unglaubliches Amazon Fund für CHF 10.50',
-        copy: 'Ich brauchte so etwas, aber wollte kein Vermögen ausgeben… Sah diesen Keter Store it Out Nova Außengarten-Lagerschuppen im Ausverkauf und dachte, warum nicht? Er kam in zwei Tagen an und ich war ehrlich gesagt beeindruckt — tolle Qualität, fühlt sich solide an und funktioniert genau wie beschrieben.\n\nDer Aufbau war unkompliziert, dauerte etwa eine Stunde und sieht ordentlich aus. Die Verarbeitungsqualität ist besser als erwartet für den Preis, sieht überhaupt nicht billig aus. Wenn Sie nach etwas Funktionalem und gut Gemachtem suchen, funktioniert das definitiv.\n\nDer einzige Nachteil? Ich wünschte, ich hätte einen zweiten bestellt.\nBestellen Sie jetzt, bevor er wieder ausverkauft ist — für CHF 10.50 ist es ehrlich gesagt ein Schnäppchen.',
+        headline: 'Amazon Ausverkaufsgeheimnis: 120 CHF Schuppen für 10.50',
+        copy: 'Okay, ich muss das teilen, weil ich es immer noch nicht glauben kann. Ich habe gestern Abend durch Amazon gescrollt, ohne vorzuhaben, etwas zu kaufen, als ich auf diesen Keter-Lagerschuppen gestoßen bin, der normalerweise 120+ CHF kostet, für nur 10.50 CHF.\n\nZuerst dachte ich, es sei ein Fehler oder ein Betrug, aber nein - es ist echt. Amazon hat diese versteckten Ausverkäufe, von denen fast niemand weiß. Ich habe es sofort gekauft, weil ich schon ewig Lagerplatz brauche.\n\nEs kam heute an und ehrlich? Die Qualität ist verrückt für den Preis. Solide Verarbeitung, ordentliche Materialien, kein wackeliger Schrott. Ich bin echt schockiert, dass sie es so billig verkaufen.\n\nWenn du Außenlagerung brauchst, schnapp es dir JETZT, bevor sie den Preisirrtum bemerken und es wieder auf 120 CHF setzen. Link in den Kommentaren - danke mir später!',
         createdAt: new Date().toISOString(),
         originalLanguage: 'ch',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -100,10 +100,10 @@
         if (ad) {
           const priceCheck = {
             gb: ad.headline.includes('£9.99'),
-            dk: ad.headline.includes('63.58 kr'),
+            dk: ad.headline.includes('63 kr'),
             no: ad.headline.includes('99 kr'),
             es: ad.headline.includes('€11.50'),
-            ch: ad.headline.includes('CHF 10.50')
+            ch: ad.headline.includes('10.50')
           };
           
           console.log(`🌍 ${countryCode.toUpperCase()}:`, {
