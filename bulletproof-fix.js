@@ -24,7 +24,7 @@
         createdAt: new Date().toISOString(),
         originalLanguage: 'gb',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
-        productUrl: 'https://amazonblanks.netlify.app/keter-storage-shed',
+        productUrl: '/keter-storage-shed',
         simplifiedName: 'Keter Store Nova'
       },
       
@@ -37,7 +37,7 @@
         createdAt: new Date().toISOString(),
         originalLanguage: 'dk',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
-        productUrl: 'https://amazonblanks.netlify.app/keter-storage-shed',
+        productUrl: '/keter-storage-shed',
         simplifiedName: 'Keter Store Nova'
       },
       
@@ -46,11 +46,11 @@
         id: 'keter-storage-shed-no',
         productName: 'Keter Store it Out Nova Outdoor Garden Storage Shed',
         headline: 'Fantastisk Amazon funn for 99 kr',
-        copy: 'Jeg trengte noe som dette, men ville ikke bruke en formue… Så denne Keter Store it Out Nova utendørs hage lagringsskur på utsalg og tenkte, hvorfor ikke? Den ankom på to dager, og jeg var faktisk imponert — god kvalitet, føles solid og fungerer akkurat som beskrevet.\n\nOppsett var greit, tok omkring en time, og det ser ordentlig ut. Kvaliteten er bedre enn forventet til prisen, slett ikke billig utseende. Hvis du leter etter noe funksjonelt og velgjort, fungerer dette helt sikkert.\n\nEneste ulempe? Jeg ønsker jeg hadde bestilt en til.\nBestill nå før den blir utsolgt igjen — til 99 kr er det ærlig talt et røverkjøp.',
+        copy: 'Jeg trengte noe som dette, men ville ikke bruke en formue… Så denne Keter Store it Out Nova utendørs hage lagringsskur på utsalg og tenkte, hvorfor ikke? Den ankom på to dager, og jeg var faktisk imponert — god kvalitet, føles solid og fungerer akkurat som beskrevet.\n\nOppsett var ligetil, tok omkring en time, og det ser ordentlig ut. Kvaliteten er bedre enn forventet til prisen, slett ikke billig utseende. Hvis du leter etter noe funksjonelt og velgjort, fungerer dette helt sikkert.\n\nEneste ulempe? Jeg ønsker jeg hadde bestilt en til.\nBestill nå før den blir utsolgt igjen — til 99 kr er det ærlig talt et røverkjøp.',
         createdAt: new Date().toISOString(),
         originalLanguage: 'no',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
-        productUrl: 'https://amazonblanks.netlify.app/keter-storage-shed',
+        productUrl: '/keter-storage-shed',
         simplifiedName: 'Keter Store Nova'
       },
       
@@ -63,7 +63,7 @@
         createdAt: new Date().toISOString(),
         originalLanguage: 'es',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
-        productUrl: 'https://amazonblanks.netlify.app/keter-storage-shed',
+        productUrl: '/keter-storage-shed',
         simplifiedName: 'Keter Store Nova'
       },
       
@@ -76,7 +76,7 @@
         createdAt: new Date().toISOString(),
         originalLanguage: 'ch',
         productImage: 'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
-        productUrl: 'https://amazonblanks.netlify.app/keter-storage-shed',
+        productUrl: '/keter-storage-shed',
         simplifiedName: 'Keter Store Nova'
       }
     ];

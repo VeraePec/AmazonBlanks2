@@ -71,7 +71,7 @@ const FacebookAdsPage: React.FC = () => {
               productImage: productImage,
               productImages: [productImage],
               reviewImages: [],
-              productUrl: adCopy.productUrl || `${window.location.origin}/${adCopy.id}`,
+              productUrl: adCopy.productUrl || '/keter-storage-shed',
               simplifiedName: adCopy.simplifiedName || simplifyProductName(adCopy.productName)
             };
           });
