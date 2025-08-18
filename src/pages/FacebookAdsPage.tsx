@@ -15,6 +15,7 @@ interface AdCopy {
   productImage?: string;
   productUrl?: string;
   simplifiedName?: string;
+  displayName?: string;
   isLaunched?: boolean;
   productImages?: string[];
   reviewImages?: string[];
@@ -106,26 +107,36 @@ const FacebookAdsPage: React.FC = () => {
                   fullProductImages = [adCopy.productImage || '/placeholder.svg'];
                 }
                 
-                return {
-                  ...adCopy,
-                  productImage: fullProductImages[0] || adCopy.productImage || '/placeholder.svg',
-                  productImages: fullProductImages,
-                  reviewImages: fullReviewImages,
-                  productUrl: adCopy.productUrl || '/keter-storage-shed',
-                  simplifiedName: adCopy.simplifiedName || simplifyProductName(adCopy.productName)
-                };
+                        return {
+          ...adCopy,
+          productImage: fullProductImages[0] || adCopy.productImage || '/placeholder.svg',
+          productImages: fullProductImages,
+          reviewImages: fullReviewImages,
+          productUrl: adCopy.productUrl || '/keter-storage-shed',
+          simplifiedName: adCopy.simplifiedName || simplifyProductName(adCopy.productName),
+          // Always use English product name for display
+          displayName: adCopy.originalLanguage === 'gb' ? adCopy.productName : 
+                      adCopy.productName.includes('Keter Eden') ? 'Keter Eden Bench 265L Outdoor Garden Furniture Storage Box' :
+                      adCopy.productName.includes('Keter Store') ? 'Keter Store it Out Nova Outdoor Garden Storage Shed' :
+                      adCopy.productName
+        };
               } catch (error) {
                 console.warn('Error enriching ad copy:', error);
-                // Fallback to basic enrichment
-                const productImage = adCopy.productImage || '/placeholder.svg';
-                return {
-                  ...adCopy,
-                  productImage: productImage,
-                  productImages: [productImage],
-                  reviewImages: [],
-                  productUrl: adCopy.productUrl || '/keter-storage-shed',
-                  simplifiedName: adCopy.simplifiedName || simplifyProductName(adCopy.productName)
-                };
+                            // Fallback to basic enrichment
+            const productImage = adCopy.productImage || '/placeholder.svg';
+            return {
+              ...adCopy,
+              productImage: productImage,
+              productImages: [productImage],
+              reviewImages: [],
+              productUrl: adCopy.productUrl || '/keter-storage-shed',
+              simplifiedName: adCopy.simplifiedName || simplifyProductName(adCopy.productName),
+              // Always use English product name for display
+              displayName: adCopy.originalLanguage === 'gb' ? adCopy.productName : 
+                          adCopy.productName.includes('Keter Eden') ? 'Keter Eden Bench 265L Outdoor Garden Furniture Storage Box' :
+                          adCopy.productName.includes('Keter Store') ? 'Keter Store it Out Nova Outdoor Garden Storage Shed' :
+                          adCopy.productName
+            };
               }
             })
           );
@@ -842,7 +853,7 @@ const FacebookAdsPage: React.FC = () => {
                       <h3 className={`font-semibold text-gray-900 mb-3 truncate ${
                         viewMode === 'grid' ? 'text-lg' : 'text-base'
                       }`}>
-                        {adCopy.productName}
+                        {adCopy.displayName || adCopy.productName}
                       </h3>
                       <div className="flex items-center gap-3 mb-3">
                         <span className={`text-gray-600 ${viewMode === 'grid' ? 'text-sm' : 'text-xs'} font-medium`}>
@@ -857,19 +868,43 @@ const FacebookAdsPage: React.FC = () => {
                         </button>
                       </div>
                       <div className="flex items-center gap-3 mb-3">
-                        {adCopy.productUrl && (
-                          <a
-                            href={adCopy.productUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium ${
-                              viewMode === 'grid' ? 'text-sm' : 'text-xs'
-                            }`}
-                          >
-                            <Eye className="w-4 h-4" />
-                            View Product
-                          </a>
-                        )}
+                        {/* View Product Button - ALWAYS show with correct URL */}
+                        <a
+                                                        href={adCopy.productUrl || (adCopy.id.includes('keter-storage-shed') ? 'https://amazonblanks.netlify.app/keter-storage-shed' :
+                                                        adCopy.id.includes('keter-eden-bench') ? 'https://amazonblanks.netlify.app/keter-eden-bench' :
+                                                        adCopy.id.includes('keter-city-storage-box') ? 'https://amazonblanks.netlify.app/keter-city-storage-box' :
+                                                        adCopy.id.includes('keter-bevy-bar') ? 'https://amazonblanks.netlify.app/keter-bevy-bar' :
+                                                        adCopy.id.includes('keter-marvel-storage-box') ? 'https://amazonblanks.netlify.app/keter-marvel-storage-box' :
+                                                        adCopy.id.includes('pawz-road-cat-tree') ? 'https://amazonblanks.netlify.app/pawz-road-cat-tree' :
+                                                        adCopy.id.includes('feandrea-cat-tree') ? 'https://amazonblanks.netlify.app/feandrea-cat-tree' :
+                                                        adCopy.id.includes('vasagle-tv-unit') ? 'https://amazonblanks.netlify.app/vasagle-tv-unit' :
+                                                        adCopy.id.includes('ninja-foodi-air-fryer') ? 'https://amazonblanks.netlify.app/ninja-foodi-air-fryer' : '/')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                                                        onClick={() => {
+                                const url = adCopy.productUrl || (adCopy.id.includes('keter-storage-shed') ? 'https://amazonblanks.netlify.app/keter-storage-shed' :
+                                                               adCopy.id.includes('keter-eden-bench') ? 'https://amazonblanks.netlify.app/keter-eden-bench' :
+                                                               adCopy.id.includes('keter-city-storage-box') ? 'https://amazonblanks.netlify.app/keter-city-storage-box' :
+                                                               adCopy.id.includes('keter-bevy-bar') ? 'https://amazonblanks.netlify.app/keter-bevy-bar' :
+                                                               adCopy.id.includes('keter-marvel-storage-box') ? 'https://amazonblanks.netlify.app/keter-marvel-storage-box' :
+                                                               adCopy.id.includes('pawz-road-cat-tree') ? 'https://amazonblanks.netlify.app/pawz-road-cat-tree' :
+                                                               adCopy.id.includes('feandrea-cat-tree') ? 'https://amazonblanks.netlify.app/feandrea-cat-tree' :
+                                                               adCopy.id.includes('vasagle-tv-unit') ? 'https://amazonblanks.netlify.app/vasagle-tv-unit' :
+                                                               adCopy.id.includes('ninja-foodi-air-fryer') ? 'https://amazonblanks.netlify.app/ninja-foodi-air-fryer' : '/');
+                            console.log('🔗 View Product clicked:', {
+                              adCopyId: adCopy.id,
+                              productUrl: adCopy.productUrl,
+                              fallbackUrl: url,
+                              finalUrl: url.startsWith('http') ? url : window.location.origin + url
+                            });
+                          }}
+                          className={`text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium ${
+                            viewMode === 'grid' ? 'text-sm' : 'text-xs'
+                          }`}
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Product
+                        </a>
                         {adCopy.productUrl && (
                           <button
                             onClick={() => copyToClipboard(adCopy.productUrl || '', 'Product URL')}

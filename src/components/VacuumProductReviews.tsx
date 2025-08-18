@@ -304,7 +304,7 @@ const VacuumProductReviews = () => {
             setSelectedReview(null);
           }}
         >
-          <div className="relative max-w-4xl max-h-full bg-white rounded-lg overflow-hidden">
+          <div className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-lg overflow-hidden flex flex-col">
             <button 
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 z-10 bg-white rounded-full p-1 shadow-lg"
               onClick={() => {
@@ -315,45 +315,47 @@ const VacuumProductReviews = () => {
               <X className="w-5 h-5" />
             </button>
             
-            {/* Review Details */}
-            {selectedReview && (
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-medium">{selectedReview.author.charAt(0)}</span>
-                  </div>
-                  
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-sm">{selectedReview.author}</span>
-                      {selectedReview.verified && (
-                        <span className="text-xs text-[#007185]">Verified Purchase</span>
-                      )}
+            <div className="flex-1 overflow-y-auto">
+              {/* Review Details */}
+              {selectedReview && (
+                <div className="p-6 border-b border-gray-200">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium">{selectedReview.author.charAt(0)}</span>
                     </div>
                     
-                    <div className="flex items-center gap-2 mb-2">
-                      {renderStars(selectedReview.rating)}
-                      <span className="font-medium text-sm">{selectedReview.title}</span>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm">{selectedReview.author}</span>
+                        {selectedReview.verified && (
+                          <span className="text-xs text-[#007185]">Verified Purchase</span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mb-2">
+                        {renderStars(selectedReview.rating)}
+                        <span className="font-medium text-sm">{selectedReview.title}</span>
+                      </div>
+                      
+                      <div className="text-xs text-gray-600 mb-2">
+                        Reviewed in the United Kingdom on {selectedReview.date}
+                      </div>
+                      
+                      <p className="text-sm text-gray-700">{selectedReview.content}</p>
                     </div>
-                    
-                    <div className="text-xs text-gray-600 mb-2">
-                      Reviewed in the United Kingdom on {selectedReview.date}
-                    </div>
-                    
-                    <p className="text-sm text-gray-700">{selectedReview.content}</p>
                   </div>
                 </div>
+              )}
+              
+              {/* Image */}
+              <div className="p-6 flex justify-center">
+                <img 
+                  src={selectedImage} 
+                  alt="Fullscreen review" 
+                  className="max-w-full max-h-[60vh] object-contain"
+                  onClick={(e) => e.stopPropagation()}
+                />
               </div>
-            )}
-            
-            {/* Image */}
-            <div className="p-6">
-              <img 
-                src={selectedImage} 
-                alt="Fullscreen review" 
-                className="max-w-full max-h-[70vh] object-contain mx-auto"
-                onClick={(e) => e.stopPropagation()}
-              />
             </div>
           </div>
         </div>

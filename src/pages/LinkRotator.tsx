@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Save, Settings, Globe, Link, ArrowLeft, AlertCircle } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { COUNTRIES } from '../utils/translations';
+import { useCountrySelector } from '../hooks/useCountrySelector';
 
 interface CountryLink {
   country: string;
@@ -14,6 +14,7 @@ interface CountryLink {
 
 const LinkRotator = () => {
   const navigate = useNavigate();
+  const { countries } = useCountrySelector();
   
   // PIN protection (same as ProductBuilder)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,7 +29,7 @@ const LinkRotator = () => {
   const [saveMessage, setSaveMessage] = useState('');
 
   // Countries from the centralized configuration (automatically includes all countries)
-  const ALL_COUNTRIES = COUNTRIES.map(country => ({
+  const ALL_COUNTRIES = countries.map(country => ({
     name: country.name,
     code: country.code.toUpperCase(),
     flag: country.flag

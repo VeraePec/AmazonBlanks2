@@ -12,9 +12,13 @@ import { getDeliveryInfo } from '../utils/deliveryDate';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
 
 const SecuritySafePage = () => {
-  // Safe country selector with fallback
   const countrySelector = useCountrySelector();
-  const selectedCountry = countrySelector.selectedCountry || { code: 'gb', name: 'English (UK)', flag: '🇬🇧', default: true };
+  const selectedCountry = countrySelector.selectedCountry;
+  
+  // Only proceed if we have a valid country selection
+  if (!selectedCountry) {
+    return <div>Loading...</div>;
+  }
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('60 L');
@@ -410,8 +414,6 @@ const SecuritySafePage = () => {
                 <h2 className="text-lg sm:text-xl font-medium mb-4">{getTranslation('product.about.this.item', getCountryConfig(selectedCountry.code).language)}</h2>
                 <ul className="space-y-2 text-sm">
                   <li>• <strong>{getTranslation('feature.safe.fire.resistant', getCountryConfig(selectedCountry.code).language)}</strong></li>
-import { useCountrySelector } from '../hooks/useCountrySelector';
-import { handleRedirectAction } from '../utils/redirectHandler';
                   <li>• <strong>{getTranslation('feature.safe.ul.standard', getCountryConfig(selectedCountry.code).language)}</strong></li>
                   <li>• <strong>{getTranslation('feature.safe.construction', getCountryConfig(selectedCountry.code).language)}</strong></li>
                   <li>• <strong>{getTranslation('feature.safe.keypad', getCountryConfig(selectedCountry.code).language)}</strong></li>

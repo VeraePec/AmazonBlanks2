@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, X, CheckCircle } from 'lucide-react';
+import { Globe, X, CheckCircle, MapPin } from 'lucide-react';
 import { useCountrySelector } from '../hooks/useCountrySelector';
 
 interface CountryDetectionNotificationProps {
@@ -58,30 +58,32 @@ const CountryDetectionNotification: React.FC<CountryDetectionNotificationProps> 
   }, []);
 
   useEffect(() => {
-    // Don't show notification on mobile devices
-    if (isMobile) {
-      return;
-    }
-
+    // Show notification for both mobile and desktop when country is detected
     // Show notification after a short delay to allow country detection to complete
     const timer = setTimeout(() => {
       if (!isDetecting && selectedCountry.code !== 'gb') {
         setIsVisible(true);
-        // Auto-hide after 8 seconds
+        // Auto-hide after 10 seconds (increased from 8)
         setTimeout(() => {
           setIsVisible(false);
           setTimeout(onClose, 300); // Wait for fade out animation
-        }, 8000);
+        }, 10000);
       }
-    }, 1000);
+    }, 1500); // Increased delay to ensure detection completes
 
     return () => clearTimeout(timer);
-  }, [selectedCountry, isDetecting, onClose, isMobile]);
+  }, [selectedCountry, isDetecting, onClose]);
 
-  if (!isVisible || isMobile) return null;
+  if (!isVisible) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-right-2 duration-300 hidden md:block" style={{ display: isMobile ? 'none' : 'block' }}>
+    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-right-2 duration-300 md:block" 
+         style={{ 
+           display: isVisible ? 'block' : 'none',
+           right: isMobile ? '1rem' : '1rem',
+           top: isMobile ? '1rem' : '1rem',
+           maxWidth: isMobile ? 'calc(100vw - 2rem)' : '24rem'
+         }}>
       <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0">
@@ -91,7 +93,7 @@ const CountryDetectionNotification: React.FC<CountryDetectionNotificationProps> 
           </div>
           
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 mb-1">
+            <div className="flex items-center space-x-2 mb-2">
               <CheckCircle className="w-4 h-4 text-green-500" />
               <p className="text-sm font-medium text-gray-900">
                 Location detected!
@@ -103,6 +105,10 @@ const CountryDetectionNotification: React.FC<CountryDetectionNotificationProps> 
                 {selectedCountry.flag} {selectedCountry.name}
               </span>
             </p>
+            <div className="flex items-center space-x-1 text-xs text-gray-500 mb-2">
+              <MapPin className="w-3 h-3" />
+              <span>Prices and language updated for your region</span>
+            </div>
             <p className="text-xs text-gray-500">
               You can change this anytime using the country selector in the header.
             </p>

@@ -33,10 +33,19 @@ import FacebookAdAssets from './pages/FacebookAdAssets';
 import FacebookAdsPage from './pages/FacebookAdsPage';
 import SyncTestPage from './pages/SyncTestPage';
 import KeterStorageShedPage from './pages/KeterStorageShedPage';
+import KeterEdenBenchPage from './pages/KeterEdenBenchPage';
+import KeterCityStorageBoxPage from './pages/KeterCityStorageBoxPage';
+import KeterBevyBarPage from './pages/KeterBevyBarPage';
+import KeterMarvelStorageBoxPage from './pages/KeterMarvelStorageBoxPage';
+import PawzRoadCatTreePage from './pages/PawzRoadCatTreePage';
+import FeandreaCatTreePage from './pages/FeandreaCatTreePage';
+import VasagleTvUnitPage from './pages/VasagleTvUnitPage';
+import NinjaFoodiAirFryerPage from './pages/NinjaFoodiAirFryerPage';
 // Removed AiProductCreator page per request
 import DynamicProductPageV2 from './components/DynamicProductPageV2';
 import NotFound from './pages/NotFound';
 import CountryDetectionNotification from './components/CountryDetectionNotification';
+import { Toaster } from './components/ui/toaster';
 
 // Dynamic registry is initialized in main.tsx
 
@@ -257,6 +266,12 @@ function DynamicTitle() {
 
 function App() {
   const [showCountryNotification, setShowCountryNotification] = React.useState(true);
+  const { selectedCountry, isDetecting } = useCountrySelector();
+
+  // Debug logging for country detection
+  React.useEffect(() => {
+    console.log('🌍 App component - Current country:', selectedCountry.name, 'Detecting:', isDetecting);
+  }, [selectedCountry, isDetecting]);
 
   return (
     <ErrorBoundary>
@@ -291,6 +306,14 @@ function App() {
                   <Route path="/ai-product-builder" element={<AiProductBuilder />} />
                   <Route path="/sync-test" element={<SyncTestPage />} />
                   <Route path="/keter-storage-shed" element={<KeterStorageShedPage />} />
+        <Route path="/keter-eden-bench" element={<KeterEdenBenchPage />} />
+        <Route path="/keter-city-storage-box" element={<KeterCityStorageBoxPage />} />
+        <Route path="/keter-bevy-bar" element={<KeterBevyBarPage />} />
+        <Route path="/keter-marvel-storage-box" element={<KeterMarvelStorageBoxPage />} />
+        <Route path="/pawz-road-cat-tree" element={<PawzRoadCatTreePage />} />
+        <Route path="/feandrea-cat-tree" element={<FeandreaCatTreePage />} />
+        <Route path="/vasagle-tv-unit" element={<VasagleTvUnitPage />} />
+        <Route path="/ninja-foodi-air-fryer" element={<NinjaFoodiAirFryerPage />} />
                   
                   {/* Catch-all route for dynamic products - should be last */}
                   <Route path="*" element={<DynamicProductPageV2 />} />
@@ -300,6 +323,17 @@ function App() {
               {/* Country Detection Notification */}
               {showCountryNotification && (
                 <CountryDetectionNotification onClose={() => setShowCountryNotification(false)} />
+              )}
+              
+              {/* Toast Notifications */}
+              <Toaster />
+              
+              {/* Debug info for development */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="fixed bottom-4 left-4 z-40 bg-black bg-opacity-75 text-white text-xs p-2 rounded">
+                  <div>Country: {selectedCountry.flag} {selectedCountry.name}</div>
+                  <div>Detecting: {isDetecting ? 'Yes' : 'No'}</div>
+                </div>
               )}
             </Router>
           </AdminAuthProvider>

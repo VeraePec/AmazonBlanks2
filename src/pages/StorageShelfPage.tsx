@@ -12,9 +12,13 @@ import { getDeliveryInfo } from '../utils/deliveryDate';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
 
 const StorageShelfPage = () => {
-  // Safe country selector with fallback
   const countrySelector = useCountrySelector();
-  const selectedCountry = countrySelector.selectedCountry || { code: 'gb', name: 'English (UK)', flag: '🇬🇧', default: true };
+  const selectedCountry = countrySelector.selectedCountry;
+  
+  // Only proceed if we have a valid country selection
+  if (!selectedCountry) {
+    return <div>Loading...</div>;
+  }
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(getTranslation('value.black', getCountryConfig(selectedCountry.code).language));

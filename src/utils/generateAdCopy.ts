@@ -308,11 +308,15 @@ export async function generateAndSaveAdCopyForProduct(productData: any, productI
     // Determine the correct product route based on productId
     let productRoute = `/${productId}`;
     
-    // Check if this is a known static route
-    if (productId === 'keter-storage-shed') {
-      productRoute = '/keter-storage-shed';
-    }
-    // Add more static route mappings here as needed
+                // Check if this is a known static route
+            if (productId === 'keter-storage-shed') {
+              productRoute = '/keter-storage-shed';
+            } else if (productId === 'keter-city-storage-box') {
+              productRoute = '/keter-city-storage-box';
+            } else if (productId === 'keter-bevy-bar') {
+              productRoute = '/keter-bevy-bar';
+            }
+            // Add more static route mappings here as needed
     
     // Save the generated ad copy with the correct route and images
     await saveAdCopyWithRoute(productId, productData.name, adCopy.headline, adCopy.copy, productRoute, productData.images);
@@ -328,25 +332,94 @@ export async function generateCountrySpecificAdCopies(productData: any, productI
   try {
     console.log('🔄 Generating country-specific ad copies for ProductPageTemplate product:', productData.name);
     
-    // Define country configurations with proper pricing
-    const countryConfigs = {
-      gb: { price: '£9.99', originalPrice: '£14.99', currency: 'GBP' },
-      dk: { price: '63.58 kr', originalPrice: '95.37 kr', currency: 'DKK' },
-      no: { price: '99 kr', originalPrice: '148.50 kr', currency: 'NOK' },
-      es: { price: '€11.50', originalPrice: '€17.25', currency: 'EUR' },
-      ch: { price: 'CHF 10.50', originalPrice: 'CHF 15.75', currency: 'CHF' }
-    };
+    // Define country configurations with proper pricing based on product
+    let countryConfigs;
+    
+                if (productId === 'keter-city-storage-box') {
+              // Keter City Storage Box pricing
+              countryConfigs = {
+                gb: { price: '£9.99', originalPrice: '£32.49', currency: 'GBP' },
+                dk: { price: '63.85 kr', originalPrice: '400 kr', currency: 'DKK' },
+                no: { price: '99 kr', originalPrice: '430 kr', currency: 'NOK' },
+                es: { price: '€32.50', originalPrice: '€37.50', currency: 'EUR' },
+                ch: { price: 'CHF 35.00', originalPrice: 'CHF 40.00', currency: 'CHF' }
+              };
+                            } else if (productId === 'keter-bevy-bar') {
+                  // Keter Bevy Bar pricing
+                  countryConfigs = {
+                    gb: { price: '£9.99', originalPrice: '£45.00', currency: 'GBP' },
+                    dk: { price: '63.85 kr', originalPrice: '450 kr', currency: 'DKK' },
+                    no: { price: '99 kr', originalPrice: '495 kr', currency: 'NOK' },
+                    es: { price: '€32.50', originalPrice: '€45.00', currency: 'EUR' },
+                    ch: { price: 'CHF 35.00', originalPrice: 'CHF 48.00', currency: 'CHF' }
+                  };
+                } else if (productId === 'pawz-road-cat-tree') {
+                  // PAWZ Road Cat Tree pricing
+                  countryConfigs = {
+                    gb: { price: '£9.99', originalPrice: '£45.99', currency: 'GBP' },
+                    dk: { price: '63.85 kr', originalPrice: '459.90 kr', currency: 'DKK' },
+                    no: { price: '99 kr', originalPrice: '459.90 kr', currency: 'NOK' },
+                    es: { price: '€32.50', originalPrice: '€45.99', currency: 'EUR' },
+                    ch: { price: 'CHF 35.00', originalPrice: 'CHF 49.00', currency: 'CHF' }
+                  };
+                } else if (productId === 'feandrea-cat-tree') {
+                  // Feandrea Cat Tree pricing
+                  countryConfigs = {
+                    gb: { price: '£9.99', originalPrice: '£96.00', currency: 'GBP' },
+                    dk: { price: '63.85 kr', originalPrice: '960.00 kr', currency: 'DKK' },
+                    no: { price: '99 kr', originalPrice: '960.00 kr', currency: 'NOK' },
+                    es: { price: '€32.50', originalPrice: '€96.00', currency: 'EUR' },
+                    ch: { price: 'CHF 35.00', originalPrice: 'CHF 104.00', currency: 'CHF' }
+                  };
+                } else if (productId === 'vasagle-tv-unit') {
+                  // VASAGLE TV Unit pricing
+                  countryConfigs = {
+                    gb: { price: '£9.99', originalPrice: '£43.89', currency: 'GBP' },
+                    dk: { price: '63.85 kr', originalPrice: '438.90 kr', currency: 'DKK' },
+                    no: { price: '99 kr', originalPrice: '438.90 kr', currency: 'NOK' },
+                    es: { price: '€32.50', originalPrice: '€43.89', currency: 'EUR' },
+                    ch: { price: 'CHF 35.00', originalPrice: 'CHF 47.00', currency: 'CHF' }
+                  };
+                } else if (productId === 'ninja-foodi-air-fryer') {
+                  // Ninja Foodi Air Fryer pricing
+                  countryConfigs = {
+                    gb: { price: '£9.99', originalPrice: '£172.00', currency: 'GBP' },
+                    dk: { price: '63.85 kr', originalPrice: '1720.00 kr', currency: 'DKK' },
+                    no: { price: '99 kr', originalPrice: '1720.00 kr', currency: 'NOK' },
+                    es: { price: '€32.50', originalPrice: '€172.00', currency: 'EUR' },
+                    ch: { price: 'CHF 35.00', originalPrice: 'CHF 187.00', currency: 'CHF' }
+                  };
+                } else if (productId === 'keter-marvel-storage-box') {
+                  // Keter Marvel Storage Box pricing
+                  countryConfigs = {
+                    gb: { price: '£9.99', originalPrice: '£45.00', currency: 'GBP' },
+                    dk: { price: '63.85 kr', originalPrice: '450.00 kr', currency: 'DKK' },
+                    no: { price: '99 kr', originalPrice: '450.00 kr', currency: 'NOK' },
+                    es: { price: '€32.50', originalPrice: '€45.00', currency: 'EUR' },
+                    ch: { price: 'CHF 35.00', originalPrice: 'CHF 48.00', currency: 'CHF' }
+                  };
+                } else {
+              // Default pricing for other products
+              countryConfigs = {
+                gb: { price: '£9.99', originalPrice: '£14.99', currency: 'GBP' },
+                dk: { price: '63.58 kr', originalPrice: '95.37 kr', currency: 'DKK' },
+                no: { price: '99 kr', originalPrice: '148.50 kr', currency: 'NOK' },
+                es: { price: '€11.50', originalPrice: '€17.25', currency: 'EUR' },
+                ch: { price: 'CHF 10.50', originalPrice: 'CHF 15.75', currency: 'CHF' }
+              };
+            }
     
     // Generate ad copy for each country
     for (const [countryCode, config] of Object.entries(countryConfigs)) {
+      const typedConfig = config as { price: string; originalPrice: string; currency: string };
       // Create country-specific product data
       const countryProductData = {
         ...productData,
-        price: config.price,
-        originalPrice: config.originalPrice
+        price: typedConfig.price,
+        originalPrice: typedConfig.originalPrice
       };
       
-      const countrySpecificAdCopy = await generateCountrySpecificAdCopy(countryProductData, countryCode, config);
+      const countrySpecificAdCopy = await generateCountrySpecificAdCopy(countryProductData, countryCode, typedConfig);
       
       // Save the country-specific ad copy
       await saveAdCopyWithRoute(
@@ -366,15 +439,15 @@ export async function generateCountrySpecificAdCopies(productData: any, productI
 }
 
 // Function to generate ad copy for a specific country
-async function generateCountrySpecificAdCopy(productData: any, countryCode: string, config: any): Promise<AdCopyResult> {
+async function generateCountrySpecificAdCopy(productData: any, countryCode: string, config: { price: string; originalPrice: string; currency: string }): Promise<AdCopyResult> {
   // Country-specific ad copy templates
   const countryTemplates = {
     gb: {
       headlines: [
-        "Found this Amazon gem for £9.99",
+        `Found this Amazon gem for ${config.price}`,
         "Clearance find that actually delivered",
         "Amazon deal I couldn't pass up",
-        "£9.99 well spent",
+        `${config.price} well spent`,
         "Honestly didn't expect this quality"
       ],
       copyTemplates: [
@@ -383,15 +456,15 @@ async function generateCountrySpecificAdCopy(productData: any, countryCode: stri
 Setup was straightforward, took about an hour, and it looks proper. The build quality is better than expected for the price, not cheap-looking at all. If you're looking for something functional and well-made, this definitely works.
 
 Only downside? I wish I ordered another one.
-Order now before it sells out again — at £9.99 it's honestly a steal.`
+Order now before it sells out again — at ${config.price} it's honestly a steal.`
       ]
     },
     dk: {
       headlines: [
-        "Fantastisk Amazon fund for 63.58 kr",
+        `Fantastisk Amazon fund for ${config.price}`,
         "Udsalgs fund der faktisk leverede",
         "Amazon tilbud jeg ikke kunne sige nej til",
-        "63.58 kr godt brugt",
+        `${config.price} godt brugt`,
         "Ærligt talt forventede jeg ikke denne kvalitet"
       ],
       copyTemplates: [
@@ -400,15 +473,15 @@ Order now before it sells out again — at £9.99 it's honestly a steal.`
 Opsætning var ligetil, tog omkring en time, og det ser ordentligt ud. Kvaliteten er bedre end forventet til prisen, slet ikke billigt udseende. Hvis du leder efter noget funktionelt og velgjort, virker dette helt sikkert.
 
 Eneste ulempe? Jeg ønsker jeg havde bestilt en til.
-Bestil nu før den bliver udsolgt igen — til 63.58 kr er det ærligt talt et røverkøb.`
+Bestil nu før den bliver udsolgt igen — til ${config.price} er det ærligt talt et røverkøp.`
       ]
     },
     no: {
       headlines: [
-        "Fantastisk Amazon funn for 99 kr",
+        `Fantastisk Amazon funn for ${config.price}`,
         "Utsalgsfunn som faktisk leverte",
         "Amazon tilbud jeg ikke kunne si nei til",
-        "99 kr godt brukt",
+        `${config.price} godt brukt`,
         "Ærlig talt forventet jeg ikke denne kvaliteten"
       ],
       copyTemplates: [
@@ -417,15 +490,15 @@ Bestil nu før den bliver udsolgt igen — til 63.58 kr er det ærligt talt et r
 Oppsett var greit, tok omkring en time, og det ser ordentlig ut. Kvaliteten er bedre enn forventet til prisen, slett ikke billig utseende. Hvis du leter etter noe funksjonelt og velgjort, fungerer dette helt sikkert.
 
 Eneste ulempe? Jeg ønsker jeg hadde bestilt en til.
-Bestill nå før den blir utsolgt igjen — til 99 kr er det ærlig talt et røverkjøp.`
+Bestill nå før den blir utsolgt igjen — til ${config.price} er det ærlig talt et røverkjøp.`
       ]
     },
     es: {
       headlines: [
-        "¡Encontré esta joya de Amazon por €11.50",
+        `¡Encontré esta joya de Amazon por ${config.price}`,
         "Hallazgo de liquidación que realmente cumplió",
         "Oferta de Amazon que no pude rechazar",
-        "€11.50 bien gastados",
+        `${config.price} bien gastados`,
         "Honestamente no esperaba esta calidad"
       ],
       copyTemplates: [
@@ -434,15 +507,15 @@ Bestill nå før den blir utsolgt igjen — til 99 kr er det ærlig talt et røv
 La configuración fue sencilla, tomó aproximadamente una hora, y se ve apropiado. La calidad de construcción es mejor de lo esperado por el precio, no se ve barato en absoluto. Si buscas algo funcional y bien hecho, esto definitivamente funciona.
 
 ¿La única desventaja? Desearía haber pedido otro.
-Pídelo ahora antes de que se agote nuevamente — a €11.50 es honestamente una ganga.`
+Pídelo ahora antes de que se agote nuevamente — a ${config.price} es honestamente una ganga.`
       ]
     },
     ch: {
       headlines: [
-        "Unglaubliches Amazon Fund für CHF 10.50",
+        `Unglaubliches Amazon Fund für ${config.price}`,
         "Ausverkaufs-Fund der tatsächlich geliefert hat",
         "Amazon Angebot das ich nicht ablehnen konnte",
-        "CHF 10.50 gut investiert",
+        `${config.price} gut investiert`,
         "Ehrlich gesagt habe ich diese Qualität nicht erwartet"
       ],
       copyTemplates: [
@@ -451,7 +524,7 @@ Pídelo ahora antes de que se agote nuevamente — a €11.50 es honestamente un
 Der Aufbau war unkompliziert, dauerte etwa eine Stunde und sieht ordentlich aus. Die Verarbeitungsqualität ist besser als erwartet für den Preis, sieht überhaupt nicht billig aus. Wenn Sie nach etwas Funktionalem und gut Gemachtem suchen, funktioniert das definitiv.
 
 Der einzige Nachteil? Ich wünschte, ich hätte einen zweiten bestellt.
-Bestellen Sie jetzt, bevor er wieder ausverkauft ist — für CHF 10.50 ist es ehrlich gesagt ein Schnäppchen.`
+Bestellen Sie jetzt, bevor er wieder ausverkauft ist — für ${config.price} ist es ehrlich gesagt ein Schnäppchen.`
       ]
     }
   };

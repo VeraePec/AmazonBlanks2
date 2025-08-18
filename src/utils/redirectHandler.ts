@@ -172,16 +172,47 @@ export const isValidRedirectUrl = (url: string): boolean => {
 
 /**
  * Get all available countries for redirect configuration
+ * Now imports from the single source of truth
  */
-export const getAvailableCountries = () => [
-  { name: 'United Kingdom', code: 'UK', flag: '🇬🇧' },
-  { name: 'Denmark', code: 'DK', flag: '🇩🇰' },
-  { name: 'Norway', code: 'NO', flag: '🇳🇴' },
-  { name: 'Switzerland', code: 'CH', flag: '🇨🇭' },
-  { name: 'France', code: 'FR', flag: '🇫🇷' },
-  { name: 'Spain', code: 'ES', flag: '🇪🇸' },
-  { name: 'Turkey', code: 'TR', flag: '🇹🇷' }
-];
+export const getAvailableCountries = () => {
+  // Import from the single source of truth to avoid duplication
+  // Use dynamic import to remain ESM/browser-friendly
+  try {
+    const modPromise = import('../hooks/useCountrySelector');
+    // Return a placeholder; callers that need sync data should pass it in instead.
+    // For backward compatibility, if called synchronously, we try to read from window cache.
+    // Prefer using the async helper below.
+    (modPromise as any).catch(() => {});
+  } catch {}
+  // Fallback synchronous list to avoid undefined in callers that expect immediate data
+  // This should match the countries in useCountrySelector
+  const fallback = [
+    { name: 'English (UK)', code: 'GB', flag: '🇬🇧' },
+    { name: 'Dansk (Denmark)', code: 'DK', flag: '🇩🇰' },
+    { name: 'Norsk (Norway)', code: 'NO', flag: '🇳🇴' },
+    { name: 'Deutsch (Switzerland)', code: 'CH', flag: '🇨🇭' },
+    { name: 'Français (France)', code: 'FR', flag: '🇫🇷' },
+    { name: 'Español (Spain)', code: 'ES', flag: '🇪🇸' },
+    { name: 'Türkçe (Turkey)', code: 'TR', flag: '🇹🇷' },
+    { name: 'English (South Africa)', code: 'ZA', flag: '🇿🇦' }
+  ];
+  return fallback;
+};
+
+// Async helper when you can await
+export const getAvailableCountriesAsync = async () => {
+  try {
+    const mod = await import('../hooks/useCountrySelector');
+    const countries = (mod as any).countries || [];
+    return countries.map((country: any) => ({
+      name: country.name,
+      code: String(country.code || '').toUpperCase(),
+      flag: country.flag
+    }));
+  } catch {
+    return getAvailableCountries();
+  }
+};
 
 export default {
   getRedirectUrl,

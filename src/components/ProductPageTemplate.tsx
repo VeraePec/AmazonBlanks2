@@ -99,9 +99,15 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
   productData, 
   redirectUrl = '#' 
 }) => {
-  // Safe country selector with fallback
+  // Use country selector without hardcoded fallback
   const countrySelector = useCountrySelector();
-  const selectedCountry = countrySelector.selectedCountry || { code: 'gb', name: 'English (UK)', flag: '🇬🇧', default: true };
+  const selectedCountry = countrySelector.selectedCountry;
+  
+  // Only proceed if we have a valid country selection
+  if (!selectedCountry) {
+    return <div>Loading...</div>;
+  }
+
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(productData.colorOptions?.[0]?.name || '');
   const [selectedSize, setSelectedSize] = useState(productData.sizeOptions?.[0]?.name || '');
@@ -390,7 +396,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
         'tr': 'TR'
       };
       
-      const mappedCountryCode = countryCodeMap[selectedCountry?.code] || 'UK';
+      const mappedCountryCode = countryCodeMap[selectedCountry?.code] || selectedCountry?.code?.toUpperCase() || 'UK';
       handleRedirectAction(mappedCountryCode, productData.countryRedirects || [], 'add-to-basket');
     } catch (error) {
       console.error('Error in handleAddToBasket:', error);
@@ -412,7 +418,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
         'tr': 'TR'
       };
       
-      const mappedCountryCode = countryCodeMap[selectedCountry?.code] || 'UK';
+      const mappedCountryCode = countryCodeMap[selectedCountry?.code] || selectedCountry?.code?.toUpperCase() || 'UK';
       handleRedirectAction(mappedCountryCode, productData.countryRedirects || [], 'buy-now');
     } catch (error) {
       console.error('Error in handleBuyNow:', error);
@@ -796,15 +802,15 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
 
                     {/* Trust indicators */}
                     <div className="text-center text-xs text-gray-600 pt-2 border-t border-gray-200">
-                      <div className="flex items-center justify-center space-x-4">
+                      <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4">
                         <div className="flex items-center space-x-1">
                           <Shield className="w-3 h-3 text-green-600" />
                           <span>{getTranslation('trust.secure', getCountryConfig(selectedCountry.code).language)}</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                      <Truck className="w-3 h-3 text-blue-600" />
-                      <span>{getDeliveryInfo(selectedCountry.code)}</span>
-                    </div>
+                          <Truck className="w-3 h-3 text-blue-600" />
+                          <span>{getDeliveryInfo(selectedCountry.code)}</span>
+                        </div>
                         <div className="flex items-center space-x-1">
                           <RotateCcw className="w-3 h-3 text-gray-600" />
                           <span>{getTranslation('trust.easy.returns', getCountryConfig(selectedCountry.code).language)}</span>

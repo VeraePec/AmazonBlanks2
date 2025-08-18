@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Upload, X, Plus, Star, Save, ArrowLeft, Edit, Trash2, Eye, Globe } from 'lucide-react';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
@@ -9,6 +9,15 @@ import { registerDynamicProduct } from '../utils/dynamicProductRegistry';
 import { unifiedStorage } from '../utils/unifiedStorage';
 import { crossBrowserSync } from '../utils/crossBrowserSync';
 import { imageStorage } from '../utils/imageStorage';
+import { useCountrySelector } from '../hooks/useCountrySelector';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
+import { Label } from '../components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Badge } from '../components/ui/badge';
+import { Separator } from '../components/ui/separator';
 
 interface Review {
   id: string;
@@ -179,15 +188,8 @@ const ProductBuilderSimple = () => {
   ];
 
   // Countries available for redirects (matching the Country Selector)
-  const AVAILABLE_COUNTRIES = [
-    { name: 'United Kingdom', code: 'UK', flag: '🇬🇧' },
-    { name: 'Denmark', code: 'DK', flag: '🇩🇰' },
-    { name: 'Norway', code: 'NO', flag: '🇳🇴' },
-    { name: 'Switzerland', code: 'CH', flag: '🇨🇭' },
-    { name: 'France', code: 'FR', flag: '🇫🇷' },
-    { name: 'Spain', code: 'ES', flag: '🇪🇸' },
-    { name: 'Turkey', code: 'TR', flag: '🇹🇷' }
-  ];
+  // Now imported from single source of truth
+  const { countries: AVAILABLE_COUNTRIES } = useCountrySelector();
 
   // Load products on mount
   useEffect(() => {

@@ -16,7 +16,7 @@ const Header = () => {
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
-  const { selectedCountry, setSelectedCountry, countries, detectAndSetCountry, isDetecting } = useCountrySelector();
+  const { selectedCountry, setSelectedCountry, countries } = useCountrySelector();
   const { login } = useAdminAuth();
   const searchRef = useRef<HTMLDivElement>(null);
   const countryRef = useRef<HTMLDivElement>(null);
@@ -335,9 +335,6 @@ const Header = () => {
               >
                 <span className="text-lg">{selectedCountry.flag}</span>
                 <span className="font-sans font-bold">{selectedCountry.code.toUpperCase()}</span>
-                {isDetecting && (
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse ml-1" title="Detecting country..."></div>
-                )}
                 <ChevronDown className="w-3 h-3" />
               </button>
 
@@ -346,36 +343,6 @@ const Header = () => {
                   <div className="py-2">
                     <div className="px-4 py-2 text-sm font-semibold text-gray-700 border-b font-sans">
                       🌍 Change country/region
-                    </div>
-                    
-                    {/* Country Detection Section */}
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <button
-                        onClick={async () => {
-                          const result = await detectAndSetCountry();
-                          if (result) {
-                            setIsCountryDropdownOpen(false);
-                          }
-                        }}
-                        disabled={isDetecting}
-                        className={`w-full flex items-center justify-center space-x-2 px-3 py-2 text-sm rounded transition-colors ${
-                          isDetecting
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-                        }`}
-                      >
-                        {isDetecting ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-                            <span>Auto-detect my location</span>
-                          </>
-                        ) : (
-                          <>
-                            <Globe className="w-4 h-4" />
-                            <span>Auto-detect my location</span>
-                          </>
-                        )}
-                      </button>
                     </div>
                     
                     {/* Country List */}
@@ -445,25 +412,6 @@ const Header = () => {
           onClick={handleAmazonsChoiceClick}
         >
           Amazon's Choice
-        </div>
-        
-        {/* Mobile Country Detection Button */}
-        <div 
-          className="flex items-center space-x-1 hover:border border-white p-1 rounded cursor-pointer whitespace-nowrap text-blue-300"
-          onClick={async () => {
-            if (!isDetecting) {
-              const result = await detectAndSetCountry();
-              if (result) {
-                // Show a brief success message
-                console.log('Country detected:', result.countryCode);
-              }
-            }
-          }}
-        >
-          <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="hidden sm:inline">
-            {isDetecting ? 'Detecting...' : 'Auto-detect'}
-          </span>
         </div>
       </div>
 

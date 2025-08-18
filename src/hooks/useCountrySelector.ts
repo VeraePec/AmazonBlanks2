@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { COUNTRIES, CountryConfig } from '../utils/translations';
 import { detectUserCountry, getDetectedCountryCode, cacheDetectedCountry } from '../utils/countryDetection';
 
 export interface Country {
@@ -9,7 +8,7 @@ export interface Country {
   default?: boolean;
 }
 
-// Shared countries list for both header and footer - now includes South Africa
+// Single source of truth for countries - no duplicates
 export const countries: Country[] = [
   { code: 'gb', name: 'English (UK)', flag: '🇬🇧', default: true },
   { code: 'dk', name: 'Dansk (Denmark)', flag: '🇩🇰' },
@@ -21,50 +20,56 @@ export const countries: Country[] = [
   { code: 'za', name: 'English (South Africa)', flag: '🇿🇦' }
 ];
 
-// Initialize from localStorage, detected country, or default
+// Initialize from detected country ONLY - no localStorage override
 const initializeSelectedCountry = () => {
-  // First, check if user has manually selected a country
-  const savedCountryCode = localStorage.getItem('selectedCountryCode');
-  if (savedCountryCode) {
-    const savedCountry = countries.find(c => c.code === savedCountryCode);
-    if (savedCountry) {
-      return savedCountry;
-    }
-  }
-
-  // If no manual selection, try to use detected country
+  // Only try to use detected country (including VPN detection)
   const detectedCountryCode = getDetectedCountryCode();
-  if (detectedCountryCode !== 'gb') { // Only use detection if it's not the fallback
+  if (detectedCountryCode) {
     const detectedCountry = countries.find(c => c.code === detectedCountryCode);
     if (detectedCountry) {
+      console.log('🌍 Using detected country:', detectedCountry.name);
       return detectedCountry;
     }
   }
 
   // Fallback to default country (UK)
+  console.log('🌍 Using default country: UK');
   return countries[0];
 };
 
 // Global state for selected country
 let globalSelectedCountry = initializeSelectedCountry();
 let listeners: Array<(country: Country) => void> = [];
+let hasInitialized = false;
+
+// Function to reset initialization flag for testing
+export const resetInitialization = (): void => {
+  hasInitialized = false;
+  console.log('🔄 Country detection initialization flag reset');
+};
 
 export const useCountrySelector = () => {
   const [selectedCountry, setSelectedCountryState] = useState<Country>(globalSelectedCountry);
   const [isDetecting, setIsDetecting] = useState(false);
 
-  // Perform automatic country detection on first use
+  // Perform automatic country detection on first use - ONLY ONCE
   useEffect(() => {
+    // Prevent multiple initializations
+    if (hasInitialized) return;
+    
     const performCountryDetection = async () => {
-      // Only detect if we don't have a manually selected country
-      const hasManualSelection = localStorage.getItem('selectedCountryCode');
-      if (hasManualSelection || isDetecting) return;
+      // Always try to detect country on first load
+      if (isDetecting) return;
 
+      console.log('🌍 Starting automatic country detection...');
       setIsDetecting(true);
       try {
         const detectionResult = await detectUserCountry();
         
-        if (detectionResult.confidence !== 'low' && detectionResult.countryCode !== 'gb') {
+        console.log('🌍 Country detection result:', detectionResult);
+        
+        // Apply detected country if confidence is good
+        if (detectionResult.confidence !== 'low') {
           const detectedCountry = countries.find(c => c.code === detectionResult.countryCode);
           if (detectedCountry) {
             // Cache the detected country
@@ -79,17 +84,26 @@ export const useCountrySelector = () => {
               listener(detectedCountry);
             });
             
-            console.log(`🌍 Auto-detected country: ${detectedCountry.name} (${detectionResult.method}, confidence: ${detectionResult.confidence})`);
+            console.log(`🌍 Auto-detected country applied: ${detectedCountry.name} (${detectionResult.method}, confidence: ${detectionResult.confidence})`);
+            
+            // Mark as initialized to prevent re-detection
+            hasInitialized = true;
           }
+        } else {
+          console.log('🌍 Country detection confidence too low, keeping current country');
+          hasInitialized = true;
         }
       } catch (error) {
         console.warn('Country detection failed:', error);
+        hasInitialized = true;
       } finally {
         setIsDetecting(false);
       }
     };
 
-    performCountryDetection();
+    // Delay detection slightly to ensure component is fully mounted
+    const timer = setTimeout(performCountryDetection, 500);
+    return () => clearTimeout(timer);
   }, [isDetecting]);
 
   useEffect(() => {
@@ -119,7 +133,7 @@ export const useCountrySelector = () => {
     
     // Refresh page if country actually changed to apply new redirect links
     if (previousCountry.code !== country.code) {
-      console.log('Country changed from', previousCountry.code, 'to', country.code, '- refreshing page');
+      console.log('🌍 Country changed from', previousCountry.code, 'to', country.code, '- refreshing page');
       setTimeout(() => {
         window.location.reload();
       }, 100); // Small delay to ensure state updates complete
@@ -127,9 +141,12 @@ export const useCountrySelector = () => {
   };
 
   const detectAndSetCountry = async () => {
+    console.log('🌍 Manual country detection requested...');
     setIsDetecting(true);
     try {
       const detectionResult = await detectUserCountry();
+      console.log('🌍 Manual detection result:', detectionResult);
+      
       const detectedCountry = countries.find(c => c.code === detectionResult.countryCode);
       
       if (detectedCountry) {
@@ -145,7 +162,7 @@ export const useCountrySelector = () => {
           listener(detectedCountry);
         });
         
-        console.log(`🌍 Manual country detection: ${detectedCountry.name} (${detectionResult.method}, confidence: ${detectionResult.confidence})`);
+        console.log(`🌍 Manual country detection applied: ${detectedCountry.name} (${detectionResult.method}, confidence: ${detectionResult.confidence})`);
         
         return detectionResult;
       }
