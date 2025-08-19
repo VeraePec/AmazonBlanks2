@@ -19,6 +19,7 @@ const VasagleTvUnitPage: React.FC = () => {
         no: '99 kr',
         es: '€32.50',
         ch: 'CHF 35.00',
+        za: 'R199.99',
         default: '£9.99'
       }}
       productOriginalPrice={{
@@ -27,6 +28,7 @@ const VasagleTvUnitPage: React.FC = () => {
         no: '438.90 kr',
         es: '€43.89',
         ch: 'CHF 47.00',
+        za: 'R878',
         default: '£43.89'
       }}
       productDiscount="77%"

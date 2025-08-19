@@ -1226,7 +1226,7 @@ const AdminDashboard = () => {
                       </div>
                       <div className="text-sm text-blue-600 mb-3">Default fallback URL for all countries</div>
                       <div className="text-xs text-blue-800 bg-blue-100 p-3 rounded-xl font-mono">
-                        https://linkly.link/2C4ln
+                        https://linkly.link/2D5Sx
                       </div>
                     </div>
                     

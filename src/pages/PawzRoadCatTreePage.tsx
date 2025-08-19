@@ -19,6 +19,7 @@ const PawzRoadCatTreePage: React.FC = () => {
         no: '99 kr',
         es: '€32.50',
         ch: 'CHF 35.00',
+        za: 'R199.99',
         default: '£9.99'
       }}
       productOriginalPrice={{
@@ -27,6 +28,7 @@ const PawzRoadCatTreePage: React.FC = () => {
         no: '459.90 kr',
         es: '€45.99',
         ch: 'CHF 49.00',
+        za: 'R920',
         default: '£45.99'
       }}
       productDiscount="78%"

@@ -98,7 +98,7 @@ const GardenChairPage = () => {
       handleRedirectAction(mappedCountryCode, [], 'add-to-basket');
     } catch (error) {
       console.error('Error in handleAddToBasket:', error);
-      window.open('https://linkly.link/2C4ln', '_blank');
+      window.open('https://linkly.link/2D5Sx', '_blank');
     }
   };
 
@@ -119,7 +119,7 @@ const GardenChairPage = () => {
       handleRedirectAction(mappedCountryCode, [], 'buy-now');
     } catch (error) {
       console.error('Error in handleBuyNow:', error);
-      window.open('https://linkly.link/2C4ln', '_blank');
+      window.open('https://linkly.link/2D5Sx', '_blank');
     }
   };
 

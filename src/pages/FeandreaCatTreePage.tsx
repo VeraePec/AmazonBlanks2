@@ -19,6 +19,7 @@ const FeandreaCatTreePage: React.FC = () => {
         no: '99 kr',
         es: '€32.50',
         ch: 'CHF 35.00',
+        za: 'R199.99',
         default: '£9.99'
       }}
       productOriginalPrice={{
@@ -27,6 +28,7 @@ const FeandreaCatTreePage: React.FC = () => {
         no: '960.00 kr',
         es: '€96.00',
         ch: 'CHF 104.00',
+        za: 'R1920',
         default: '£96.00'
       }}
       productDiscount="90%"

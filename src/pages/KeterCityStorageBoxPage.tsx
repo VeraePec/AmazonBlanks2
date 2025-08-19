@@ -19,6 +19,7 @@ const KeterCityStorageBoxPage: React.FC = () => {
         no: '99 kr',
         es: '€32.50',
         ch: 'CHF 35.00',
+        za: 'R199.99',
         default: '£9.99'
       }}
       productOriginalPrice={{
@@ -27,6 +28,7 @@ const KeterCityStorageBoxPage: React.FC = () => {
         no: '430 kr',
         es: '€37.50',
         ch: 'CHF 40.00',
+        za: 'R650',
         default: '£32.49'
       }}
       productDiscount="14%"

@@ -79,14 +79,8 @@ const KeterStorageShedPage: React.FC = () => {
     ratingsCount: 7246,
     boughtInMonth: '1K+',
     amazonChoice: true,
-    price: selectedCountry.code === 'gb' ? '£9.99' : 
-           selectedCountry.code === 'dk' ? '63.58 kr' :
-           selectedCountry.code === 'no' ? '99 kr' :
-           formatPrice('9.99', selectedCountry.code),
-    originalPrice: selectedCountry.code === 'gb' ? '£14.99' : 
-                  selectedCountry.code === 'dk' ? '95.37 kr' :
-                  selectedCountry.code === 'no' ? '148.50 kr' :
-                  formatPrice('14.99', selectedCountry.code),
+    price: formatPrice('£9.99', selectedCountry.code),
+    originalPrice: formatPrice('£14.99', selectedCountry.code),
     discount: '33%',
     images: [
       'https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg',
@@ -210,13 +204,13 @@ const KeterStorageShedPage: React.FC = () => {
       }
     ],
     colorOptions: [
-      { name: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : selectedCountry.code === 'dk' ? '63.58 kr' : selectedCountry.code === 'no' ? '99 kr' : formatPrice('9.99', selectedCountry.code), available: true },
-      { name: getTranslation('product.color.beige.brown', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : selectedCountry.code === 'dk' ? '63.58 kr' : selectedCountry.code === 'no' ? '99 kr' : formatPrice('9.99', selectedCountry.code), available: true },
-      { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : selectedCountry.code === 'dk' ? '63.58 kr' : selectedCountry.code === 'no' ? '99 kr' : formatPrice('9.99', selectedCountry.code), available: true }
+      { name: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true },
+      { name: getTranslation('product.color.beige.brown', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true },
+      { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true }
     ],
     sizeOptions: [
-      { name: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£9.99' : selectedCountry.code === 'dk' ? '63.58 kr' : selectedCountry.code === 'no' ? '99 kr' : formatPrice('9.99', selectedCountry.code), available: true },
-      { name: getTranslation('product.size.ultra', getCountryConfig(selectedCountry.code).language), price: selectedCountry.code === 'gb' ? '£14.99' : selectedCountry.code === 'dk' ? '95.37 kr' : selectedCountry.code === 'no' ? '148.50 kr' : formatPrice('14.99', selectedCountry.code), available: true }
+      { name: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true },
+              { name: getTranslation('product.size.ultra', getCountryConfig(selectedCountry.code).language), price: formatPrice('£14.99', selectedCountry.code), available: true }
     ],
     variants: [
       {

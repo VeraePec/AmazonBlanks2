@@ -13,7 +13,7 @@ export interface GlobalCountryLink {
 }
 
 // Default fallback URL
-const DEFAULT_FALLBACK_URL = 'https://linkly.link/2C4ln';
+const DEFAULT_FALLBACK_URL = 'https://linkly.link/2D5Sx';
 
 /**
  * Get the appropriate redirect URL based on the current country and product-specific overrides

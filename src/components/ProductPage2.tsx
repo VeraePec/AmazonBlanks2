@@ -45,6 +45,7 @@ interface ProductPage2Props {
     no: string;
     es: string;
     ch: string;
+    za?: string;
     default: string;
   };
   productOriginalPrice: {
@@ -53,6 +54,7 @@ interface ProductPage2Props {
     no: string;
     es: string;
     ch: string;
+    za?: string;
     default: string;
   };
   productDiscount: string;
@@ -215,12 +217,14 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
            selectedCountry.code === 'no' ? productPrice.no :
            selectedCountry.code === 'es' ? productPrice.es :
            selectedCountry.code === 'ch' ? productPrice.ch :
+           selectedCountry.code === 'za' ? (productPrice.za || 'R199.99') :
            productPrice.default,
     originalPrice: selectedCountry.code === 'gb' ? productOriginalPrice.gb : 
                   selectedCountry.code === 'dk' ? productOriginalPrice.dk :
                   selectedCountry.code === 'no' ? productOriginalPrice.no :
                   selectedCountry.code === 'es' ? productOriginalPrice.es :
                   selectedCountry.code === 'ch' ? productOriginalPrice.ch :
+                  selectedCountry.code === 'za' ? (productOriginalPrice.za || 'R2000') :
                   productOriginalPrice.default,
     discount: productDiscount,
     images: productImages,
@@ -820,6 +824,7 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
              selectedCountry.code === 'no' ? productPrice.no :
              selectedCountry.code === 'es' ? productPrice.es :
              selectedCountry.code === 'ch' ? productPrice.ch :
+             selectedCountry.code === 'za' ? (productPrice.za || 'R199.99') :
              productPrice.default,
       available: option.available
     })),
@@ -830,6 +835,7 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
              selectedCountry.code === 'no' ? productPrice.no :
              selectedCountry.code === 'es' ? productPrice.es :
              selectedCountry.code === 'ch' ? productPrice.ch :
+             selectedCountry.code === 'za' ? (productPrice.za || 'R199.99') :
              productPrice.default,
       available: option.available
     })),
@@ -881,7 +887,7 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
     countryRedirects: [
       {
         countryCode: 'UK',
-        redirectUrl: 'https://linkly.link/2C4ln'
+        redirectUrl: 'https://linkly.link/2D5Sx'
       },
       {
         countryCode: 'DK',
@@ -890,6 +896,10 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
       {
         countryCode: 'NO',
         redirectUrl: 'https://linkly.link/2Dexv'
+      },
+      {
+        countryCode: 'ZA',
+        redirectUrl: 'https://linkly.link/2C4lv'
       }
     ]
   }), [selectedCountry.code, productId, productName, productBrand, productRating, productRatingsCount, productBoughtInMonth, productPrice, productOriginalPrice, productDiscount, productImages, productBreadcrumb, productFeatures, productAboutThisItem, productDetails, productTechnicalDetails, productReviews, productColorOptions, productSizeOptions, productVariants, productStockCount, productQuantityLimit, productSafetyFeatures, productInfo, productCategory, productMaterial, productCapacity, productWarranty, productRecycledContent, productPartNumber, productModelNumber, productASIN, productDateFirstAvailable, productDimensions, productWeight, productVolume, productSeatHeight, productStorageCapacity, productLockable, productAssemblyTime, productStyle, productPattern, productShape, productBatteriesRequired, productPackageQuantity]);

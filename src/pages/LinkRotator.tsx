@@ -24,7 +24,7 @@ const LinkRotator = () => {
   
   // Link management
   const [countryLinks, setCountryLinks] = useState<CountryLink[]>([]);
-  const [defaultLink, setDefaultLink] = useState('https://linkly.link/2C4ln');
+  const [defaultLink, setDefaultLink] = useState('https://linkly.link/2D5Sx');
   const [isLoading, setIsLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
 
@@ -252,7 +252,7 @@ const LinkRotator = () => {
             value={defaultLink}
             onChange={(e) => setDefaultLink(e.target.value)}
             className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all duration-200"
-            placeholder="https://linkly.link/2C4ln"
+            placeholder="https://linkly.link/2D5Sx"
           />
           {!isValidUrl(defaultLink) && (
             <div className="text-red-500 text-sm mt-2 flex items-center gap-2">

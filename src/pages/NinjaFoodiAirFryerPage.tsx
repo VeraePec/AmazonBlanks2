@@ -19,6 +19,7 @@ const NinjaFoodiAirFryerPage: React.FC = () => {
         no: '99 kr',
         es: '€32.50',
         ch: 'CHF 35.00',
+        za: 'R199.99',
         default: '£9.99'
       }}
       productOriginalPrice={{
@@ -27,6 +28,7 @@ const NinjaFoodiAirFryerPage: React.FC = () => {
         no: '1720.00 kr',
         es: '€172.00',
         ch: 'CHF 187.00',
+        za: 'R3440',
         default: '£172.00'
       }}
       productDiscount="94%"

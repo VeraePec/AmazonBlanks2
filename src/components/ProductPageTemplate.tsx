@@ -16,7 +16,7 @@ import { generateAndSaveAdCopyForProduct } from '../utils/generateAdCopy';
 
 // Helper function to check if price is already formatted
 const isPriceFormatted = (price: string): boolean => {
-  return price.includes('kr') || price.includes('£') || price.includes('€') || price.includes('$');
+  return price.includes('kr') || price.includes('£') || price.includes('€') || price.includes('$') || price.includes('R') || price.includes('CHF') || price.includes('₺');
 };
 
 // Helper function to format price only if needed
@@ -401,7 +401,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
     } catch (error) {
       console.error('Error in handleAddToBasket:', error);
       // Fallback to default redirect
-      window.open('https://linkly.link/2C4ln', '_blank');
+      window.open('https://linkly.link/2D5Sx', '_blank');
     }
   };
 
@@ -423,7 +423,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
     } catch (error) {
       console.error('Error in handleBuyNow:', error);
       // Fallback to default redirect
-      window.open('https://linkly.link/2C4ln', '_blank');
+      window.open('https://linkly.link/2D5Sx', '_blank');
     }
   };
 

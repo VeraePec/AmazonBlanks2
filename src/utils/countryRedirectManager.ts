@@ -10,7 +10,7 @@ export interface CountryRedirectState {
 let globalRedirectState: CountryRedirectState = {
   selectedCountryCode: 'gb',
   globalLinks: [],
-  defaultFallback: 'https://linkly.link/2C4ln'
+  defaultFallback: 'https://linkly.link/2D5Sx'
 };
 
 // Listeners for redirect state changes
@@ -23,7 +23,7 @@ let redirectListeners: Array<(state: CountryRedirectState) => void> = [];
 export const updateCountryRedirectState = (countryCode: string) => {
   // Load fresh data from localStorage
   const globalLinks = JSON.parse(localStorage.getItem('globalCountryLinks') || '[]');
-  const defaultFallback = localStorage.getItem('defaultRedirectLink') || 'https://linkly.link/2C4ln';
+  const defaultFallback = localStorage.getItem('defaultRedirectLink') || 'https://linkly.link/2D5Sx';
   
   // Update global state
   globalRedirectState = {

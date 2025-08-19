@@ -20,8 +20,22 @@ export const countries: Country[] = [
   { code: 'za', name: 'English (South Africa)', flag: '🇿🇦' }
 ];
 
-// Initialize from detected country ONLY - no localStorage override
+// Initialize with this precedence:
+// 1) Manual selection (localStorage)
+// 2) Detected country (session cache)
+// 3) Default (UK)
 const initializeSelectedCountry = () => {
+  try {
+    const savedCountryCode = typeof localStorage !== 'undefined' ? localStorage.getItem('selectedCountryCode') : null;
+    if (savedCountryCode) {
+      const saved = countries.find(c => c.code === savedCountryCode);
+      if (saved) {
+        console.log('🌍 Using MANUAL country:', saved.name);
+        return saved;
+      }
+    }
+  } catch {}
+
   // Only try to use detected country (including VPN detection)
   const detectedCountryCode = getDetectedCountryCode();
   if (detectedCountryCode) {
@@ -54,11 +68,20 @@ export const useCountrySelector = () => {
 
   // Perform automatic country detection on first use - ONLY ONCE
   useEffect(() => {
+    // If user has a manual selection, never auto-detect over it
+    try {
+      const savedCountryCode = typeof localStorage !== 'undefined' ? localStorage.getItem('selectedCountryCode') : null;
+      if (savedCountryCode) {
+        hasInitialized = true;
+        return; // Respect manual selection
+      }
+    } catch {}
+
     // Prevent multiple initializations
     if (hasInitialized) return;
     
     const performCountryDetection = async () => {
-      // Always try to detect country on first load
+      // Always try to detect country on first load when no manual selection exists
       if (isDetecting) return;
 
       console.log('🌍 Starting automatic country detection...');
@@ -124,7 +147,7 @@ export const useCountrySelector = () => {
     setSelectedCountryState(country);
     
     // Persist to localStorage for persistence across refreshes
-    localStorage.setItem('selectedCountryCode', country.code);
+    try { localStorage.setItem('selectedCountryCode', country.code); } catch {}
     
     // Notify all other components
     listeners.forEach(listener => {
