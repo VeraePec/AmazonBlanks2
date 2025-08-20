@@ -297,16 +297,22 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
                           return getTranslation('product.about.feandrea.cat.tree.5', getCountryConfig(selectedCountry.code).language);
                         }
                       } else if (productId === 'vasagle-tv-unit') {
-                        if (item === 'LIKE ON TV: The white TV stand adds a touch of unique charm to your room. You will not feel any jealousy seeing the interiors of lofts in Paris and New York in movies and on TV.') {
-                          return getTranslation('product.about.vasagle.tv.unit.1', getCountryConfig(selectedCountry.code).language);
-                        } else if (item === 'Enough Space The TV stand can accommodate TVs up to 65 inches. For small TVs, it is enough to place plants on both sides.') {
-                          return getTranslation('product.about.vasagle.tv.unit.2', getCountryConfig(selectedCountry.code).language);
-                        } else if (item === 'Everything is ready: will your favorite movie be on TV soon? You can place the game consoles and receivers in the 2 open compartments and store the DVDs in the compartments with doors. The movie is in progress and you just have to sit back and enjoy it.') {
-                          return getTranslation('product.about.vasagle.tv.unit.3', getCountryConfig(selectedCountry.code).language);
-                        } else if (item === 'As simple as 1x1: thanks to the clear instructions and the well-identified parts, assembly is done without breaking your head. After work, you still have time to settle down before the screening of your favorite movie at 8:15 p.m.') {
-                          return getTranslation('product.about.vasagle.tv.unit.4', getCountryConfig(selectedCountry.code).language);
-                        } else if (item === '3, 2, 1, Action: This modern TV stand will be your perfect Sunday night companion. Grab the chips hidden behind the push-opening door and enjoy your movie night with family or friends.') {
-                          return getTranslation('product.about.vasagle.tv.unit.5', getCountryConfig(selectedCountry.code).language);
+                        // Handle Vasagle TV unit about text with flexible matching
+                        if (item.includes('LIKE ON TV') || item.includes('unique charm') || item.includes('Paris and New York')) {
+                          const translation = getTranslation('product.about.vasagle.tv.unit.1', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? item : translation;
+                        } else if (item.includes('Enough Space') || item.includes('65 inches') || item.includes('plants on both sides')) {
+                          const translation = getTranslation('product.about.vasagle.tv.unit.2', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? item : translation;
+                        } else if (item.includes('Everything is ready') || item.includes('game consoles') || item.includes('DVDs') || item.includes('compartments with doors')) {
+                          const translation = getTranslation('product.about.vasagle.tv.unit.3', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? item : translation;
+                        } else if (item.includes('As simple as 1x1') || item.includes('clear instructions') || item.includes('8:15 p.m.')) {
+                          const translation = getTranslation('product.about.vasagle.tv.unit.4', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? item : translation;
+                        } else if (item.includes('3, 2, 1, Action') || item.includes('Sunday night companion') || item.includes('chips hidden') || item.includes('movie night with family')) {
+                          const translation = getTranslation('product.about.vasagle.tv.unit.5', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? item : translation;
                         }
                       } else if (productId === 'ninja-foodi-air-fryer') {
                         if (item === 'ENERGY-SAVING: Save up to 75% on your energy bill* (*testing and calculations based on recommended cook time for sausages, using air fry function versus conventional ovens).') {
@@ -437,25 +443,35 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
                         }
                       } else if (productId === 'vasagle-tv-unit') {
                         if (feature === '140 cm long TV unit for TVs up to 65 inches') {
-                          return getTranslation('product.features.vasagle.tv.unit.1', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.1', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === '2 doors with adjustable shelves') {
-                          return getTranslation('product.features.vasagle.tv.unit.2', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.2', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'Open compartments for game consoles and receivers') {
-                          return getTranslation('product.features.vasagle.tv.unit.3', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.3', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'Closed compartments for DVDs and storage') {
-                          return getTranslation('product.features.vasagle.tv.unit.4', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.4', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'High-quality water-resistant particleboard panels') {
-                          return getTranslation('product.features.vasagle.tv.unit.5', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.5', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === '12 cm space underneath for robotic vacuuming') {
-                          return getTranslation('product.features.vasagle.tv.unit.6', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.6', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'Two cable holes for easy cable management') {
-                          return getTranslation('product.features.vasagle.tv.unit.7', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.7', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'Modern white design for any room') {
-                          return getTranslation('product.features.vasagle.tv.unit.8', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.8', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'Easy assembly with clear instructions') {
-                          return getTranslation('product.features.vasagle.tv.unit.9', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.9', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         } else if (feature === 'Maximum static load capacity: 50 kg') {
-                          return getTranslation('product.features.vasagle.tv.unit.10', getCountryConfig(selectedCountry.code).language);
+                          const translation = getTranslation('product.features.vasagle.tv.unit.10', getCountryConfig(selectedCountry.code).language);
+                          return translation.startsWith('product.') ? feature : translation;
                         }
                       } else if (productId === 'ninja-foodi-air-fryer') {
                         if (feature === '7.6L total capacity with 2 independent cooking zones') {
@@ -493,25 +509,35 @@ const ProductPage2: React.FC<ProductPage2Props> = ({
         if (productId === 'vasagle-tv-unit') {
           // VASAGLE TV Unit translations
           if (key.toLowerCase() === 'brand') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.brand', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.brand', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'color') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.color', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.color', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'material') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.material', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.material', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase().includes('dimension')) {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.dimensions', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.dimensions', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase().includes('weight')) {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.weight', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.weight', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'volume') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.volume', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.volume', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'size') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.size', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.size', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'style') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.style', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.style', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'assembly') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.assembly', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.assembly', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           } else if (key.toLowerCase() === 'shape') {
-            translatedKey = getTranslation('product.details.vasagle.tv.unit.shape', language);
+            const translation = getTranslation('product.details.vasagle.tv.unit.shape', language);
+            translatedKey = translation.startsWith('product.') ? key : translation;
           }
         } else if (productId === 'ninja-foodi-air-fryer') {
           // Ninja Foodi Air Fryer translations

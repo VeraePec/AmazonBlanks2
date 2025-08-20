@@ -1,4 +1,5 @@
 // Utility functions for handling redirect logic with proper fallback chain
+import { getSmartBlankOfferUrl } from './blankOfferRedirect';
 
 export interface CountryRedirect {
   countryCode: string;
@@ -83,7 +84,12 @@ export const getDefaultRedirectUrl = (): string => {
 export const handleRedirectAction = (
   selectedCountryCode: string,
   productOverrides: CountryRedirect[] = [],
-  actionType: 'buy-now' | 'add-to-basket' = 'buy-now'
+  actionType: 'buy-now' | 'add-to-basket' = 'buy-now',
+  productData?: {
+    name: string;
+    images: string[];
+    options?: Record<string, any>; // Add options parameter
+  }
 ) => {
   try {
     const redirectUrl = getRedirectUrl(selectedCountryCode, productOverrides);
@@ -95,14 +101,21 @@ export const handleRedirectAction = (
       return;
     }
     
-    // Add tracking parameters if needed
-    const finalUrl = new URL(redirectUrl);
-    finalUrl.searchParams.set('action', actionType);
-    finalUrl.searchParams.set('country', selectedCountryCode);
-    finalUrl.searchParams.set('timestamp', Date.now().toString());
+    // Build checkout page URL with all necessary parameters
+    const checkoutUrl = new URL('/product-redirect', window.location.origin);
+    checkoutUrl.searchParams.set('name', productData?.name || 'Product');
+    checkoutUrl.searchParams.set('image', productData?.images?.[0] || '');
+    checkoutUrl.searchParams.set('url', redirectUrl);
+    checkoutUrl.searchParams.set('action', actionType);
+    checkoutUrl.searchParams.set('country', selectedCountryCode);
     
-    // Open in new tab/window
-    window.open(finalUrl.toString(), '_blank', 'noopener,noreferrer');
+    // Add selected options if they exist
+    if (productData?.options && Object.keys(productData.options).length > 0) {
+      checkoutUrl.searchParams.set('options', encodeURIComponent(JSON.stringify(productData.options)));
+    }
+    
+    // Redirect to our checkout page instead of directly to external URL
+    window.location.href = checkoutUrl.toString();
   } catch (error) {
     console.error('Error in handleRedirectAction:', error);
     // Fallback to default URL
@@ -155,6 +168,8 @@ export const getRedirectPreview = (
     source: 'default-fallback'
   };
 };
+
+
 
 /**
  * Validate if a URL is properly formatted

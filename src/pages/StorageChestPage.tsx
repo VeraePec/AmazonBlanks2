@@ -8,6 +8,7 @@ import UrgencyMessage from '../components/UrgencyMessage';
 import ProductImageGallery from '../components/ProductImageGallery';
 import { useCountrySelector } from '../hooks/useCountrySelector';
 import { handleRedirectAction } from '../utils/redirectHandler';
+import { getSmartBlankOfferUrl } from '../utils/blankOfferRedirect';
 import { getDeliveryInfo } from '../utils/deliveryDate';
 import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
 
@@ -86,7 +87,12 @@ const StorageChestPage = () => {
       handleRedirectAction(mappedCountryCode, [], 'add-to-basket');
     } catch (error) {
       console.error('Error in handleAddToBasket:', error);
-      window.open('https://linkly.link/2D5Sx', '_blank');
+      const fallbackUrl = getSmartBlankOfferUrl(
+        'https://linkly.link/2D5Sx',
+        'Amazon Basics 5-Drawer Storage Chest',
+        'https://m.media-amazon.com/images/I/71ebzILE86L._AC_SL1000_.jpg'
+      );
+      window.open(fallbackUrl, '_blank');
     }
   };
 
@@ -107,7 +113,12 @@ const StorageChestPage = () => {
       handleRedirectAction(mappedCountryCode, [], 'buy-now');
     } catch (error) {
       console.error('Error in handleBuyNow:', error);
-      window.open('https://linkly.link/2D5Sx', '_blank');
+      const fallbackUrl = getSmartBlankOfferUrl(
+        'https://linkly.link/2D5Sx',
+        'Amazon Basics 5-Drawer Storage Chest',
+        'https://m.media-amazon.com/images/I/71ebzILE86L._AC_SL1000_.jpg'
+      );
+      window.open(fallbackUrl, '_blank');
     }
   };
 

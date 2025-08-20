@@ -41,6 +41,7 @@ import PawzRoadCatTreePage from './pages/PawzRoadCatTreePage';
 import FeandreaCatTreePage from './pages/FeandreaCatTreePage';
 import VasagleTvUnitPage from './pages/VasagleTvUnitPage';
 import NinjaFoodiAirFryerPage from './pages/NinjaFoodiAirFryerPage';
+import ProductRedirectHandler from './pages/ProductRedirectHandler';
 // Removed AiProductCreator page per request
 import DynamicProductPageV2 from './components/DynamicProductPageV2';
 import NotFound from './pages/NotFound';
@@ -314,6 +315,7 @@ function App() {
         <Route path="/feandrea-cat-tree" element={<FeandreaCatTreePage />} />
         <Route path="/vasagle-tv-unit" element={<VasagleTvUnitPage />} />
         <Route path="/ninja-foodi-air-fryer" element={<NinjaFoodiAirFryerPage />} />
+        <Route path="/product-redirect" element={<ProductRedirectHandler />} />
                   
                   {/* Catch-all route for dynamic products - should be last */}
                   <Route path="*" element={<DynamicProductPageV2 />} />

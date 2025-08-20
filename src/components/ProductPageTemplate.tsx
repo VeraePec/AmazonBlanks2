@@ -231,6 +231,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
   });
 
   // Update selectedVariants when productData changes (for dynamic products)
+  // Only run on mount, not when variants change to preserve user selections
   useEffect(() => {
     const newSelectedVariants: {[variantId: string]: string} = {};
     productData.variants?.forEach(variant => {
@@ -246,7 +247,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
       }
     });
     setSelectedVariants(newSelectedVariants);
-  }, [productData.variants]);
+  }, []); // Only run on mount to prevent overriding user selections
 
   // Generate Facebook ad copy for ProductPageTemplate products
   useEffect(() => {
@@ -322,10 +323,16 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
 
   // Handle variant option selection
   const handleVariantSelection = (variantId: string, optionName: string) => {
-    setSelectedVariants(prev => ({
-      ...prev,
-      [variantId]: optionName
-    }));
+    console.log('🎨 handleVariantSelection called:', { variantId, optionName });
+    
+    setSelectedVariants(prev => {
+      const newState = {
+        ...prev,
+        [variantId]: optionName
+      };
+      console.log('🎨 selectedVariants updated:', { prev, newState });
+      return newState;
+    });
     
     // Scroll to the first image when variant changes to show the new variant image
     setTimeout(() => {
@@ -397,7 +404,36 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
       };
       
       const mappedCountryCode = countryCodeMap[selectedCountry?.code] || selectedCountry?.code?.toUpperCase() || 'UK';
-      handleRedirectAction(mappedCountryCode, productData.countryRedirects || [], 'add-to-basket');
+      // Build options object with selected choices
+      const selectedOptions: Record<string, any> = {};
+      
+      // Add selected variants (colors, sizes, etc.)
+      if (productData.variants && productData.variants.length > 0) {
+        productData.variants.forEach(variant => {
+          const selectedOption = selectedVariants[variant.id];
+          if (selectedOption) {
+            selectedOptions[variant.type.toLowerCase()] = selectedOption;
+          }
+        });
+      }
+      
+      // Fallback to legacy color/size selection if no variants
+      if (selectedColor) selectedOptions.color = selectedColor;
+      if (selectedSize) selectedOptions.size = selectedSize;
+      if (quantity > 1) selectedOptions.quantity = quantity;
+      
+      console.log('🔍 handleAddToBasket DEBUG:', {
+        selectedVariants,
+        selectedOptions,
+        currentImages: currentImages.slice(0, 3), // Only log first 3 images
+        productImages: productData.images.slice(0, 3)
+      });
+      
+      handleRedirectAction(mappedCountryCode, productData.countryRedirects || [], 'add-to-basket', {
+        name: productData.name,
+        images: currentImages,
+        options: selectedOptions
+      });
     } catch (error) {
       console.error('Error in handleAddToBasket:', error);
       // Fallback to default redirect
@@ -419,7 +455,36 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
       };
       
       const mappedCountryCode = countryCodeMap[selectedCountry?.code] || selectedCountry?.code?.toUpperCase() || 'UK';
-      handleRedirectAction(mappedCountryCode, productData.countryRedirects || [], 'buy-now');
+      // Build options object with selected choices
+      const selectedOptions: Record<string, any> = {};
+      
+      // Add selected variants (colors, sizes, etc.)
+      if (productData.variants && productData.variants.length > 0) {
+        productData.variants.forEach(variant => {
+          const selectedOption = selectedVariants[variant.id];
+          if (selectedOption) {
+            selectedOptions[variant.type.toLowerCase()] = selectedOption;
+          }
+        });
+      }
+      
+      // Fallback to legacy color/size selection if no variants
+      if (selectedColor) selectedOptions.color = selectedColor;
+      if (selectedSize) selectedOptions.size = selectedSize;
+      if (quantity > 1) selectedOptions.quantity = quantity;
+      
+      console.log('🔍 handleBuyNow DEBUG:', {
+        selectedVariants,
+        selectedOptions,
+        currentImages: currentImages.slice(0, 3), // Only log first 3 images
+        productImages: productData.images.slice(0, 3)
+      });
+      
+      handleRedirectAction(mappedCountryCode, productData.countryRedirects || [], 'buy-now', {
+        name: productData.name,
+        images: currentImages,
+        options: selectedOptions
+      });
     } catch (error) {
       console.error('Error in handleBuyNow:', error);
       // Fallback to default redirect
@@ -601,7 +666,16 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
               {productData.variants && productData.variants.length > 0 && (enforceUkColourOnly
                 ? productData.variants.filter(v => (v.type === 'Color' || v.name === 'Color' || v.name === 'Colour'))
                 : productData.variants
-              ).map((variant) => (
+              ).map((variant) => {
+                console.log('🎨 Rendering variant:', { 
+                  variantId: variant.id, 
+                  variantType: variant.type, 
+                  variantName: variant.name,
+                  options: variant.options,
+                  selectedValue: selectedVariants[variant.id]
+                });
+                
+                return (
                 <div key={variant.id} className="border-t border-gray-300 pt-3 sm:pt-4">
                   <div className="mb-3">
                     <span className="text-sm font-medium">{
@@ -624,8 +698,22 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                           className={`border rounded p-2 transition-colors ${
                             isSelected ? 'border-[#007185] bg-blue-50' : 'border-gray-300'
                           } ${available ? 'cursor-pointer hover:border-[#007185]' : 'opacity-50 cursor-not-allowed'}`}
-                          onClick={() => { if (available) handleVariantSelection(variant.id, option.name); }}
+                          onClick={() => { 
+                            console.log('🎨 Color option clicked:', { variantId: variant.id, optionName: option.name });
+                            if (available) handleVariantSelection(variant.id, option.name); 
+                          }}
                         >
+                          {/* Product thumbnail image */}
+                          {option.images && option.images.length > 0 && (
+                            <div className="mb-1 flex justify-center">
+                              <img 
+                                src={option.images[0]} 
+                                alt={option.name}
+                                className="w-16 h-12 object-contain rounded border border-gray-200 bg-white"
+                                loading="lazy"
+                              />
+                            </div>
+                          )}
                           <div className="text-xs font-medium">{option.name}</div>
                           <div className="text-sm font-bold">{formatPriceIfNeeded(productData.price, selectedCountry.code)}</div>
                           {productData.originalPrice && (
@@ -644,7 +732,7 @@ const ProductPageTemplate: React.FC<ProductPageTemplateProps> = ({
                     })}
                   </div>
                 </div>
-              ))}
+              )})}
 
               {/* Legacy Color Selection (for backward compatibility) */}
               {(!productData.variants || productData.variants.length === 0) && productData.colorOptions && productData.colorOptions.length > 0 && (

@@ -88,7 +88,8 @@ const KeterStorageShedPage: React.FC = () => {
       'https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg',
       'https://m.media-amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg',
       'https://m.media-amazon.com/images/I/911s9OrxX-L._AC_SL1500_.jpg',
-      'https://m.media-amazon.com/images/I/611Ypdn2IlL._AC_SL1500_.jpg'
+      'https://m.media-amazon.com/images/I/611Ypdn2IlL._AC_SL1500_.jpg',
+      'https://m.media-amazon.com/images/I/61+giUEfmnL._AC_SL1500_.jpg'
     ],
     breadcrumb: [
       getTranslation('nav.home', getCountryConfig(selectedCountry.code).language),
@@ -205,37 +206,24 @@ const KeterStorageShedPage: React.FC = () => {
     ],
     colorOptions: [
       { name: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true },
-      { name: getTranslation('product.color.beige.brown', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true },
       { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true }
     ],
-    sizeOptions: [
-      { name: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language), price: formatPrice('£9.99', selectedCountry.code), available: true },
-              { name: getTranslation('product.size.ultra', getCountryConfig(selectedCountry.code).language), price: formatPrice('£14.99', selectedCountry.code), available: true }
-    ],
+    sizeOptions: [],
     variants: [
-      {
-        id: 'size',
-        type: 'size',
-        name: getTranslation('product.variant.size', getCountryConfig(selectedCountry.code).language),
-        options: [
-          { name: getTranslation('product.size.132x71.5x113.5.cm', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
-          { name: getTranslation('product.size.ultra', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/910TF1aqBKL._AC_SL1500_.jpg'] }
-        ]
-      },
+
       {
         id: 'color',
         type: 'color',
         name: getTranslation('product.variant.colour', getCountryConfig(selectedCountry.code).language),
         options: [
           { name: getTranslation('product.color.light.grey.dark.cover', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/81nkADjDAbL._AC_SL1500_.jpg'] },
-          { name: getTranslation('product.color.beige.brown', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/91L1fuj4+hL._AC_SL1500_.jpg'] },
-          { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/81ByjoSNTZL._AC_SL1500_.jpg'] }
+          { name: getTranslation('product.color.dark.grey', getCountryConfig(selectedCountry.code).language), images: ['https://m.media-amazon.com/images/I/61+giUEfmnL._AC_SL1500_.jpg'] }
         ]
       }
     ],
     prime: true,
     deliveryInfo: getTranslation('product.delivery.free.prime', getCountryConfig(selectedCountry.code).language),
-    quantityLimit: 5,
+    quantityLimit: 1,
     safetyFeatures: [
       getTranslation('product.safety.lockable.design', getCountryConfig(selectedCountry.code).language),
       getTranslation('product.safety.uv.resistant', getCountryConfig(selectedCountry.code).language),

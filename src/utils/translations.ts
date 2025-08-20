@@ -2926,8 +2926,182 @@ export const TRANSLATIONS = {
 
   
   tr: { // Turkish
+    // Checkout/Order Preparation Page Translations - Turkish
+    'checkout.secure.checkout': 'Güvenli Ödeme',
+    'checkout.preparing.order': 'Siparişiniz Hazırlanıyor',
+    'checkout.please.wait': 'Güvenli ödeme kurulumunuz yapılırken lütfen bekleyin...',
+    'checkout.order.summary': 'Sipariş Özeti',
+    'checkout.action': 'Eylem',
+    'checkout.country': 'Ülke',
+    'checkout.redirecting.in': '{seconds} saniye{plural} içinde yönlendiriliyor...',
+    'checkout.redirecting.to.partner': 'Güvenli ödeme ortağımıza yönlendirileceksiniz',
+    'checkout.continue.to.checkout': 'Ödemeye Devam Et',
+    'checkout.ssl.encrypted': 'SSL Şifreli',
+    'checkout.trusted.partner': 'Güvenilir Ortak',
+    'checkout.selected.options': 'Seçilen Seçenekler',
+    'checkout.quantity': 'Miktar',
+    'checkout.color': 'Renk',
+    'checkout.size': 'Boyut',
+    'checkout.style': 'Stil',
+    'checkout.material': 'Malzeme',
+    'checkout.dimensions': 'Boyutlar',
+    'checkout.weight': 'Ağırlık',
+    'checkout.volume': 'Hacim',
+    'checkout.brand': 'Marka',
+    'checkout.assembly': 'Montaj',
+    'checkout.shape': 'Şekil'
   }
 };
+
+// Checkout/Order Preparation Page Translations - English
+TRANSLATIONS.en['checkout.secure.checkout'] = 'Secure Checkout';
+TRANSLATIONS.en['checkout.preparing.order'] = 'Preparing Your Order';
+TRANSLATIONS.en['checkout.please.wait'] = 'Please wait while we set up your secure checkout...';
+TRANSLATIONS.en['checkout.order.summary'] = 'Order Summary';
+TRANSLATIONS.en['checkout.action'] = 'Action';
+TRANSLATIONS.en['checkout.country'] = 'Country';
+TRANSLATIONS.en['checkout.redirecting.in'] = 'Redirecting in {seconds} second{plural}...';
+TRANSLATIONS.en['checkout.redirecting.to.partner'] = 'You will be redirected to our secure checkout partner';
+TRANSLATIONS.en['checkout.continue.to.checkout'] = 'Continue to Checkout';
+TRANSLATIONS.en['checkout.ssl.encrypted'] = 'SSL Encrypted';
+TRANSLATIONS.en['checkout.trusted.partner'] = 'Trusted Partner';
+TRANSLATIONS.en['checkout.selected.options'] = 'Selected Options';
+TRANSLATIONS.en['checkout.quantity'] = 'Quantity';
+TRANSLATIONS.en['checkout.color'] = 'Color';
+TRANSLATIONS.en['checkout.size'] = 'Size';
+TRANSLATIONS.en['checkout.style'] = 'Style';
+TRANSLATIONS.en['checkout.material'] = 'Material';
+TRANSLATIONS.en['checkout.dimensions'] = 'Dimensions';
+TRANSLATIONS.en['checkout.weight'] = 'Weight';
+TRANSLATIONS.en['checkout.volume'] = 'Volume';
+TRANSLATIONS.en['checkout.brand'] = 'Brand';
+TRANSLATIONS.en['checkout.assembly'] = 'Assembly';
+TRANSLATIONS.en['checkout.shape'] = 'Shape';
+
+// Checkout/Order Preparation Page Translations - Danish
+TRANSLATIONS.da['checkout.secure.checkout'] = 'Sikker Betaling';
+TRANSLATIONS.da['checkout.preparing.order'] = 'Forbereder Din Ordre';
+TRANSLATIONS.da['checkout.please.wait'] = 'Vent venligst mens vi opsætter din sikre betaling...';
+TRANSLATIONS.da['checkout.order.summary'] = 'Ordre Oversigt';
+TRANSLATIONS.da['checkout.action'] = 'Handling';
+TRANSLATIONS.da['checkout.country'] = 'Land';
+TRANSLATIONS.da['checkout.redirecting.in'] = 'Omdirigerer om {seconds} sekund{plural}...';
+TRANSLATIONS.da['checkout.redirecting.to.partner'] = 'Du vil blive omdirigeret til vores sikre betalingspartner';
+TRANSLATIONS.da['checkout.continue.to.checkout'] = 'Fortsæt til Betaling';
+TRANSLATIONS.da['checkout.ssl.encrypted'] = 'SSL Krypteret';
+TRANSLATIONS.da['checkout.trusted.partner'] = 'Pålidelig Partner';
+TRANSLATIONS.da['checkout.selected.options'] = 'Valgte Muligheder';
+TRANSLATIONS.da['checkout.quantity'] = 'Mængde';
+TRANSLATIONS.da['checkout.color'] = 'Farve';
+TRANSLATIONS.da['checkout.size'] = 'Størrelse';
+TRANSLATIONS.da['checkout.style'] = 'Stil';
+TRANSLATIONS.da['checkout.material'] = 'Materiale';
+TRANSLATIONS.da['checkout.dimensions'] = 'Dimensioner';
+TRANSLATIONS.da['checkout.weight'] = 'Vægt';
+TRANSLATIONS.da['checkout.volume'] = 'Volumen';
+TRANSLATIONS.da['checkout.brand'] = 'Mærke';
+TRANSLATIONS.da['checkout.assembly'] = 'Samling';
+TRANSLATIONS.da['checkout.shape'] = 'Form';
+
+// Checkout/Order Preparation Page Translations - Norwegian
+TRANSLATIONS.no['checkout.secure.checkout'] = 'Sikker Betaling';
+TRANSLATIONS.no['checkout.preparing.order'] = 'Forbereder Din Bestilling';
+TRANSLATIONS.no['checkout.please.wait'] = 'Vennligst vent mens vi setter opp din sikre betaling...';
+TRANSLATIONS.no['checkout.order.summary'] = 'Bestillings Oversikt';
+TRANSLATIONS.no['checkout.action'] = 'Handling';
+TRANSLATIONS.no['checkout.country'] = 'Land';
+TRANSLATIONS.no['checkout.redirecting.in'] = 'Omdirigerer om {seconds} sekund{plural}...';
+TRANSLATIONS.no['checkout.redirecting.to.partner'] = 'Du vil bli omdirigert til vår sikre betalingspartner';
+TRANSLATIONS.no['checkout.continue.to.checkout'] = 'Fortsett til Betaling';
+TRANSLATIONS.no['checkout.ssl.encrypted'] = 'SSL Kryptert';
+TRANSLATIONS.no['checkout.trusted.partner'] = 'Pålitelig Partner';
+TRANSLATIONS.no['checkout.selected.options'] = 'Valgte Alternativer';
+TRANSLATIONS.no['checkout.quantity'] = 'Mengde';
+TRANSLATIONS.no['checkout.color'] = 'Farge';
+TRANSLATIONS.no['checkout.size'] = 'Størrelse';
+TRANSLATIONS.no['checkout.style'] = 'Stil';
+TRANSLATIONS.no['checkout.material'] = 'Materiale';
+TRANSLATIONS.no['checkout.dimensions'] = 'Dimensjoner';
+TRANSLATIONS.no['checkout.weight'] = 'Vekt';
+TRANSLATIONS.no['checkout.volume'] = 'Volum';
+TRANSLATIONS.no['checkout.brand'] = 'Merke';
+TRANSLATIONS.no['checkout.assembly'] = 'Montering';
+TRANSLATIONS.no['checkout.shape'] = 'Form';
+
+// Checkout/Order Preparation Page Translations - German (Switzerland)
+TRANSLATIONS.de['checkout.secure.checkout'] = 'Sichere Bezahlung';
+TRANSLATIONS.de['checkout.preparing.order'] = 'Ihre Bestellung wird vorbereitet';
+TRANSLATIONS.de['checkout.please.wait'] = 'Bitte warten Sie, während wir Ihre sichere Bezahlung einrichten...';
+TRANSLATIONS.de['checkout.order.summary'] = 'Bestellübersicht';
+TRANSLATIONS.de['checkout.action'] = 'Aktion';
+TRANSLATIONS.de['checkout.country'] = 'Land';
+TRANSLATIONS.de['checkout.redirecting.in'] = 'Weiterleitung in {seconds} Sekunde{plural}...';
+TRANSLATIONS.de['checkout.redirecting.to.partner'] = 'Sie werden zu unserem sicheren Zahlungspartner weitergeleitet';
+TRANSLATIONS.de['checkout.continue.to.checkout'] = 'Zur Kasse';
+TRANSLATIONS.de['checkout.ssl.encrypted'] = 'SSL Verschlüsselt';
+TRANSLATIONS.de['checkout.trusted.partner'] = 'Vertrauenswürdiger Partner';
+TRANSLATIONS.de['checkout.selected.options'] = 'Ausgewählte Optionen';
+TRANSLATIONS.de['checkout.quantity'] = 'Menge';
+TRANSLATIONS.de['checkout.color'] = 'Farbe';
+TRANSLATIONS.de['checkout.size'] = 'Größe';
+TRANSLATIONS.de['checkout.style'] = 'Stil';
+TRANSLATIONS.de['checkout.material'] = 'Material';
+TRANSLATIONS.de['checkout.dimensions'] = 'Abmessungen';
+TRANSLATIONS.de['checkout.weight'] = 'Gewicht';
+TRANSLATIONS.de['checkout.volume'] = 'Volumen';
+TRANSLATIONS.de['checkout.brand'] = 'Marke';
+TRANSLATIONS.de['checkout.assembly'] = 'Montage';
+TRANSLATIONS.de['checkout.shape'] = 'Form';
+
+// Checkout/Order Preparation Page Translations - French
+TRANSLATIONS.fr['checkout.secure.checkout'] = 'Paiement Sécurisé';
+TRANSLATIONS.fr['checkout.preparing.order'] = 'Préparation de Votre Commande';
+TRANSLATIONS.fr['checkout.please.wait'] = 'Veuillez patienter pendant que nous configurons votre paiement sécurisé...';
+TRANSLATIONS.fr['checkout.order.summary'] = 'Résumé de la Commande';
+TRANSLATIONS.fr['checkout.action'] = 'Action';
+TRANSLATIONS.fr['checkout.country'] = 'Pays';
+TRANSLATIONS.fr['checkout.redirecting.in'] = 'Redirection dans {seconds} seconde{plural}...';
+TRANSLATIONS.fr['checkout.redirecting.to.partner'] = 'Vous serez redirigé vers notre partenaire de paiement sécurisé';
+TRANSLATIONS.fr['checkout.continue.to.checkout'] = 'Continuer vers le Paiement';
+TRANSLATIONS.fr['checkout.ssl.encrypted'] = 'Chiffré SSL';
+TRANSLATIONS.fr['checkout.trusted.partner'] = 'Partenaire de Confiance';
+TRANSLATIONS.fr['checkout.selected.options'] = 'Options Sélectionnées';
+TRANSLATIONS.fr['checkout.quantity'] = 'Quantité';
+TRANSLATIONS.fr['checkout.color'] = 'Couleur';
+TRANSLATIONS.fr['checkout.size'] = 'Taille';
+TRANSLATIONS.fr['checkout.style'] = 'Style';
+TRANSLATIONS.fr['checkout.material'] = 'Matériau';
+TRANSLATIONS.fr['checkout.dimensions'] = 'Dimensions';
+TRANSLATIONS.fr['checkout.weight'] = 'Poids';
+TRANSLATIONS.fr['checkout.volume'] = 'Volume';
+TRANSLATIONS.fr['checkout.brand'] = 'Marque';
+TRANSLATIONS.fr['checkout.assembly'] = 'Assemblage';
+TRANSLATIONS.fr['checkout.shape'] = 'Forme';
+
+// Checkout/Order Preparation Page Translations - Spanish
+TRANSLATIONS.es['checkout.secure.checkout'] = 'Pago Seguro';
+TRANSLATIONS.es['checkout.preparing.order'] = 'Preparando Tu Pedido';
+TRANSLATIONS.es['checkout.please.wait'] = 'Por favor espera mientras configuramos tu pago seguro...';
+TRANSLATIONS.es['checkout.order.summary'] = 'Resumen del Pedido';
+TRANSLATIONS.es['checkout.action'] = 'Acción';
+TRANSLATIONS.es['checkout.country'] = 'País';
+TRANSLATIONS.es['checkout.redirecting.in'] = 'Redirigiendo en {seconds} segundo{plural}...';
+TRANSLATIONS.es['checkout.redirecting.to.partner'] = 'Serás redirigido a nuestro socio de pago seguro';
+TRANSLATIONS.es['checkout.continue.to.checkout'] = 'Continuar al Pago';
+TRANSLATIONS.es['checkout.ssl.encrypted'] = 'Cifrado SSL';
+TRANSLATIONS.es['checkout.trusted.partner'] = 'Socio de Confianza';
+TRANSLATIONS.es['checkout.selected.options'] = 'Opciones Seleccionadas';
+TRANSLATIONS.es['checkout.quantity'] = 'Cantidad';
+TRANSLATIONS.es['checkout.color'] = 'Color';
+TRANSLATIONS.es['checkout.size'] = 'Tamaño';
+TRANSLATIONS.es['checkout.style'] = 'Estilo';
+TRANSLATIONS.es['checkout.material'] = 'Material';
+TRANSLATIONS.es['checkout.dimensions'] = 'Dimensiones';
+TRANSLATIONS.es['checkout.weight'] = 'Peso';
+TRANSLATIONS.es['checkout.volume'] = 'Volumen';
+TRANSLATIONS.es['checkout.brand'] = 'Marca';
+TRANSLATIONS.es['checkout.assembly'] = 'Ensamblaje';
+TRANSLATIONS.es['checkout.shape'] = 'Forma';
 
 // Get translation for a key in the current language
 export const getTranslation = (key: string, language: string = 'en', params?: Record<string, string | number>): string => {
