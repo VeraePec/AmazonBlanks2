@@ -42,6 +42,16 @@ import FeandreaCatTreePage from './pages/FeandreaCatTreePage';
 import VasagleTvUnitPage from './pages/VasagleTvUnitPage';
 import NinjaFoodiAirFryerPage from './pages/NinjaFoodiAirFryerPage';
 import ProductRedirectHandler from './pages/ProductRedirectHandler';
+// Newer product pages
+import HPDeskJet2810ePage from './pages/HPDeskJet2810ePage';
+import RussellHobbsSteamIronPage from './pages/RussellHobbsSteamIronPage';
+import SoundcoreQ20iPage from './pages/SoundcoreQ20iPage';
+import NOCOBoostGB40Page from './pages/NOCOBoostGB40Page';
+import SharkPowerProPage from './pages/SharkPowerProPage';
+import PhilipsSonicare4300Page from './pages/PhilipsSonicare4300Page';
+import AmazonFireTVStick4KPage from './pages/AmazonFireTVStick4KPage';
+import DysonV8AdvancedPage from './pages/DysonV8AdvancedPage';
+import NaspaluroOfficeChairPage from './pages/NaspaluroOfficeChairPage';
 // Removed AiProductCreator page per request
 import DynamicProductPageV2 from './components/DynamicProductPageV2';
 import NotFound from './pages/NotFound';
@@ -316,6 +326,17 @@ function App() {
         <Route path="/vasagle-tv-unit" element={<VasagleTvUnitPage />} />
         <Route path="/ninja-foodi-air-fryer" element={<NinjaFoodiAirFryerPage />} />
         <Route path="/product-redirect" element={<ProductRedirectHandler />} />
+        
+        {/* Newer product pages */}
+        <Route path="/hp-deskjet-2810e" element={<HPDeskJet2810ePage />} />
+        <Route path="/russell-hobbs-steam-iron" element={<RussellHobbsSteamIronPage />} />
+        <Route path="/soundcore-q20i" element={<SoundcoreQ20iPage />} />
+        <Route path="/noco-boost-gb40" element={<NOCOBoostGB40Page />} />
+        <Route path="/shark-power-pro" element={<SharkPowerProPage />} />
+        <Route path="/philips-sonicare-4300" element={<PhilipsSonicare4300Page />} />
+        <Route path="/amazon-fire-tv-stick-4k" element={<AmazonFireTVStick4KPage />} />
+        <Route path="/dyson-v8-advanced" element={<DysonV8AdvancedPage />} />
+        <Route path="/naspaluro-office-chair" element={<NaspaluroOfficeChairPage />} />
                   
                   {/* Catch-all route for dynamic products - should be last */}
                   <Route path="*" element={<DynamicProductPageV2 />} />
