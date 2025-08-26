@@ -2,11 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductPageTemplate from './ProductPageTemplate';
 import { useCountrySelector } from '../hooks/useCountrySelector';
-import { getTranslation, getCountryConfig, formatPrice, testKeterTranslations } from '../utils/translations';
+import { getTranslation, getCountryConfig, formatPrice } from '../utils/translations';
 import { getDeliveryInfo } from '../utils/deliveryDate';
-
-// Make test function available globally for debugging
-(window as any).testKeterTranslations = testKeterTranslations;
 
 // Simple Error Boundary Component
 class ErrorBoundary extends React.Component<
